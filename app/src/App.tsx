@@ -1,9 +1,12 @@
 import "./App.css";
+import { Navbar } from "./components/Navbar";
+import { HomePage } from "./pages/HomePage";
 
 function App() {
   return (
-    <main className="flex items-center justify-center flex-col min-h-screen">
-      <div>App will be here</div>
+    <main>
+      <Navbar />
+      <HomePage />
     </main>
   );
 }
