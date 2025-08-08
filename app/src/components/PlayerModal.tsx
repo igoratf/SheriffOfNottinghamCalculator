@@ -1,11 +1,10 @@
-import type { Player } from "./MatchManager/MatchManager";
+import type { Player } from "@/utils/types";
 import { PlayerForm } from "./PlayerForm";
 import { Button } from "./ui/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
