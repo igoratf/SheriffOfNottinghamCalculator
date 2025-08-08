@@ -7,7 +7,7 @@ import type { Player } from "@/utils/types";
 export const MatchManager = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [newPlayerModalOpen, setNewPlayerModalOpen] = useState(false);
-  const [showMaxPlayersMessage, setShowMaxPlayersMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const openNewPlayerModal = () => {
     setNewPlayerModalOpen(true);
@@ -18,13 +18,28 @@ export const MatchManager = () => {
   };
 
   const addPlayer = (player: Player) => {
-    console.log("player ", player);
     if (players.length < 5) {
-      setPlayers((prevPlayers) => [...prevPlayers, { ...player }]);
+      const alreadyExists = players.find(
+        (p) => player.name.toLowerCase() === p.name.toLowerCase()
+      );
+      if (alreadyExists) {
+        // Move this to player form or toast
+        setErrorMessage("Player already exists");
+      } else {
+        setPlayers((prevPlayers) => [...prevPlayers, { ...player }]);
+        setErrorMessage("");
+      }
       closeNewPlayerModal();
     } else {
-      setShowMaxPlayersMessage(true);
+      setErrorMessage("Cannot add more than 5 players");
     }
+  };
+
+  const removePlayer = (player: Player) => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.filter((p) => p.name !== player.name)
+    );
+    setErrorMessage("");
   };
 
   return (
@@ -38,15 +53,17 @@ export const MatchManager = () => {
         <span>Insert a new player to calculate a match score</span>
       ) : (
         <div className="flex flex-wrap justify-center gap-4 max-w-5xl mb-8">
-          {players.map((player, index) => (
-            <PlayerCard key={index} player={player} />
+          {players.map((player) => (
+            <PlayerCard
+              key={player.name}
+              player={player}
+              onDelete={removePlayer}
+            />
           ))}
         </div>
       )}
-      {showMaxPlayersMessage && (
-        <p className="text-red-600 text-center">
-          Cannot add more than 5 players
-        </p>
+      {errorMessage && (
+        <p className="text-red-600 text-center">{errorMessage}</p>
       )}
       <AddPlayerButton onClick={openNewPlayerModal} />
     </div>
