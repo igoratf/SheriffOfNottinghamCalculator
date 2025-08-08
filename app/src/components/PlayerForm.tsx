@@ -1,4 +1,6 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormField,
@@ -8,14 +10,21 @@ import {
   FormDescription,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import type { Player } from "./MatchManager/MatchManager";
+import type { Player } from "@/utils/types";
 
 interface PlayerFormProps {
   onSubmit: (data: Player) => void;
 }
 
+const handleInputChange =
+  (field: any) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/^0+(?!$)/, "");
+    field.onChange(value);
+  };
+
 export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
   const form = useForm<Player>({
+    resolver: zodResolver(playerFormSchema),
     defaultValues: {
       name: "",
       apple: 0,
@@ -28,6 +37,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
   });
 
   const { control, handleSubmit } = form;
+
   return (
     <Form {...form}>
       <form id="player-form" onSubmit={handleSubmit(onSubmit)}>
@@ -54,16 +64,18 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
           <FormField
             name="apple"
             control={control}
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor="apple">Apple</FormLabel>
                 <FormControl>
                   <Input
+                    {...field}
                     id="apple"
                     placeholder="0"
                     type="number"
                     min={0}
                     max={99}
+                    onChange={handleInputChange(field)}
                   ></Input>
                 </FormControl>
                 <FormDescription>Amount of apple</FormDescription>
@@ -74,16 +86,18 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
           <FormField
             name="bread"
             control={control}
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor="bread">Bread</FormLabel>
                 <FormControl>
                   <Input
+                    {...field}
                     id="bread"
                     placeholder="0"
                     type="number"
                     min={0}
                     max={99}
+                    onChange={handleInputChange(field)}
                   ></Input>
                 </FormControl>
                 <FormDescription>Amount of bread</FormDescription>
@@ -94,16 +108,18 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
           <FormField
             name="cheese"
             control={control}
-            render={() => (
+            render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="bread">Cheese</FormLabel>
+                <FormLabel htmlFor="cheese">Cheese</FormLabel>
                 <FormControl>
                   <Input
-                    id="bread"
+                    {...field}
+                    id="cheese"
                     placeholder="0"
                     type="number"
                     min={0}
                     max={99}
+                    onChange={handleInputChange(field)}
                   ></Input>
                 </FormControl>
                 <FormDescription>Amount of cheese</FormDescription>
@@ -114,12 +130,12 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
           <FormField
             name="chicken"
             control={control}
-            render={() => (
+            render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="bread">Chicken</FormLabel>
+                <FormLabel htmlFor="chicken">Chicken</FormLabel>
                 <FormControl>
                   <Input
-                    id="bread"
+                    id="chicken"
                     placeholder="0"
                     type="number"
                     min={0}
@@ -135,19 +151,43 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
           <FormField
             name="contraband"
             control={control}
-            render={() => (
+            render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="bread">Contraband</FormLabel>
+                <FormLabel htmlFor="contraband">Contraband</FormLabel>
                 <FormControl>
                   <Input
-                    id="bread"
+                    {...field}
+                    id="contraband"
                     placeholder="0"
                     type="number"
                     min={0}
                     max={99}
+                    onChange={handleInputChange(field)}
                   ></Input>
                 </FormControl>
                 <FormDescription>Amount of contraband</FormDescription>
+                {/* <FormMessage>Error will come here</FormMessage> */}
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="coin"
+            control={control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="coin">Coin</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    id="coin"
+                    placeholder="0"
+                    type="number"
+                    min={0}
+                    max={99}
+                    onChange={handleInputChange(field)}
+                  ></Input>
+                </FormControl>
+                <FormDescription>Amount of coin</FormDescription>
                 {/* <FormMessage>Error will come here</FormMessage> */}
               </FormItem>
             )}
@@ -177,3 +217,18 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
     </Form>
   );
 };
+
+import { z } from "zod";
+
+export const playerFormSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(12, "Name must be at most 12 characters"),
+  apple: z.number().min(0, "Must be at least 0").max(99, "Must be at most 99"),
+  bread: z.number().min(0).max(99),
+  cheese: z.number().min(0).max(99),
+  chicken: z.number().min(0).max(99),
+  contraband: z.number().min(0).max(99),
+  coin: z.number().min(0).max(99),
+});

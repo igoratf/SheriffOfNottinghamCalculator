@@ -2,16 +2,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { PlayerModal } from "../PlayerModal";
 import { PlayerCard } from "../PlayerCard";
-
-export interface Player {
-  name: string;
-  apple: number;
-  bread: number;
-  cheese: number;
-  chicken: number;
-  contraband: number;
-  coin: number;
-}
+import type { Player } from "@/utils/types";
 
 export const MatchManager = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -31,6 +22,8 @@ export const MatchManager = () => {
     if (players.length < 5) {
       setPlayers((prevPlayers) => [...prevPlayers, { ...player }]);
       closeNewPlayerModal();
+    } else {
+      setShowMaxPlayersMessage(true);
     }
   };
 
@@ -51,7 +44,9 @@ export const MatchManager = () => {
         </div>
       )}
       {showMaxPlayersMessage && (
-        <p className="text-red-600">Cannot add more than 5 players</p>
+        <p className="text-red-600 text-center">
+          Cannot add more than 5 players
+        </p>
       )}
       <AddPlayerButton onClick={openNewPlayerModal} />
     </div>
