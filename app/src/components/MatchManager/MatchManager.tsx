@@ -3,6 +3,8 @@ import { Button } from "../ui/button";
 import { PlayerModal } from "../PlayerModal";
 import { PlayerCard } from "../PlayerCard";
 import type { Player } from "@/utils/types";
+import { Tooltip, TooltipContent } from "../ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export const MatchManager = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -65,18 +67,44 @@ export const MatchManager = () => {
       {errorMessage && (
         <p className="text-red-600 text-center">{errorMessage}</p>
       )}
-      <AddPlayerButton onClick={openNewPlayerModal} />
+      <div className="flex justify-center items-center gap-4">
+        <Tooltip>
+          {players.length >= 5 ? (
+            <TooltipTrigger>
+              <TooltipContent>
+                <p>Maximum players reached</p>
+              </TooltipContent>
+              <AddPlayerButton
+                onClick={openNewPlayerModal}
+                disabled={players.length >= 5}
+              />
+            </TooltipTrigger>
+          ) : (
+            <AddPlayerButton
+              onClick={openNewPlayerModal}
+              disabled={players.length >= 5}
+            />
+          )}
+        </Tooltip>
+        <Button
+          onClick={() => {}}
+          className="bg-green-700 hover:bg-green-700/90 text-white"
+        >
+          Calculate score
+        </Button>
+      </div>
     </div>
   );
 };
 
 interface AddPlayerButtonProps {
   onClick: () => void;
+  disabled?: boolean;
 }
 
-const AddPlayerButton = ({ onClick }: AddPlayerButtonProps) => {
+const AddPlayerButton = ({ onClick, disabled }: AddPlayerButtonProps) => {
   return (
-    <Button className="cursor-pointer" onClick={onClick}>
+    <Button className="cursor-pointer" onClick={onClick} disabled={disabled}>
       Add player
     </Button>
   );
