@@ -6,3 +6,18 @@ export const RESOURCE_SCORE_MAP = {
   coin: 1,
   contraband: 1,
 };
+
+export const KINGS_AND_QUEENS_BONUS = {
+  king: {
+    apple: 20,
+    bread: 15,
+    cheese: 15,
+    chicken: 10,
+  },
+  queen: {
+    apple: 10,
+    bread: 10,
+    cheese: 10,
+    chicken: 5,
+  },
+};
