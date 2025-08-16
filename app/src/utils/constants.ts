@@ -21,3 +21,5 @@ export const KINGS_AND_QUEENS_BONUS = {
     chicken: 5,
   },
 };
+
+export const RESOURCE_NAMES = ["apple", "bread", "chicken", "cheese"];

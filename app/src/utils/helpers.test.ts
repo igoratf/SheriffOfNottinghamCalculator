@@ -9,8 +9,8 @@ const player1 = {
   name: "Player 1",
   apple: 2,
   bread: 2,
-  chicken: 2,
   cheese: 2,
+  chicken: 2,
   coin: 2,
   contraband: 5,
 };
@@ -19,28 +19,18 @@ const player2 = {
   name: "Player 2",
   apple: 1,
   bread: 1,
-  chicken: 1,
   cheese: 1,
+  chicken: 1,
   coin: 1,
   contraband: 1,
-};
-
-const player3 = {
-  name: "Player 2",
-  apple: 1,
-  bread: 2,
-  chicken: 3,
-  cheese: 4,
-  coin: 5,
-  contraband: 5,
 };
 
 const breadKing = {
   name: "Bread king",
   apple: 1,
-  bread: 10,
-  chicken: 2,
+  bread: 15,
   cheese: 2,
+  chicken: 2,
   coin: 1,
   contraband: 1,
 };
@@ -48,9 +38,9 @@ const breadKing = {
 const cheeseKing = {
   name: "Cheese king",
   apple: 1,
-  bread: 10,
+  bread: 8,
+  cheese: 15,
   chicken: 2,
-  cheese: 20,
   coin: 1,
   contraband: 1,
 };
@@ -119,6 +109,44 @@ test("calculate kings and queens", () => {
 describe("calculate match score", () => {
   test("calculate a match score", () => {
     const players = [player1, breadKing, cheeseKing, player2];
-    expect(calculateScore(players)).toEqual({});
+    const expected = {
+      "Bread king": {
+        apple: 2,
+        bread: 45,
+        cheese: 6,
+        chicken: 8,
+        coin: 1,
+        contraband: 1,
+        total: 86,
+      },
+      "Cheese king": {
+        apple: 2,
+        bread: 24,
+        cheese: 45,
+        chicken: 8,
+        coin: 1,
+        contraband: 1,
+        total: 114,
+      },
+      "Player 1": {
+        apple: 4,
+        bread: 6,
+        cheese: 6,
+        chicken: 8,
+        coin: 2,
+        contraband: 5,
+        total: 66,
+      },
+      "Player 2": {
+        apple: 2,
+        bread: 3,
+        cheese: 3,
+        chicken: 4,
+        coin: 1,
+        contraband: 1,
+        total: 17,
+      },
+    };
+    expect(calculateScore(players)).toEqual(expected);
   });
 });
