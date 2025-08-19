@@ -35,8 +35,6 @@ export const PlayerCard = ({
     queens[resource].includes(player)
   );
 
-  console.log(kingResources, queenResources);
-
   return (
     <Card className="max-h-100 w-70 relative">
       <CardHeader>

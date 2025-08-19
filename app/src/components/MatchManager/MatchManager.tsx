@@ -51,7 +51,6 @@ export const MatchManager = () => {
   const onCalculateScore = () => {
     const score = calculateScore(players);
     const kingsAndQueens = calculateKingsAndQueens(players);
-    console.log("kingsAndQueens", kingsAndQueens);
 
     setMatchScore(score);
     setKingsAndQueens(kingsAndQueens);
