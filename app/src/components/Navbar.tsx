@@ -19,7 +19,7 @@ export const Navbar = () => {
         <li>
           <a
             href="#"
-            className="text-gray-700 hover:text-amber-600 transition-colors"
+            className="text-gray-400 cursor-not-allowed opacity-50 pointer-events-none"
           >
             Ranking
           </a>
