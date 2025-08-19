@@ -5,6 +5,10 @@ import {
 } from "./constants";
 import { type Player } from "./types";
 
+export function capitalizeFirstLetter(resource: string) {
+  return resource.charAt(0).toUpperCase() + resource.slice(1);
+}
+
 //TODO: Fix types
 export function calculatePlayerScore(player: Player) {
   let totalResourceScore: Record<string, number> = {};
