@@ -45,7 +45,7 @@ export const PlayerCard = ({
             onClick={() => onDelete?.(player)}
             variant="ghost"
             size="sm"
-            className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-red-600 hover:text-white"
+            className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-red-600/80 hover:text-white"
           >
             <TrashIcon className="h-4 w-4" />
           </Button>

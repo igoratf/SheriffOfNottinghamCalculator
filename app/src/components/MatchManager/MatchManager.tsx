@@ -78,7 +78,7 @@ export const MatchManager = () => {
       {players.length === 0 ? (
         <span>Insert a new player to calculate a match score</span>
       ) : (
-        <div className="flex flex-wrap justify-start gap-4 max-w-5xl mb-8">
+        <div className="flex flex-wrap justify-center gap-4 max-w-5xl mb-8">
           {players.map((player) => (
             <PlayerCard
               key={player.name}
@@ -117,6 +117,7 @@ export const MatchManager = () => {
           <Button
             onClick={onCalculateScore}
             className="bg-green-700 hover:bg-green-700/90 text-white"
+            disabled={players.length === 0}
           >
             Calculate score
           </Button>
