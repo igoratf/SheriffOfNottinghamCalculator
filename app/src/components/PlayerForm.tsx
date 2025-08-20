@@ -205,7 +205,9 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                     onChange={handleInputChange(field)}
                   ></Input>
                 </FormControl>
-                <FormDescription>Amount of contraband</FormDescription>
+                <FormDescription className="whitespace-nowrap">
+                  Amount of contraband
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
