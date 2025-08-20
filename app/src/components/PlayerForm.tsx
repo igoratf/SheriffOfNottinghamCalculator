@@ -206,7 +206,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                     onChange={handleInputChange(field)}
                   ></Input>
                 </FormControl>
-                <FormDescription className="whitespace-nowrap">
+                <FormDescription className="sm:whitespace-nowrap">
                   Amount of contraband
                 </FormDescription>
                 <FormMessage />
