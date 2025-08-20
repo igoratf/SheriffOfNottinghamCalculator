@@ -78,13 +78,14 @@ export const MatchManager = () => {
         <span>Insert a new player to calculate a match score</span>
       ) : (
         <div className="flex flex-wrap justify-center gap-4 max-w-5xl mb-8">
-          {players.map((player) => (
+          {players.map((player, index) => (
             <PlayerCard
               key={player.name}
               player={player}
               onDelete={removePlayer}
               matchScore={matchScore}
               kingsAndQueens={kingsAndQueens}
+              index={index}
             />
           ))}
         </div>

@@ -10,9 +10,11 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { calculatePlayerScore, capitalizeFirstLetter } from "@/utils/helpers";
 import { TrashIcon } from "lucide-react";
+import { useMemo } from "react";
 
 export interface PlayerCardProps {
   player: Player;
+  index: number;
   onDelete: (player: Player) => void;
   matchScore?: Record<string, Record<string, number>>;
   kingsAndQueens?: Record<string, Record<string, Player[]>>;
@@ -22,21 +24,38 @@ export const PlayerCard = ({
   player,
   matchScore,
   kingsAndQueens,
+  index,
   onDelete,
 }: PlayerCardProps) => {
   const playerScore = matchScore?.[player.name];
   const kings = kingsAndQueens?.kings || {};
   const queens = kingsAndQueens?.queens || {};
 
-  const kingResources = Object.keys(kings).filter((resource) =>
-    kings[resource].includes(player)
+  const kingResources = useMemo(
+    () =>
+      Object.keys(kings).filter((resource) => kings[resource].includes(player)),
+    [kings, player]
   );
-  const queenResources = Object.keys(queens).filter((resource) =>
-    queens[resource].includes(player)
+  const queenResources = useMemo(
+    () =>
+      Object.keys(queens).filter((resource) =>
+        queens[resource].includes(player)
+      ),
+    [queens, player]
   );
 
+  const isTiedForFirst = useMemo(() => {
+    if (!matchScore) return false;
+    const allScores = Object.values(matchScore).map((score) => score.total);
+    const highestScore = Math.max(...allScores);
+    return allScores.filter((score) => score === highestScore).length > 1;
+  }, [matchScore]);
+
+  const isFirst = index === 0 && !!playerScore && !isTiedForFirst;
+  const isSecond = index === 1 && !!playerScore && !isTiedForFirst;
+
   return (
-    <Card className="max-h-100 w-70 relative">
+    <Card className="max-h-110 w-70 relative h-max">
       <CardHeader>
         {!matchScore && (
           <Button
@@ -48,7 +67,16 @@ export const PlayerCard = ({
             <TrashIcon className="h-4 w-4" />
           </Button>
         )}
-        <CardTitle>{player.name}</CardTitle>
+        <CardTitle>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold">{player.name}</span>
+            {isFirst && <span className="text-yellow-500">Winner! 👑</span>}
+            {isTiedForFirst && (
+              <span className="text-yellow-500">Tied for 1st!</span>
+            )}
+            {isSecond && <span className="text-slate-600">2nd place</span>}
+          </div>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ul>
