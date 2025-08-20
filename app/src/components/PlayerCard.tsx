@@ -16,6 +16,7 @@ import { Separator } from "./ui/separator";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
+import classNames from "classnames";
 
 export interface PlayerCardProps {
   player: Player;
@@ -71,7 +72,12 @@ export const PlayerCard = ({
   const isSecond = index === 1 && !!playerScore && !isTiedForFirst;
 
   return (
-    <Card className="max-h-110 w-70 relative h-max">
+    <Card
+      className={classNames("max-h-110 w-70 relative h-max", {
+        "inset-ring inset-ring-yellow-500/50": isFirst || isTiedForFirst,
+        "inset-ring inset-ring-slate-500/50": isSecond,
+      })}
+    >
       <CardHeader>
         {!matchScore && (
           <Button
