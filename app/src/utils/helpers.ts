@@ -3,19 +3,28 @@ import {
   RESOURCE_NAMES,
   RESOURCE_SCORE_MAP,
 } from "./constants";
-import { type Player } from "./types";
+import {
+  type Player,
+  type PlayerScore,
+  type KingsAndQueens,
+  type KingQueenResourceName,
+} from "./types.d";
 
 export function capitalizeFirstLetter(resource: string) {
   return resource.charAt(0).toUpperCase() + resource.slice(1);
 }
 
-//TODO: Fix types
-export function calculatePlayerScore(player: Player) {
-  let totalResourceScore: Record<string, number> = {};
-  Object.keys(RESOURCE_SCORE_MAP).forEach((resource) => {
-    totalResourceScore[resource] =
-      (player[resource] || 0) * RESOURCE_SCORE_MAP[resource];
-  });
+export function calculatePlayerScore(player: Player): PlayerScore {
+  const totalResourceScore: PlayerScore = {
+    apple: player.apple * RESOURCE_SCORE_MAP.apple,
+    bread: player.bread * RESOURCE_SCORE_MAP.bread,
+    cheese: player.cheese * RESOURCE_SCORE_MAP.cheese,
+    chicken: player.chicken * RESOURCE_SCORE_MAP.chicken,
+    coin: player.coin * RESOURCE_SCORE_MAP.coin,
+    contraband: player.contraband * RESOURCE_SCORE_MAP.contraband,
+    total: 0,
+  };
+
   totalResourceScore.total = Object.values(totalResourceScore).reduce(
     (acc, score) => acc + score,
     0
@@ -24,8 +33,8 @@ export function calculatePlayerScore(player: Player) {
   return totalResourceScore;
 }
 
-export function calculateScore(players: Player[]) {
-  const playerScoreMap: Record<string, Record<string, number>> = players.reduce(
+export function calculateScore(players: Player[]): Record<string, PlayerScore> {
+  const playerScoreMap: Record<string, PlayerScore> = players.reduce(
     (acc, player) => {
       const score = calculatePlayerScore(player);
       return { ...acc, [player.name]: score };
@@ -36,8 +45,8 @@ export function calculateScore(players: Player[]) {
   const { kings, queens } = calculateKingsAndQueens(players);
 
   RESOURCE_NAMES.forEach((resource) => {
-    const resourceKings = kings[resource];
-    const resourceQueens = queens[resource];
+    const resourceKings = kings[resource as KingQueenResourceName];
+    const resourceQueens = queens[resource as KingQueenResourceName];
 
     const kingBonus = KINGS_AND_QUEENS_BONUS["king"][resource];
     const queenBonus = KINGS_AND_QUEENS_BONUS["queen"][resource];
@@ -51,7 +60,8 @@ export function calculateScore(players: Player[]) {
       } else if (resourceQueens.length > 1) {
         const totalBonus = Math.floor(queenBonus / resourceQueens.length);
         resourceQueens.forEach(
-          (player) => (playerScoreMap[player.name]["total"] += totalBonus)
+          (player: Player) =>
+            (playerScoreMap[player.name]["total"] += totalBonus)
         );
       }
       // If there are multiple kings, the king and queen bonus are added and split between them. There's no payout for queens
@@ -60,7 +70,7 @@ export function calculateScore(players: Player[]) {
         (kingBonus + queenBonus) / resourceKings.length
       );
       resourceKings.forEach(
-        (player) => (playerScoreMap[player.name]["total"] += totalBonus)
+        (player: Player) => (playerScoreMap[player.name]["total"] += totalBonus)
       );
     }
   });
@@ -68,26 +78,31 @@ export function calculateScore(players: Player[]) {
   return playerScoreMap;
 }
 
-export function calculateKingsAndQueens(players: Player[]) {
-  let kings: Record<string, Player[]> = {
+export function calculateKingsAndQueens(players: Player[]): KingsAndQueens {
+  const kings: Record<KingQueenResourceName, Player[]> = {
     apple: [],
     bread: [],
     cheese: [],
     chicken: [],
   };
 
-  let queens: Record<string, Player[]> = {
+  const queens: Record<KingQueenResourceName, Player[]> = {
     apple: [],
     bread: [],
     cheese: [],
     chicken: [],
   };
+
+  const kingQueenResources: KingQueenResourceName[] = [
+    "apple",
+    "bread",
+    "cheese",
+    "chicken",
+  ];
 
   players.forEach((player) => {
-    Object.keys(player).forEach((key) => {
-      if (RESOURCE_NAMES.includes(key)) {
-        return compareResourceScore(kings, queens, key, player);
-      }
+    kingQueenResources.forEach((resource) => {
+      compareResourceScore(kings, queens, resource, player);
     });
   });
 
@@ -95,9 +110,9 @@ export function calculateKingsAndQueens(players: Player[]) {
 }
 
 function compareResourceScore(
-  kingsMap: Record<string, Player[]>,
-  queensMap: Record<string, Player[]>,
-  resource: string,
+  kingsMap: Record<KingQueenResourceName, Player[]>,
+  queensMap: Record<KingQueenResourceName, Player[]>,
+  resource: KingQueenResourceName,
   player: Player
 ) {
   const resourceKings = kingsMap[resource];
@@ -113,20 +128,26 @@ function compareResourceScore(
     return (kingsMap[resource] = [player]);
   }
 
+  const currentKingResource = currentKing[resource];
+
   /* If the player has more goods than the current king, it becomes king
    and previous king becomes queen */
-  if (playerResource > currentKing[resource]) {
+  if (playerResource > currentKingResource) {
     kingsMap[resource] = [player];
     queensMap[resource] = [currentKing];
 
     /* If player has the same amount as the king, it's a tie and there is no queen */
-  } else if (playerResource === currentKing[resource]) {
+  } else if (playerResource === currentKingResource) {
     kingsMap[resource].push(player);
     queensMap[resource] = [];
-  } else if (resourceQueens.length === 0)
+  } else if (resourceQueens.length === 0) {
     return (queensMap[resource] = [player]);
-  else if (playerResource > currentQueen[resource])
-    queensMap[resource] = [player];
-  else if (playerResource === currentQueen[resource])
-    queensMap[resource].push(player);
+  } else {
+    const currentQueenResource = currentQueen[resource];
+    if (playerResource > currentQueenResource) {
+      queensMap[resource] = [player];
+    } else if (playerResource === currentQueenResource) {
+      queensMap[resource].push(player);
+    }
+  }
 }

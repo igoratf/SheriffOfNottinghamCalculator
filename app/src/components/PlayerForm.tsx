@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import type { Player } from "@/utils/types";
+import type { Player } from "@/utils/types.d";
 
 export const playerFormSchema = z.object({
   name: z
@@ -50,7 +50,8 @@ interface PlayerFormProps {
 }
 
 const handleInputChange =
-  (field: any) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  (field: { onChange: (value: string) => void }) =>
+  (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/^0+(?!$)/, "");
     field.onChange(value);
   };

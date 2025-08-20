@@ -1,4 +1,4 @@
-import type { Player } from "@/utils/types";
+import type { Player } from "@/utils/types.d";
 import { PlayerForm } from "./PlayerForm";
 import { Button } from "./ui/button";
 import {

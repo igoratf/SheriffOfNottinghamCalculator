@@ -1,4 +1,6 @@
-export const RESOURCE_SCORE_MAP = {
+import type { ResourceName } from "./types.d";
+
+export const RESOURCE_SCORE_MAP: Record<ResourceName, number> = {
   apple: 2,
   cheese: 3,
   bread: 3,
@@ -13,13 +15,18 @@ export const KINGS_AND_QUEENS_BONUS = {
     bread: 15,
     cheese: 15,
     chicken: 10,
-  },
+  } as Record<ResourceName, number>,
   queen: {
     apple: 10,
     bread: 10,
     cheese: 10,
     chicken: 5,
-  },
+  } as Record<ResourceName, number>,
 };
 
-export const RESOURCE_NAMES = ["apple", "bread", "chicken", "cheese"];
+export const RESOURCE_NAMES: ResourceName[] = [
+  "apple",
+  "bread",
+  "chicken",
+  "cheese",
+];

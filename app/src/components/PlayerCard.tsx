@@ -1,4 +1,9 @@
-import type { Player } from "@/utils/types";
+import type {
+  Player,
+  PlayerScore,
+  KingsAndQueens,
+  KingQueenResourceName,
+} from "@/utils/types.d";
 import {
   Card,
   CardContent,
@@ -8,7 +13,7 @@ import {
 } from "./ui/card";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
-import { calculatePlayerScore, capitalizeFirstLetter } from "@/utils/helpers";
+import { capitalizeFirstLetter } from "@/utils/helpers";
 import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 
@@ -16,8 +21,8 @@ export interface PlayerCardProps {
   player: Player;
   index: number;
   onDelete: (player: Player) => void;
-  matchScore?: Record<string, Record<string, number>>;
-  kingsAndQueens?: Record<string, Record<string, Player[]>>;
+  matchScore?: Record<string, PlayerScore>;
+  kingsAndQueens?: KingsAndQueens;
 }
 
 export const PlayerCard = ({
@@ -28,18 +33,29 @@ export const PlayerCard = ({
   onDelete,
 }: PlayerCardProps) => {
   const playerScore = matchScore?.[player.name];
-  const kings = kingsAndQueens?.kings || {};
-  const queens = kingsAndQueens?.queens || {};
+
+  const kings = useMemo(
+    () =>
+      kingsAndQueens?.kings || ({} as Record<KingQueenResourceName, Player[]>),
+    [kingsAndQueens?.kings]
+  );
+  const queens = useMemo(
+    () =>
+      kingsAndQueens?.queens || ({} as Record<KingQueenResourceName, Player[]>),
+    [kingsAndQueens?.queens]
+  );
 
   const kingResources = useMemo(
     () =>
-      Object.keys(kings).filter((resource) => kings[resource].includes(player)),
+      Object.keys(kings).filter((resource) =>
+        kings[resource as KingQueenResourceName].includes(player)
+      ),
     [kings, player]
   );
   const queenResources = useMemo(
     () =>
       Object.keys(queens).filter((resource) =>
-        queens[resource].includes(player)
+        queens[resource as KingQueenResourceName].includes(player)
       ),
     [queens, player]
   );
