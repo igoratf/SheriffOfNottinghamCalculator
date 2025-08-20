@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { PlayerModal } from "../PlayerModal";
 import { PlayerCard } from "../PlayerCard";
-import type { Player } from "@/utils/types";
+import type { Player, PlayerScore, KingsAndQueens } from "@/utils/types.d";
 import { Tooltip, TooltipContent } from "../ui/tooltip";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { calculateKingsAndQueens, calculateScore } from "@/utils/helpers";
@@ -11,8 +11,12 @@ export const MatchManager = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [newPlayerModalOpen, setNewPlayerModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [matchScore, setMatchScore] = useState();
-  const [kingsAndQueens, setKingsAndQueens] = useState();
+  const [matchScore, setMatchScore] = useState<
+    Record<string, PlayerScore> | undefined
+  >(undefined);
+  const [kingsAndQueens, setKingsAndQueens] = useState<
+    KingsAndQueens | undefined
+  >(undefined);
 
   const openNewPlayerModal = () => {
     setNewPlayerModalOpen(true);
