@@ -14,6 +14,36 @@ export function capitalizeFirstLetter(resource: string) {
   return resource.charAt(0).toUpperCase() + resource.slice(1);
 }
 
+// Helper function to get effective resource quantities for king/queen calculations
+// This includes contraband resource bonuses
+function getEffectiveResourceQuantities(
+  player: Player
+): Record<KingQueenResourceName, number> {
+  const effectiveQuantities: Record<KingQueenResourceName, number> = {
+    apple: player.apple,
+    bread: player.bread,
+    cheese: player.cheese,
+    chicken: player.chicken,
+  };
+
+  // Add contraband resource bonuses to effective quantities
+  if (player.contrabands) {
+    player.contrabands.forEach((playerContraband) => {
+      const { contraband, quantity } = playerContraband;
+
+      if (contraband.resourceBonus && contraband.resourceType) {
+        const resourceType = contraband.resourceType as KingQueenResourceName;
+        if (resourceType in effectiveQuantities) {
+          effectiveQuantities[resourceType] +=
+            contraband.resourceBonus * quantity;
+        }
+      }
+    });
+  }
+
+  return effectiveQuantities;
+}
+
 export function calculatePlayerScore(player: Player): PlayerScore {
   const totalResourceScore: PlayerScore = {
     apple: player.apple * RESOURCE_SCORE_MAP.apple,
@@ -21,9 +51,19 @@ export function calculatePlayerScore(player: Player): PlayerScore {
     cheese: player.cheese * RESOURCE_SCORE_MAP.cheese,
     chicken: player.chicken * RESOURCE_SCORE_MAP.chicken,
     coin: player.coin * RESOURCE_SCORE_MAP.coin,
-    contraband: player.contraband * RESOURCE_SCORE_MAP.contraband,
+    contraband: 0,
     total: 0,
   };
+
+  // Add detailed contraband scores (only base contraband score, not resource bonuses)
+  if (player.contrabands) {
+    player.contrabands.forEach((playerContraband) => {
+      const { contraband, quantity } = playerContraband;
+
+      // Add base contraband score only
+      totalResourceScore.contraband += contraband.score * quantity;
+    });
+  }
 
   totalResourceScore.total = Object.values(totalResourceScore).reduce(
     (acc, score) => acc + score,
@@ -121,14 +161,19 @@ function compareResourceScore(
   const currentKing = resourceKings[0];
   const currentQueen = resourceQueens[0];
 
-  const playerResource = player[resource];
+  // Use effective resource quantities (including contraband bonuses) for king/queen calculations
+  const effectiveQuantities = getEffectiveResourceQuantities(player);
+  const playerResource = effectiveQuantities[resource];
 
   // If there's no king, the player becomes king
   if (!currentKing) {
     return (kingsMap[resource] = [player]);
   }
 
-  const currentKingResource = currentKing[resource];
+  // Get effective quantities for current king
+  const currentKingEffectiveQuantities =
+    getEffectiveResourceQuantities(currentKing);
+  const currentKingResource = currentKingEffectiveQuantities[resource];
 
   /* If the player has more goods than the current king, it becomes king
    and previous king becomes queen */
@@ -143,7 +188,11 @@ function compareResourceScore(
   } else if (resourceQueens.length === 0) {
     return (queensMap[resource] = [player]);
   } else {
-    const currentQueenResource = currentQueen[resource];
+    // Get effective quantities for current queen
+    const currentQueenEffectiveQuantities =
+      getEffectiveResourceQuantities(currentQueen);
+    const currentQueenResource = currentQueenEffectiveQuantities[resource];
+
     if (playerResource > currentQueenResource) {
       queensMap[resource] = [player];
     } else if (playerResource === currentQueenResource) {

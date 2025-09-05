@@ -11,13 +11,25 @@ export type KingQueenResourceName = Exclude<
   "coin" | "contraband"
 >;
 
+export interface Contraband {
+  name: string;
+  score: number;
+  resourceBonus?: number;
+  resourceType?: ResourceName;
+}
+
+export interface PlayerContraband {
+  contraband: Contraband;
+  quantity: number;
+}
+
 export interface Player {
   name: string;
   apple: number;
   bread: number;
   cheese: number;
   chicken: number;
-  contraband: number;
+  contrabands: PlayerContraband[];
   coin: number;
 }
 

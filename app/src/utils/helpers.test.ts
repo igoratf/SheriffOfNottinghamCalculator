@@ -12,7 +12,7 @@ const player1 = {
   cheese: 2,
   chicken: 2,
   coin: 2,
-  contraband: 5,
+  contrabands: [],
 };
 
 const player2 = {
@@ -22,7 +22,7 @@ const player2 = {
   cheese: 1,
   chicken: 1,
   coin: 1,
-  contraband: 1,
+  contrabands: [],
 };
 
 const breadKing = {
@@ -32,7 +32,7 @@ const breadKing = {
   cheese: 2,
   chicken: 2,
   coin: 1,
-  contraband: 1,
+  contrabands: [],
 };
 
 const cheeseKing = {
@@ -42,7 +42,7 @@ const cheeseKing = {
   cheese: 15,
   chicken: 2,
   coin: 1,
-  contraband: 1,
+  contrabands: [],
 };
 
 describe("calculate player score", () => {
@@ -55,8 +55,8 @@ describe("calculate player score", () => {
       chicken: 8,
       cheese: 6,
       coin: 2,
-      contraband: 5,
-      total: 31,
+      contraband: 0,
+      total: 26,
     };
     expect(calculatePlayerScore(player)).toEqual(expected);
   });
@@ -69,7 +69,7 @@ describe("calculate player score", () => {
       chicken: 0,
       cheese: 0,
       coin: 0,
-      contraband: 0,
+      contrabands: [],
     };
 
     const expected = {
@@ -116,8 +116,8 @@ describe("calculate match score", () => {
         cheese: 6,
         chicken: 8,
         coin: 1,
-        contraband: 1,
-        total: 86,
+        contraband: 0,
+        total: 85,
       },
       "Cheese king": {
         apple: 2,
@@ -125,8 +125,8 @@ describe("calculate match score", () => {
         cheese: 45,
         chicken: 8,
         coin: 1,
-        contraband: 1,
-        total: 114,
+        contraband: 0,
+        total: 113,
       },
       "Player 1": {
         apple: 4,
@@ -134,8 +134,8 @@ describe("calculate match score", () => {
         cheese: 6,
         chicken: 8,
         coin: 2,
-        contraband: 5,
-        total: 66,
+        contraband: 0,
+        total: 61,
       },
       "Player 2": {
         apple: 2,
@@ -143,8 +143,8 @@ describe("calculate match score", () => {
         cheese: 3,
         chicken: 4,
         coin: 1,
-        contraband: 1,
-        total: 17,
+        contraband: 0,
+        total: 16,
       },
     };
     expect(calculateScore(players)).toEqual(expected);

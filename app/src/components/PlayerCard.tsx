@@ -3,6 +3,7 @@ import type {
   PlayerScore,
   KingsAndQueens,
   KingQueenResourceName,
+  PlayerContraband,
 } from "@/utils/types.d";
 import {
   Card,
@@ -17,6 +18,38 @@ import { capitalizeFirstLetter } from "@/utils/helpers";
 import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import classNames from "classnames";
+
+const displayContrabandDetails = (contrabands: PlayerContraband[]) => {
+  if (!contrabands || contrabands.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="mt-4">
+      <h4 className="font-medium text-sm mb-2">Detailed Contrabands:</h4>
+      <ul className="text-sm space-y-1">
+        {contrabands.map((playerContraband, index) => (
+          <li key={index} className="flex justify-between">
+            <span>
+              {playerContraband.contraband.name} x{playerContraband.quantity}
+            </span>
+            <span className="text-muted-foreground">
+              ({playerContraband.contraband.score * playerContraband.quantity}{" "}
+              pts
+              {playerContraband.contraband.resourceBonus &&
+                playerContraband.contraband.resourceType &&
+                `, +${
+                  playerContraband.contraband.resourceBonus *
+                  playerContraband.quantity
+                } ${playerContraband.contraband.resourceType}`}
+              )
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 export interface PlayerCardProps {
   player: Player;
@@ -73,7 +106,7 @@ export const PlayerCard = ({
 
   return (
     <Card
-      className={classNames("max-h-110 w-70 relative h-max", {
+      className={classNames("max-h-120 w-70 relative h-max", {
         "inset-ring inset-ring-yellow-500/50": isFirst || isTiedForFirst,
         "inset-ring inset-ring-slate-500/50": isSecond,
       })}
@@ -119,10 +152,13 @@ export const PlayerCard = ({
             Coin - {player.coin} {playerScore && `(${playerScore.coin})`}
           </li>
           <li>
-            Contraband - {player.contraband}{" "}
+            Contraband -{" "}
+            {player.contrabands.reduce((total, pc) => total + pc.quantity, 0)}{" "}
             {playerScore && `(${playerScore.contraband})`}
           </li>
         </ul>
+
+        {displayContrabandDetails(player.contrabands)}
       </CardContent>
       {playerScore && (
         <>
