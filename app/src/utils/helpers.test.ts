@@ -13,6 +13,7 @@ const player1 = {
   chicken: 2,
   coin: 2,
   contraband: 5,
+  contrabands: [],
 };
 
 const player2 = {
@@ -23,6 +24,7 @@ const player2 = {
   chicken: 1,
   coin: 1,
   contraband: 1,
+  contrabands: [],
 };
 
 const breadKing = {
@@ -33,6 +35,7 @@ const breadKing = {
   chicken: 2,
   coin: 1,
   contraband: 1,
+  contrabands: [],
 };
 
 const cheeseKing = {
@@ -43,6 +46,7 @@ const cheeseKing = {
   chicken: 2,
   coin: 1,
   contraband: 1,
+  contrabands: [],
 };
 
 describe("calculate player score", () => {
@@ -70,6 +74,7 @@ describe("calculate player score", () => {
       cheese: 0,
       coin: 0,
       contraband: 0,
+      contrabands: [],
     };
 
     const expected = {
