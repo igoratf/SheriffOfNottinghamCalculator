@@ -33,39 +33,56 @@ export const RESOURCE_NAMES: ResourceName[] = [
 
 export const CONTRABAND_OPTIONS: Contraband[] = [
   {
+    name: "Pepper",
+    score: 6,
+  },
+  {
+    name: "Mead",
+    score: 7,
+  },
+  {
+    name: "Silk",
+    score: 8,
+  },
+  {
     name: "Crossbow",
+    score: 9,
+  },
+  { name: "Green Apples", score: 4, resourceBonus: 2, resourceType: "apple" },
+  {
+    name: "Golden Apples",
     score: 6,
     resourceBonus: 2,
     resourceType: "apple",
   },
   {
-    name: "Silk",
-    score: 5,
-    resourceBonus: 2,
-    resourceType: "bread",
-  },
-  {
-    name: "Pepper",
-    score: 4,
+    name: "Bleu Cheese",
+    score: 9,
     resourceBonus: 2,
     resourceType: "cheese",
   },
   {
-    name: "Meade",
-    score: 3,
+    name: "Gouda Cheese",
+    score: 6,
+    resourceBonus: 2,
+    resourceType: "cheese",
+  },
+  {
+    name: "Rye Bread",
+    score: 6,
+    resourceBonus: 2,
+    resourceType: "bread",
+  },
+  {
+    name: "Pumpernickel Bread",
+    score: 9,
+    resourceBonus: 2,
+    resourceType: "bread",
+  },
+  {
+    name: "Royal Rooster",
+    score: 8,
     resourceBonus: 2,
     resourceType: "chicken",
-  },
-  {
-    name: "Gems",
-    score: 7,
-    resourceBonus: 3,
-    resourceType: "coin",
-  },
-  {
-    name: "Gold",
-    score: 8,
-    resourceBonus: 4,
-    resourceType: "coin",
   },
 ];
