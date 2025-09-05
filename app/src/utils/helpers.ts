@@ -25,6 +25,25 @@ export function calculatePlayerScore(player: Player): PlayerScore {
     total: 0,
   };
 
+  // Add detailed contraband scores
+  if (player.contrabands) {
+    player.contrabands.forEach((playerContraband) => {
+      const { contraband, quantity } = playerContraband;
+
+      // Add base contraband score
+      totalResourceScore.contraband += contraband.score * quantity;
+
+      // Add resource bonus if applicable
+      if (contraband.resourceBonus && contraband.resourceType) {
+        const resourceType = contraband.resourceType as keyof PlayerScore;
+        if (resourceType in totalResourceScore) {
+          totalResourceScore[resourceType] +=
+            contraband.resourceBonus * quantity;
+        }
+      }
+    });
+  }
+
   totalResourceScore.total = Object.values(totalResourceScore).reduce(
     (acc, score) => acc + score,
     0

@@ -1,4 +1,4 @@
-import type { ResourceName } from "./types.d";
+import type { ResourceName, Contraband } from "./types.d";
 
 export const RESOURCE_SCORE_MAP: Record<ResourceName, number> = {
   apple: 2,
@@ -29,4 +29,43 @@ export const RESOURCE_NAMES: ResourceName[] = [
   "bread",
   "chicken",
   "cheese",
+];
+
+export const CONTRABAND_OPTIONS: Contraband[] = [
+  {
+    name: "Crossbow",
+    score: 6,
+    resourceBonus: 2,
+    resourceType: "apple",
+  },
+  {
+    name: "Silk",
+    score: 5,
+    resourceBonus: 2,
+    resourceType: "bread",
+  },
+  {
+    name: "Pepper",
+    score: 4,
+    resourceBonus: 2,
+    resourceType: "cheese",
+  },
+  {
+    name: "Meade",
+    score: 3,
+    resourceBonus: 2,
+    resourceType: "chicken",
+  },
+  {
+    name: "Gems",
+    score: 7,
+    resourceBonus: 3,
+    resourceType: "coin",
+  },
+  {
+    name: "Gold",
+    score: 8,
+    resourceBonus: 4,
+    resourceType: "coin",
+  },
 ];

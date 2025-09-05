@@ -123,6 +123,35 @@ export const PlayerCard = ({
             {playerScore && `(${playerScore.contraband})`}
           </li>
         </ul>
+
+        {player.contrabands && player.contrabands.length > 0 && (
+          <div className="mt-4">
+            <h4 className="font-medium text-sm mb-2">Detailed Contrabands:</h4>
+            <ul className="text-sm space-y-1">
+              {player.contrabands.map((playerContraband, index) => (
+                <li key={index} className="flex justify-between">
+                  <span>
+                    {playerContraband.contraband.name} x
+                    {playerContraband.quantity}
+                  </span>
+                  <span className="text-muted-foreground">
+                    (
+                    {playerContraband.contraband.score *
+                      playerContraband.quantity}{" "}
+                    pts
+                    {playerContraband.contraband.resourceBonus &&
+                      playerContraband.contraband.resourceType &&
+                      `, +${
+                        playerContraband.contraband.resourceBonus *
+                        playerContraband.quantity
+                      } ${playerContraband.contraband.resourceType}`}
+                    )
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </CardContent>
       {playerScore && (
         <>
