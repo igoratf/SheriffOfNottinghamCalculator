@@ -29,8 +29,7 @@ export interface Player {
   bread: number;
   cheese: number;
   chicken: number;
-  contraband: number; // Keep for backward compatibility
-  contrabands: PlayerContraband[]; // New detailed contraband system
+  contrabands: PlayerContraband[];
   coin: number;
 }
 

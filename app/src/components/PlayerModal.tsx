@@ -35,7 +35,7 @@ export const PlayerModal = ({
             </Button>
           </DialogClose>
           <Button type="submit" form="player-form">
-            Save changes
+            Save player
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -152,7 +152,8 @@ export const PlayerCard = ({
             Coin - {player.coin} {playerScore && `(${playerScore.coin})`}
           </li>
           <li>
-            Contraband - {player.contraband}{" "}
+            Contraband -{" "}
+            {player.contrabands.reduce((total, pc) => total + pc.quantity, 0)}{" "}
             {playerScore && `(${playerScore.contraband})`}
           </li>
         </ul>

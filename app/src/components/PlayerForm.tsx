@@ -52,10 +52,6 @@ export const playerFormSchema = z.object({
     .number()
     .min(0, "Must be at least 0")
     .max(99, "Must be at most 99"),
-  contraband: z.coerce
-    .number()
-    .min(0, "Must be at least 0")
-    .max(99, "Must be at most 99"),
   contrabands: z.array(contrabandSchema).default([]),
   coin: z.coerce
     .number()
@@ -89,7 +85,6 @@ const transformFormDataToPlayer = (formData: any): Player => {
     bread: formData.bread,
     cheese: formData.cheese,
     chicken: formData.chicken,
-    contraband: formData.contraband, // Keep for backward compatibility
     contrabands,
     coin: formData.coin,
   };
@@ -111,7 +106,6 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
       bread: "",
       cheese: "",
       chicken: "",
-      contraband: "",
       contrabands: [],
       coin: "",
     },
@@ -245,31 +239,6 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
           />
 
           <FormField
-            name="contraband"
-            control={control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="contraband">Contraband</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={String(field.value ?? "")}
-                    id="contraband"
-                    placeholder="0"
-                    type="number"
-                    min={0}
-                    max={99}
-                    onChange={handleInputChange(field)}
-                  ></Input>
-                </FormControl>
-                <FormDescription className="sm:whitespace-nowrap">
-                  Amount of contraband
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
             name="coin"
             control={control}
             render={({ field }) => (
@@ -317,20 +286,20 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
             return (
               <div
                 key={field.id}
-                className="flex items-end gap-2 mb-4 p-4 border rounded-lg"
+                className="flex items-end gap-2 mb-4 p-4 border rounded-lg min-w-0"
               >
                 <FormField
                   control={control}
                   name={`contrabands.${index}.contrabandName`}
                   render={({ field }) => (
-                    <FormItem className="flex-1">
+                    <FormItem className="flex-1 min-w-0">
                       <FormLabel>Contraband Type</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full min-w-0">
                             <SelectValue placeholder="Select contraband" />
                           </SelectTrigger>
                         </FormControl>
@@ -342,12 +311,15 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                             <SelectItem
                               key={contraband.name}
                               value={contraband.name}
+                              className="truncate"
                             >
-                              {contraband.name} (Score: {contraband.score}
-                              {contraband.resourceBonus &&
-                                contraband.resourceType &&
-                                `, +${contraband.resourceBonus} ${contraband.resourceType}`}
-                              )
+                              <span className="truncate">
+                                {contraband.name} (Score: {contraband.score}
+                                {contraband.resourceBonus &&
+                                  contraband.resourceType &&
+                                  `, +${contraband.resourceBonus} ${contraband.resourceType}`}
+                                )
+                              </span>
                             </SelectItem>
                           ))}
                         </SelectContent>

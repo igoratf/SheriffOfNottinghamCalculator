@@ -51,7 +51,7 @@ export function calculatePlayerScore(player: Player): PlayerScore {
     cheese: player.cheese * RESOURCE_SCORE_MAP.cheese,
     chicken: player.chicken * RESOURCE_SCORE_MAP.chicken,
     coin: player.coin * RESOURCE_SCORE_MAP.coin,
-    contraband: player.contraband * RESOURCE_SCORE_MAP.contraband,
+    contraband: 0,
     total: 0,
   };
 
