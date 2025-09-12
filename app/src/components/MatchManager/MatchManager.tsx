@@ -79,9 +79,22 @@ export const MatchManager = () => {
         onConfirm={addPlayer}
       />
       {players.length === 0 ? (
-        <span>Insert a new player to calculate a match score</span>
+        <div className="text-center py-8">
+          <p className="text-gray-600 mb-4">
+            Add players to start calculating your Sheriff of Nottingham match
+            score
+          </p>
+          <p className="text-sm text-gray-500">
+            Supports 2-5 players • Track legal goods and contraband • Instant
+            scoring
+          </p>
+        </div>
       ) : (
-        <div className="flex flex-wrap justify-center gap-4 max-w-5xl mb-8">
+        <div
+          className="flex flex-wrap justify-center gap-4 max-w-5xl mb-8"
+          role="region"
+          aria-label="Player Cards"
+        >
           {players.map((player, index) => (
             <PlayerCard
               key={player.name}

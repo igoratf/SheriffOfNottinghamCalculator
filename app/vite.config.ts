@@ -11,4 +11,34 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Performance optimizations
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          ui: [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-select",
+            "@radix-ui/react-tooltip",
+          ],
+        },
+      },
+    },
+    // Enable source maps for better debugging
+    sourcemap: false,
+    // Optimize chunk size
+    chunkSizeWarningLimit: 1000,
+  },
+  // Enable compression
+  server: {
+    compress: true,
+  },
 });
