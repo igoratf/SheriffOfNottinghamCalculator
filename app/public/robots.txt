@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://sheriff-nottingham-calculator.vercel.app/sitemap.xml
+Sitemap: https://sheriff-of-nottingham-calculator.vercel.app//sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
