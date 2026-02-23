@@ -6,6 +6,12 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
+# Copy the prisma folder explicitly to the WORKDIR
+COPY prisma ./prisma/
+
+# Generate the client (this verifies the file is there during build)
+RUN npx prisma generate
+
 # Copy the rest of your app code
 COPY . .
 

@@ -11,16 +11,29 @@ services:
       - "${DB_HOST_PORT}:${DB_CONTAINER_PORT}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # Added: Ensures other services know when the DB is actually "ready"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend      # Look here for the code
+      dockerfile: Dockerfile  # The instructions are right here
     ports:
-      - "3002:3002" # HOST:CONTAINER
+      - "3002:3002"
     environment:
       - PORT=3002
-      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      # Note: We use 'db' as the hostname because it matches the service name above
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?schema=public
     depends_on:
-      - db
+      db:
+        condition: service_healthy # Wait for healthcheck to pass
+    # Added: This runs migrations and starts your app automatically
+    command: >
+      sh -c "npx prisma migrate deploy --schema ./prisma/schema.prisma && npm run start"
 
 volumes:
   postgres_data:
