@@ -15,25 +15,21 @@ model Match {
 }
 
 model MatchPlayer {
-    id      Int   @id @default(autoincrement())
-    matchId Int
-    match   Match @relation(fields: [matchId], references: [id])
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    name      String   @default("Player")
+    match     Match    @relation(fields: [matchId], references: [id])
+    matchId   Int
 
-    playerName String
-
-    // Basic Goods
     appleCount   Int @default(0)
     breadCount   Int @default(0)
     cheeseCount  Int @default(0)
     chickenCount Int @default(0)
 
-    // Currency and calculated bonuses
-    coins          Int @default(0)
-    kingQueenBonus Int @default(0)
-    totalScore     Int @default(0)
-
-    // Relationship to which contrabands they had
     contrabands PlayerContraband[]
+    coins       Int
+
+    totalScore Int @default(0)
 }
 
 model Contraband {
@@ -43,22 +39,19 @@ model Contraband {
     resourceBonus Int     @default(0)
     resourceType  String? // "apple", "bread", "cheese" or "chicken"
 
-    // Back-reference to the bridge table
     playersWithThis PlayerContraband[]
 }
 
-// THE BRIDGE TABLE: Specifically links a player to their contraband cards
+// Since a player can have multiple contrabands and contrabands can be held by multiple players
+// I created this table to join them
 model PlayerContraband {
     id Int @id @default(autoincrement())
 
-    // Relation to the player
     matchPlayer   MatchPlayer @relation(fields: [matchPlayerId], references: [id])
     matchPlayerId Int
 
-    // Relation to the contraband definition
     contraband   Contraband @relation(fields: [contrabandId], references: [id])
     contrabandId Int
 
-    // How many of this specific card they had (e.g., 2 "Silk" cards)
     quantity Int @default(1)
 }

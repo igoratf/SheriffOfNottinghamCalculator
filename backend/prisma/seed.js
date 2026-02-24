@@ -18,15 +18,13 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("🌱 Starting database seed...");
 
-  // 1. Define the base game items
   const contrabands = [
-    // Standard Contraband
     { name: "Pepper", score: 6, resourceBonus: 0, resourceType: null },
     { name: "Mead", score: 7, resourceBonus: 0, resourceType: null },
     { name: "Silk", score: 9, resourceBonus: 0, resourceType: null },
     { name: "Crossbow", score: 7, resourceBonus: 0, resourceType: null },
 
-    // Royal Goods (These give you extra points towards King/Queen)
+    // Royal Goods (These give extra points towards King/Queen)
     { name: "Green Apples", score: 4, resourceBonus: 2, resourceType: "apple" },
     {
       name: "Golden Apples",
@@ -63,7 +61,7 @@ async function main() {
   console.log(`✅ Added ${contrabands.length} Contraband items.`);
 
   // 2. Create a dummy match to test the dashboard
-  const testMatch = await prisma.match.create({
+  await prisma.match.create({
     data: {
       players: {
         create: [
