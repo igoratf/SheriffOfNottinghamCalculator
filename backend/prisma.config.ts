@@ -7,6 +7,6 @@ export default defineConfig({
     seed: "node ./prisma/seed.js",
   },
   datasource: {
-    url: DATABASE_URL,
+    url: DATABASE_URL || "",
   },
 });
