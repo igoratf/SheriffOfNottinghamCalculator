@@ -32,14 +32,8 @@ export interface Player {
   coin: number;
 }
 
-export interface PlayerScore {
-  apple: number;
-  bread: number;
-  cheese: number;
-  chicken: number;
-  coin: number;
-  contraband: number;
-  total: number;
+export interface PlayerScore extends Player {
+  totalScore: number;
 }
 
 export interface KingsAndQueens {
