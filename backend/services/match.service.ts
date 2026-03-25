@@ -4,13 +4,13 @@ import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
 export const calculateMatchScore = (players: Player[]) => {
   const matchPlayers = calculateGoodsScore(players);
 
-  console.log("MATCH PLAYERS ", matchPlayers);
+  const { kings, queens } = calculateKingsAndQueens(matchPlayers);
+  calculateKingQueenBonus(kings, queens);
 
-  const playersScore = calculateKingsAndQueens(matchPlayers);
-  return playersScore;
+  return players;
 };
 
-const calculateGoodsScore = (players: Player[]) => {
+export const calculateGoodsScore = (players: Player[]) => {
   const matchPlayers: PlayerScore[] = players.map((player) => {
     let totalScore = 0;
     totalScore += player.apple * GOODS_SCORES["apple"];
@@ -93,9 +93,7 @@ export const calculateKingsAndQueens = (players: PlayerScore[]) => {
     }
   });
 
-  calculateKingQueenBonus(kings, queens);
-
-  return players;
+  return { kings, queens };
 };
 
 type KingsAndQueens = {
