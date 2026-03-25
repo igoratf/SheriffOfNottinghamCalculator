@@ -33,6 +33,8 @@ export interface Player {
 }
 
 export interface PlayerScore extends Player {
+  king: KingQueenResourceName[];
+  queen: KingQueenResourceName[];
   totalScore: number;
 }
 
