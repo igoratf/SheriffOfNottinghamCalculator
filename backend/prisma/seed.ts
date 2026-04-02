@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import { CONTRABAND_SCORE } from "../constants.js";
+import { ResourceEnum } from "../types.js";
 
 const { Pool } = pg;
 
@@ -19,33 +21,73 @@ async function main() {
   console.log("🌱 Starting database seed...");
 
   const contrabands = [
-    { name: "Pepper", score: 6, resourceBonus: 0, resourceType: null },
-    { name: "Mead", score: 7, resourceBonus: 0, resourceType: null },
-    { name: "Silk", score: 9, resourceBonus: 0, resourceType: null },
-    { name: "Crossbow", score: 7, resourceBonus: 0, resourceType: null },
+    {
+      name: "Pepper",
+      score: CONTRABAND_SCORE.PEPPER,
+      resourceBonus: 0,
+      resourceType: null,
+    },
+    {
+      name: "Mead",
+      score: CONTRABAND_SCORE.MEAD,
+      resourceBonus: 0,
+      resourceType: null,
+    },
+    {
+      name: "Silk",
+      score: CONTRABAND_SCORE.SILK,
+      resourceBonus: 0,
+      resourceType: null,
+    },
+    {
+      name: "Crossbow",
+      score: CONTRABAND_SCORE.CROSSBOW,
+      resourceBonus: 0,
+      resourceType: null,
+    },
 
     // Royal Goods (These give extra points towards King/Queen)
-    { name: "Green Apples", score: 4, resourceBonus: 2, resourceType: "apple" },
+    {
+      name: "Green Apples",
+      score: CONTRABAND_SCORE.GREEN_APPLES,
+      resourceBonus: 2,
+      resourceType: ResourceEnum.APPLE,
+    },
     {
       name: "Golden Apples",
-      score: 6,
+      score: CONTRABAND_SCORE.GOLDEN_APPLES,
       resourceBonus: 3,
-      resourceType: "apple",
+      resourceType: ResourceEnum.APPLE,
     },
     {
       name: "Gouda Cheese",
-      score: 6,
+      score: CONTRABAND_SCORE.GOUDA_CHEESE,
       resourceBonus: 2,
-      resourceType: "cheese",
+      resourceType: ResourceEnum.CHEESE,
     },
-    { name: "Bleu Cheese", score: 9, resourceBonus: 3, resourceType: "cheese" },
-    { name: "Rye Bread", score: 4, resourceBonus: 2, resourceType: "bread" },
-    { name: "Pumpernickel", score: 6, resourceBonus: 3, resourceType: "bread" },
+    {
+      name: "Bleu Cheese",
+      score: CONTRABAND_SCORE.BLEU_CHEESE,
+      resourceBonus: 3,
+      resourceType: ResourceEnum.CHEESE,
+    },
+    {
+      name: "Rye Bread",
+      score: CONTRABAND_SCORE.RYE_BREAD,
+      resourceBonus: 2,
+      resourceType: ResourceEnum.BREAD,
+    },
+    {
+      name: "Pumpernickel",
+      score: CONTRABAND_SCORE.PUMPERNICKEL_BREAD,
+      resourceBonus: 3,
+      resourceType: ResourceEnum.BREAD,
+    },
     {
       name: "Royal Rooster",
-      score: 8,
+      score: CONTRABAND_SCORE.ROYAL_ROOSTER,
       resourceBonus: 2,
-      resourceType: "chicken",
+      resourceType: ResourceEnum.CHICKEN,
     },
   ];
 
@@ -66,7 +108,7 @@ async function main() {
       players: {
         create: [
           {
-            playerName: "Prince John",
+            name: "Prince John",
             appleCount: 5,
             breadCount: 2,
             cheeseCount: 0,
@@ -75,7 +117,7 @@ async function main() {
             totalScore: 35, // Placeholder calculated score
           },
           {
-            playerName: "Robin Hood",
+            name: "Robin Hood",
             appleCount: 0,
             breadCount: 4,
             cheeseCount: 3,

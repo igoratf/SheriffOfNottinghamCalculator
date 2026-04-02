@@ -1,5 +1,8 @@
 import { GOODS_SCORES, KINGS_BONUS, QUEENS_BONUS } from "../constants.js";
 import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
+import { PrismaClient, type MatchPlayer } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const calculateMatchScore = (players: Player[]) => {
   const matchPlayers = calculateGoodsScore(players);
@@ -11,6 +14,39 @@ export const calculateMatchScore = (players: Player[]) => {
   }, 0);
 
   return { matchPlayers, matchTotalScore };
+};
+
+const saveMatch = async (players: Player[]) => {
+  const { matchPlayers, matchTotalScore } = calculateMatchScore(players);
+
+  const match = await prisma.match.create({
+    data: {
+      totalScore: matchTotalScore,
+      players: {
+        create: matchPlayers.map((player) => ({
+          name: player.name,
+          appleCount: player.apple,
+          breadCount: player.bread,
+          cheeseCount: player.cheese,
+          chickenCount: player.chicken,
+          coins: player.coin,
+          king: player.king,
+          queen: player.queen,
+          score: player.totalScore,
+          contrabands: {
+            create: player.contrabands.map((contraband) => ({
+              quantity: contraband.quantity,
+              contraband: {
+                connect: {
+                  name: contraband.name,
+                },
+              },
+            })),
+          },
+        })),
+      },
+    },
+  });
 };
 
 export const calculateGoodsScore = (players: Player[]) => {

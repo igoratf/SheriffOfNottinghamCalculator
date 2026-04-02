@@ -1,3 +1,10 @@
+export enum ResourceEnum {
+  APPLE = "apple",
+  BREAD = "bread",
+  CHEESE = "cheese",
+  CHICKEN = "chicken",
+}
+
 export type ResourceName =
   | "apple"
   | "bread"
