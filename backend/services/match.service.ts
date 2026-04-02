@@ -6,8 +6,11 @@ export const calculateMatchScore = (players: Player[]) => {
 
   const { kings, queens } = calculateKingsAndQueens(matchPlayers);
   calculateKingQueenBonus(kings, queens);
+  const matchTotalScore = matchPlayers.reduce((acc, player) => {
+    return acc + player.totalScore;
+  }, 0);
 
-  return matchPlayers;
+  return { matchPlayers, matchTotalScore };
 };
 
 export const calculateGoodsScore = (players: Player[]) => {
