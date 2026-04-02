@@ -113,7 +113,7 @@ const calculateKingQueenBonus = (
     PlayerScore[],
   ][];
 
-  kingsEntries.map(([resource, players]) => {
+  kingsEntries.forEach(([resource, players]) => {
     let scoreBonus = 0;
     if (players.length > 1) {
       scoreBonus = Math.floor(
@@ -133,14 +133,18 @@ const calculateKingQueenBonus = (
     return playersWithBonus;
   });
 
-  queensEntries.map(([resource, players]) => {
+  queensEntries.forEach(([resource, players]) => {
     if (kings[resource].length > 1) return;
 
     const scoreBonus = Math.floor(QUEENS_BONUS[resource] / players.length);
-    players.forEach((player) => {
-      player.queen.push(resource);
-      player.totalScore += scoreBonus;
-    });
+
+    const playersWithBonus = players.map((player) => ({
+      ...player,
+      queen: [...player.queen, resource],
+      totalScore: (player.totalScore += scoreBonus),
+    }));
+
+    return playersWithBonus;
   });
 
   return { kingsEntries, queensEntries };
