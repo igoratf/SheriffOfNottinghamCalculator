@@ -7,7 +7,7 @@ export const calculateMatchScore = (players: Player[]) => {
   const { kings, queens } = calculateKingsAndQueens(matchPlayers);
   calculateKingQueenBonus(kings, queens);
 
-  return players;
+  return matchPlayers;
 };
 
 export const calculateGoodsScore = (players: Player[]) => {
@@ -124,10 +124,13 @@ const calculateKingQueenBonus = (
       scoreBonus = KINGS_BONUS[resource];
     }
 
-    players.forEach((player) => {
-      player.king.push(resource);
-      player.totalScore += scoreBonus;
-    });
+    const playersWithBonus = players.map((player) => ({
+      ...player,
+      king: [...player.king, resource],
+      totalScore: (player.totalScore += scoreBonus),
+    }));
+
+    return playersWithBonus;
   });
 
   queensEntries.map(([resource, players]) => {
@@ -170,13 +173,20 @@ const calculateContrabandBonus = (player: Player) => {
   if (!player.contrabands?.length) return player;
 
   const playerContrabands = player.contrabands;
-  playerContrabands.map((playerContraband) => {
-    const { resourceType, resourceBonus } = playerContraband;
-    if (resourceType && resourceBonus && resourceType in player) {
-      player[resourceType as KingQueenResourceName] +=
-        resourceBonus * playerContraband.quantity;
-    }
-  });
+  const playerWithContrabandBonus = playerContrabands.map(
+    (playerContraband) => {
+      const { resourceType, resourceBonus } = playerContraband;
+      if (resourceType && resourceBonus && resourceType in player) {
+        return {
+          ...player,
+          [resourceType]: (player[resourceType as KingQueenResourceName] +=
+            resourceBonus * playerContraband.quantity),
+        };
+      }
 
-  return player;
+      return player;
+    },
+  );
+
+  return playerWithContrabandBonus;
 };
