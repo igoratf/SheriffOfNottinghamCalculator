@@ -1,7 +1,5 @@
 generator client {
     provider = "prisma-client-js"
-    // I recommend removing 'output' for now to use the default location
-    // unless you have a specific reason to keep it custom.
 }
 
 datasource db {

@@ -114,7 +114,7 @@ async function main() {
             cheeseCount: 0,
             chickenCount: 1,
             coins: 15,
-            totalScore: 35, // Placeholder calculated score
+            score: 35, // Placeholder calculated score
           },
           {
             name: "Robin Hood",
@@ -123,7 +123,7 @@ async function main() {
             cheeseCount: 3,
             chickenCount: 0,
             coins: 50,
-            totalScore: 65, // Placeholder calculated score
+            score: 65, // Placeholder calculated score
           },
         ],
       },

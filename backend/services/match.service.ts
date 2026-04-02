@@ -1,8 +1,13 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { GOODS_SCORES, KINGS_BONUS, QUEENS_BONUS } from "../constants.js";
 import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
-import { PrismaClient, type MatchPlayer } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+
+export const prisma = new PrismaClient({ adapter });
 
 export const calculateMatchScore = (players: Player[]) => {
   const matchPlayers = calculateGoodsScore(players);
@@ -16,7 +21,7 @@ export const calculateMatchScore = (players: Player[]) => {
   return { matchPlayers, matchTotalScore };
 };
 
-const saveMatch = async (players: Player[]) => {
+export const saveMatch = async (players: Player[]) => {
   const { matchPlayers, matchTotalScore } = calculateMatchScore(players);
 
   const match = await prisma.match.create({
@@ -47,6 +52,8 @@ const saveMatch = async (players: Player[]) => {
       },
     },
   });
+
+  return match;
 };
 
 export const calculateGoodsScore = (players: Player[]) => {
