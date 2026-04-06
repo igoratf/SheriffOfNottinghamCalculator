@@ -23,7 +23,6 @@ export const calculateMatchScore = async (players: Player[]) => {
 
 export const saveMatch = async (players: Player[]) => {
   const { matchPlayers, matchTotalScore } = await calculateMatchScore(players);
-  console.log("match total score ", matchTotalScore);
 
   const match = await prisma.match.create({
     data: {
@@ -240,4 +239,22 @@ const calculateContrabandBonus = (player: Player) => {
   );
 
   return playerWithContrabandBonus;
+};
+
+export const getMatches = async () => {
+  const matches = await prisma.match.findMany();
+  return matches;
+};
+
+export const getMatch = async (id: string) => {
+  const match = await prisma.match.findUnique({
+    where: { id: parseInt(id) },
+    select: {
+      totalScore: true,
+      createdAt: true,
+      players: true,
+    },
+  });
+
+  return match;
 };
