@@ -1,7 +1,8 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { GOODS_SCORES, KINGS_BONUS, QUEENS_BONUS } from "../constants.js";
 import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type Match } from "@prisma/client";
+import type { MatchWithPlayers } from "./types.js";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -51,9 +52,39 @@ export const saveMatch = async (players: Player[]) => {
         })),
       },
     },
+    include: {
+      players: {
+        include: {
+          contrabands: {
+            include: {
+              contraband: true,
+            },
+          },
+        },
+      },
+    },
   });
 
-  return match;
+  const formattedMatch = mapMatchToResponse(match);
+  return formattedMatch;
+};
+
+export const mapMatchToResponse = (match: MatchWithPlayers) => {
+  const formattedPlayers = match.players.map((player) => ({
+    ...player,
+    appleScore: player.appleCount * GOODS_SCORES["apple"],
+    breadScore: player.breadCount * GOODS_SCORES["bread"],
+    cheeseScore: player.cheeseCount * GOODS_SCORES["cheese"],
+    chickenScore: player.chickenCount * GOODS_SCORES["chicken"],
+    contrabands: player.contrabands.map((c) => ({
+      quantity: c.quantity,
+      totalScore: c.quantity * c.contraband.score,
+      ...c.contraband,
+    })),
+  }));
+  const formattedMatch = { ...match, players: formattedPlayers };
+
+  return formattedMatch;
 };
 
 export const calculateGoodsScore = async (players: Player[]) => {
@@ -249,12 +280,26 @@ export const getMatches = async () => {
 export const getMatch = async (id: string) => {
   const match = await prisma.match.findUnique({
     where: { id: parseInt(id) },
-    select: {
-      totalScore: true,
-      createdAt: true,
-      players: true,
+    include: {
+      players: {
+        include: {
+          contrabands: {
+            include: {
+              contraband: true,
+            },
+            omit: {
+              matchPlayerId: true,
+              contrabandId: true,
+            },
+          },
+        },
+      },
     },
   });
 
-  return match;
+  if (match) {
+    return mapMatchToResponse(match);
+  } else {
+    throw new Error("Match doesn't exist");
+  }
 };
