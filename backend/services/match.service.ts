@@ -9,8 +9,8 @@ const adapter = new PrismaPg({
 
 export const prisma = new PrismaClient({ adapter });
 
-export const calculateMatchScore = (players: Player[]) => {
-  const matchPlayers = calculateGoodsScore(players);
+export const calculateMatchScore = async (players: Player[]) => {
+  const matchPlayers = await calculateGoodsScore(players);
 
   const { kings, queens } = calculateKingsAndQueens(matchPlayers);
   calculateKingQueenBonus(kings, queens);
@@ -22,7 +22,8 @@ export const calculateMatchScore = (players: Player[]) => {
 };
 
 export const saveMatch = async (players: Player[]) => {
-  const { matchPlayers, matchTotalScore } = calculateMatchScore(players);
+  const { matchPlayers, matchTotalScore } = await calculateMatchScore(players);
+  console.log("match total score ", matchTotalScore);
 
   const match = await prisma.match.create({
     data: {
@@ -39,7 +40,7 @@ export const saveMatch = async (players: Player[]) => {
           queen: player.queen,
           score: player.totalScore,
           contrabands: {
-            create: player.contrabands.map((contraband) => ({
+            create: player.contrabands?.map((contraband) => ({
               quantity: contraband.quantity,
               contraband: {
                 connect: {
@@ -56,7 +57,12 @@ export const saveMatch = async (players: Player[]) => {
   return match;
 };
 
-export const calculateGoodsScore = (players: Player[]) => {
+export const calculateGoodsScore = async (players: Player[]) => {
+  const contrabands = await prisma.contraband.findMany();
+  const contrabandsMap = new Map(
+    contrabands.map((contraband) => [contraband.name, contraband]),
+  );
+
   const matchPlayers: PlayerScore[] = players.map((player) => {
     let totalScore = 0;
     totalScore += player.apple * GOODS_SCORES["apple"];
@@ -66,7 +72,8 @@ export const calculateGoodsScore = (players: Player[]) => {
     totalScore += player.coin;
     if (player.contrabands) {
       totalScore += player.contrabands.reduce(
-        (acc, curr) => acc + curr.quantity * curr.score,
+        (acc, curr) =>
+          acc + curr.quantity * (contrabandsMap.get(curr.name)?.score || 0),
         0,
       );
     }
@@ -170,13 +177,10 @@ const calculateKingQueenBonus = (
       scoreBonus = KINGS_BONUS[resource];
     }
 
-    const playersWithBonus = players.map((player) => ({
-      ...player,
-      king: [...player.king, resource],
-      totalScore: (player.totalScore += scoreBonus),
-    }));
-
-    return playersWithBonus;
+    players.forEach((player) => {
+      player.king.push(resource);
+      player.totalScore += scoreBonus;
+    });
   });
 
   queensEntries.forEach(([resource, players]) => {
@@ -184,13 +188,10 @@ const calculateKingQueenBonus = (
 
     const scoreBonus = Math.floor(QUEENS_BONUS[resource] / players.length);
 
-    const playersWithBonus = players.map((player) => ({
-      ...player,
-      queen: [...player.queen, resource],
-      totalScore: (player.totalScore += scoreBonus),
-    }));
-
-    return playersWithBonus;
+    players.forEach((player) => {
+      player.queen.push(resource);
+      player.totalScore += scoreBonus;
+    });
   });
 
   return { kingsEntries, queensEntries };

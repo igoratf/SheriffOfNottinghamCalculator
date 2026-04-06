@@ -9,6 +9,7 @@
   "main": "app.js",
   "scripts": {
     "dev": "tsx watch app.ts",
+    "seed": "tsx prisma/seed.ts",
     "build": "tsc",
     "start": "node dist/app.js",
     "test": "tsx --test"
