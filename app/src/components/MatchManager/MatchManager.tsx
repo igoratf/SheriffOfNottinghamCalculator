@@ -29,7 +29,7 @@ export const MatchManager = () => {
   const addPlayer = (player: Player) => {
     if (players.length < 5) {
       const alreadyExists = players.find(
-        (p) => player.name.toLowerCase() === p.name.toLowerCase()
+        (p) => player.name.toLowerCase() === p.name.toLowerCase(),
       );
       if (alreadyExists) {
         // Move this to player form or toast
@@ -46,7 +46,7 @@ export const MatchManager = () => {
 
   const removePlayer = (player: Player) => {
     setPlayers((prevPlayers) =>
-      prevPlayers.filter((p) => p.name !== player.name)
+      prevPlayers.filter((p) => p.name !== player.name),
     );
     setErrorMessage("");
   };

@@ -67,7 +67,7 @@ const transformFormDataToPlayer = (formData: any): Player => {
   const contrabands: PlayerContraband[] = formData.contrabands.map(
     (item: any) => {
       const contraband = CONTRABAND_OPTIONS.find(
-        (c) => c.name === item.contrabandName
+        (c) => c.name === item.contrabandName,
       );
       if (!contraband) {
         throw new Error(`Contraband not found: ${item.contrabandName}`);
@@ -76,7 +76,7 @@ const transformFormDataToPlayer = (formData: any): Player => {
         contraband,
         quantity: item.quantity,
       };
-    }
+    },
   );
 
   return {
@@ -306,7 +306,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                         <SelectContent>
                           {CONTRABAND_OPTIONS.filter(
                             (contraband) =>
-                              !usedContrabands.includes(contraband.name)
+                              !usedContrabands.includes(contraband.name),
                           ).map((contraband) => (
                             <SelectItem
                               key={contraband.name}

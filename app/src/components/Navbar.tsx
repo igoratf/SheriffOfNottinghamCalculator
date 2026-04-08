@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export const Navbar = () => {
   return (
     <nav className="bg-white shadow p-4 flex items-center">
@@ -9,20 +11,20 @@ export const Navbar = () => {
 
       <ul className="flex space-x-6 ml-8">
         <li>
-          <a
-            href="#"
+          <Link
+            to="/"
             className="text-gray-700 hover:text-amber-600 transition-colors"
           >
             Home
-          </a>
+          </Link>
         </li>
         <li>
-          <a
-            href="#"
-            className="text-gray-400 cursor-not-allowed opacity-50 pointer-events-none"
+          <Link
+            to="/ranking"
+            className="text-gray-700 hover:text-amber-600 transition-colors"
           >
             Ranking
-          </a>
+          </Link>
         </li>
       </ul>
     </nav>

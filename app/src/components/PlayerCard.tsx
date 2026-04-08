@@ -71,27 +71,27 @@ export const PlayerCard = ({
   const kings = useMemo(
     () =>
       kingsAndQueens?.kings || ({} as Record<KingQueenResourceName, Player[]>),
-    [kingsAndQueens?.kings]
+    [kingsAndQueens?.kings],
   );
   const queens = useMemo(
     () =>
       kingsAndQueens?.queens || ({} as Record<KingQueenResourceName, Player[]>),
-    [kingsAndQueens?.queens]
+    [kingsAndQueens?.queens],
   );
 
   const kingResources = useMemo(
     () =>
       Object.keys(kings).filter((resource) =>
-        kings[resource as KingQueenResourceName].includes(player)
+        kings[resource as KingQueenResourceName].includes(player),
       ),
-    [kings, player]
+    [kings, player],
   );
   const queenResources = useMemo(
     () =>
       Object.keys(queens).filter((resource) =>
-        queens[resource as KingQueenResourceName].includes(player)
+        queens[resource as KingQueenResourceName].includes(player),
       ),
-    [queens, player]
+    [queens, player],
   );
 
   const isTiedForFirst = useMemo(() => {

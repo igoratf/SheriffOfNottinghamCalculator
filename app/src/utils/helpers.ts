@@ -17,7 +17,7 @@ export function capitalizeFirstLetter(resource: string) {
 // Helper function to get effective resource quantities for king/queen calculations
 // This includes contraband resource bonuses
 function getEffectiveResourceQuantities(
-  player: Player
+  player: Player,
 ): Record<KingQueenResourceName, number> {
   const effectiveQuantities: Record<KingQueenResourceName, number> = {
     apple: player.apple,
@@ -67,7 +67,7 @@ export function calculatePlayerScore(player: Player): PlayerScore {
 
   totalResourceScore.total = Object.values(totalResourceScore).reduce(
     (acc, score) => acc + score,
-    0
+    0,
   );
 
   return totalResourceScore;
@@ -79,7 +79,7 @@ export function calculateScore(players: Player[]): Record<string, PlayerScore> {
       const score = calculatePlayerScore(player);
       return { ...acc, [player.name]: score };
     },
-    {}
+    {},
   );
 
   const { kings, queens } = calculateKingsAndQueens(players);
@@ -101,16 +101,17 @@ export function calculateScore(players: Player[]): Record<string, PlayerScore> {
         const totalBonus = Math.floor(queenBonus / resourceQueens.length);
         resourceQueens.forEach(
           (player: Player) =>
-            (playerScoreMap[player.name]["total"] += totalBonus)
+            (playerScoreMap[player.name]["total"] += totalBonus),
         );
       }
       // If there are multiple kings, the king and queen bonus are added and split between them. There's no payout for queens
     } else {
       const totalBonus = Math.floor(
-        (kingBonus + queenBonus) / resourceKings.length
+        (kingBonus + queenBonus) / resourceKings.length,
       );
       resourceKings.forEach(
-        (player: Player) => (playerScoreMap[player.name]["total"] += totalBonus)
+        (player: Player) =>
+          (playerScoreMap[player.name]["total"] += totalBonus),
       );
     }
   });
@@ -153,7 +154,7 @@ function compareResourceScore(
   kingsMap: Record<KingQueenResourceName, Player[]>,
   queensMap: Record<KingQueenResourceName, Player[]>,
   resource: KingQueenResourceName,
-  player: Player
+  player: Player,
 ) {
   const resourceKings = kingsMap[resource];
   const resourceQueens = queensMap[resource];
