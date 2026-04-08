@@ -1,4 +1,4 @@
-import { type Request, type Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 import * as matchService from "../services/match.service.js";
 
 export const saveMatch = async (req: Request, res: Response) => {
@@ -11,9 +11,17 @@ export const getMatches = async (_req: Request, res: Response) => {
   res.json({ data: matches });
 };
 
-export const getMatch = async (req: Request, res: Response) => {
-  console.log("req params id ", req.params.id);
+export const getMatch = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const matchId = req.params.id ?? "";
-  const match = await matchService.getMatch(matchId as string);
-  res.json({ data: match });
+
+  try {
+    const match = await matchService.getMatch(matchId as string);
+    return res.json({ data: match });
+  } catch (err) {
+    next(err);
+  }
 };

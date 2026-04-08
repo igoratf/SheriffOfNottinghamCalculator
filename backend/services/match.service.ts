@@ -3,6 +3,7 @@ import { GOODS_SCORES, KINGS_BONUS, QUEENS_BONUS } from "../constants.js";
 import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
 import { PrismaClient, type Match } from "@prisma/client";
 import type { MatchWithPlayers } from "./types.js";
+import { AppError } from "../utils/AppError.js";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -300,6 +301,6 @@ export const getMatch = async (id: string) => {
   if (match) {
     return mapMatchToResponse(match);
   } else {
-    throw new Error("Match doesn't exist");
+    throw new AppError("Match not found", 404);
   }
 };
