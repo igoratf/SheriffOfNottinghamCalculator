@@ -1,22 +1,6 @@
-import { API_URL } from "@/api";
 import { MatchManager } from "@/components/MatchManager/MatchManager";
-import { useEffect } from "react";
 
 export const HomePage = () => {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${API_URL}/v1/match`);
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        const result = await response.json();
-        console.log("RESULT ", result);
-      } catch (err) {
-        console.log("err ", err);
-      }
-    };
-    fetchData();
-  }, []);
   return (
     <main className="flex items-center p-12 justify-start mt-auto min-h-screen flex-col">
       <header className="text-center mb-8">
