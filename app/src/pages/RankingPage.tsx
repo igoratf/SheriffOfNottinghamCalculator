@@ -1,6 +1,8 @@
 import { fetchMatches } from "@/api/api";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Match, Player } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 
 export const RankingPage = () => {
   const {
@@ -34,22 +36,30 @@ export const RankingPage = () => {
       )}
 
       <ul className="flex flex-col gap-4">
-        {matches.map((match) => (
-          <li
+        {/* TODO: Create FE type or schema from backend */}
+        {matches.map((match: Match) => (
+          <Link
+            to={`/match/$matchId`}
+            params={{ matchId: match.id.toString() }}
             key={match.id}
-            className="p-4 bg-gray-200 flex w-md justify-between rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 bg-gray-200 flex flex-col w-md gap-4 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
           >
-            <span className="flex-2 text-gray-800 font-medium">
-              {new Date(match.createdAt).toLocaleString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </span>
-            <span className="text-left flex-1 text-gray-800 font-medium">
-              Total score: {match.totalScore}
-            </span>
-          </li>
+            <div className="flex justify-between">
+              <span className="flex-2 text-gray-800 font-medium">
+                {new Date(match.createdAt).toLocaleString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </span>
+              <span className="text-left flex-1 text-gray-800 font-medium">
+                Total score: {match.totalScore}
+              </span>
+            </div>
+            <p className="text-sm text-gray-500">
+              {match.players.map((player: Player) => player.name).join(", ")}
+            </p>
+          </Link>
         ))}
       </ul>
     </main>

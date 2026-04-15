@@ -11,6 +11,8 @@ export const fetchMatches = async () => {
 };
 
 export const fetchMatchById = async (id: string) => {
+  if (!id) throw new Error("Match id not provided)");
+
   const response = await fetch(`${API_URL}/v1/match/${id}`);
   console.log("Response ", response);
   if (!response.ok) {

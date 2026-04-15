@@ -8,7 +8,7 @@ export const saveMatch = async (req: Request, res: Response) => {
 
 export const getMatches = async (_req: Request, res: Response) => {
   const matches = await matchService.getMatches();
-  res.json({ data: matches });
+  res.json({ matches: matches });
 };
 
 export const getMatch = async (
@@ -20,7 +20,7 @@ export const getMatch = async (
 
   try {
     const match = await matchService.getMatch(matchId as string);
-    return res.json({ data: match });
+    return res.json({ match: match });
   } catch (err) {
     next(err);
   }

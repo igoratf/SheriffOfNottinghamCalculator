@@ -47,3 +47,11 @@ export interface KingsAndQueens {
   kings: Record<KingQueenResourceName, Player[]>;
   queens: Record<KingQueenResourceName, Player[]>;
 }
+
+// TODO: Replace with backend schema in the future
+export interface Match {
+  id: number;
+  createdAt: string;
+  totalScore: number;
+  players: Player[];
+}

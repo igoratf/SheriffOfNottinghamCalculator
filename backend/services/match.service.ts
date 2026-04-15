@@ -274,7 +274,16 @@ const calculateContrabandBonus = (player: Player) => {
 };
 
 export const getMatches = async () => {
-  const matches = await prisma.match.findMany();
+  const matches = await prisma.match.findMany({
+    include: {
+      players: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
   return matches;
 };
 
