@@ -38,10 +38,10 @@ export const RankingPage = () => {
             to={`/match/$matchId`}
             params={{ matchId: match.id.toString() }}
             key={match.id}
-            className="px-4 py-2 bg-gray-200 flex flex-col w-md gap-4 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 bg-slate-200 flex flex-col w-md gap-4 rounded-lg cursor-pointer hover:bg-slate-300 ring-2 ring-slate-200 hover:ring-blue-300"
           >
             <div className="flex justify-between">
-              <span className="flex-2 text-gray-800 font-medium">
+              <span className="flex-2 text-gray-600 font-medium">
                 {new Date(match.createdAt).toLocaleString("en-US", {
                   month: "long",
                   day: "numeric",
