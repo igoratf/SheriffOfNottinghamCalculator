@@ -5,18 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 
 export const RankingPage = () => {
-  const {
-    data: matchesData,
-    error,
-    isLoading,
-  } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["matches"],
     queryFn: fetchMatches,
   });
 
   if (error) return <p>Error: {error.message}</p>;
 
-  const matches = matchesData?.data || [];
+  const { matches } = data;
 
   return (
     <main className="flex items-center p-12 justify-start mt-auto min-h-screen flex-col">
