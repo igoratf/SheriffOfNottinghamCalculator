@@ -7,42 +7,35 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@radix-ui/react-select";
 import { Input } from "./ui/input";
 import type { FormData } from "./PlayerForm";
 import { useQuery } from "@tanstack/react-query";
 import { fetchContrabands } from "@/api/api";
 import { Skeleton } from "./ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import type { Contraband } from "@/utils/types";
 
 interface ContrabandsSelect {
   control: Control<FormData>;
-  name: keyof FormData;
-  handleInputChange: (field: { onChange: (value: string) => void }) => void;
 }
 
-export const ContrabandsSelect = ({
-  control,
-  name,
-  handleInputChange,
-}: ContrabandsSelect) => {
+export const ContrabandsSelect = ({ control }: ContrabandsSelect) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["contrabands"],
     queryFn: fetchContrabands,
   });
 
-  console.log("Contrabands ", data);
-
-  const watchedValue = useWatch({ control, name: "contrabands" });
+  const watchedValue = useWatch({ control, name: "contrabands" }) || [];
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name,
+    name: "contrabands",
   });
 
   if (error) return <p>Error: {error.message}</p>;
@@ -51,7 +44,14 @@ export const ContrabandsSelect = ({
     return <Skeleton className="h-8" aria-label="Loading contrabands" />;
   }
 
-  const contrabandOptions = data.contrabands;
+  const contrabandOptions = data?.contrabands || [];
+
+  const formatContraband = (contraband: Contraband) => {
+    return (
+      `${contraband.name} (Score: ${contraband.score}` +
+      `${contraband.resourceType && contraband.resourceBonus ? `, +${contraband.resourceBonus} ${contraband.resourceType}` : ""})`
+    );
+  };
 
   return (
     <div className="mt-4">
@@ -61,55 +61,64 @@ export const ContrabandsSelect = ({
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => append({ contrabandName: "", quantity: 1 })}
+          onClick={() => append({ contraband: undefined, quantity: 1 })}
         >
           Add Contraband
         </Button>
       </div>
 
       {fields.map((field, index) => {
-        const usedContrabands = (watchedValue || [])
-          .map((c, i) => (i !== index ? c.contrabandName : ""))
-          .filter(Boolean);
+        console.log("FIELD ", field);
+        const currentSelection = watchedValue[index]?.contraband?.name;
+
+        const filteredOptions = contrabandOptions.filter((option) => {
+          const isUsedElsewhere = watchedValue.some(
+            (item, i) => i !== index && item?.contraband?.name === option.name,
+          );
+
+          // Keep the  option if it's NOT used elsewhere OR if it is the current selection
+          return !isUsedElsewhere || option.name === currentSelection;
+        });
 
         return (
           <div
             key={field.id}
-            className="flex items-end gap-2 mb-4 p-4 border rounded-lg min-w-0"
+            className="flex items-start gap-2 mb-4 p-4 border rounded-lg min-w-0"
           >
             <FormField
               control={control}
-              name={`contrabands.${index}.contrabandName`}
+              name={`contrabands.${index}.contraband`}
               render={({ field }) => (
                 <FormItem className="flex-1 min-w-0">
                   <FormLabel>Contraband Type</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={(value) => {
+                      const selected = contrabandOptions.find(
+                        (c) => c.name === value,
+                      );
+                      field.onChange(selected);
+                    }}
+                    value={field.value?.name ?? ""}
+                  >
                     <FormControl>
                       <SelectTrigger className="w-full min-w-0">
                         <SelectValue placeholder="Select contraband" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {contrabandOptions
-                        .filter(
-                          (contraband) =>
-                            !usedContrabands.includes(contraband.name),
-                        )
-                        .map((contraband) => (
+                      {filteredOptions.map((contraband) => {
+                        return (
                           <SelectItem
                             key={contraband.name}
                             value={contraband.name}
                             className="truncate"
                           >
                             <span className="truncate">
-                              {contraband.name} (Score: {contraband.score}
-                              {contraband.resourceBonus &&
-                                contraband.resourceType &&
-                                `, +${contraband.resourceBonus} ${contraband.resourceType}`}
-                              )
+                              {formatContraband(contraband)}
                             </span>
                           </SelectItem>
-                        ))}
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -126,12 +135,11 @@ export const ContrabandsSelect = ({
                   <FormControl>
                     <Input
                       {...field}
-                      value={String(field.value ?? "")}
+                      value={(field.value as string) ?? "1"}
                       placeholder="1"
                       type="number"
                       min={1}
                       max={99}
-                      onChange={handleInputChange(field)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -140,6 +148,7 @@ export const ContrabandsSelect = ({
             />
 
             <Button
+              className="mt-6"
               type="button"
               variant="destructive"
               size="sm"

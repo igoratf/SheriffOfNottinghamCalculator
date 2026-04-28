@@ -21,7 +21,6 @@ export const MatchPage = () => {
     );
 
   const { totalScore, createdAt, players } = data.match;
-  console.log(data);
 
   return (
     <main className="flex items-center p-12 justify-start mt-auto min-h-screen flex-col">

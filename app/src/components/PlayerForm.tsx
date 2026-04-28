@@ -12,47 +12,20 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 
-import type { Player } from "@/utils/types.d";
 import { ContrabandsSelect } from "./ContrabandsSelect";
 import { playerFormSchema } from "@/utils/schemas";
 
 interface PlayerFormProps {
-  onSubmit: (data: Player) => void;
+  onSubmit: (data: FormData) => void;
 }
 
-/* const transformFormDataToPlayer = (formData: FormData): Player => {
-  const contrabands: PlayerContraband[] = formData.contrabands?.map(
-    (item: Contraband) => {
-      const contraband = CONTRABAND_OPTIONS.find(
-        (c) => c.name === item.contrabandName,
-      );
-      if (!contraband) {
-        throw new Error(`Contraband not found: ${item.contrabandName}`);
-      }
-      return {
-        contraband,
-        quantity: item.quantity,
-      };
-    },
-  );
-
-  return {
-    name: formData.name,
-    apple: formData.apple,
-    bread: formData.bread,
-    cheese: formData.cheese,
-    chicken: formData.chicken,
-    contrabands,
-    coin: formData.coin,
-  };
-}; */
-
-const handleInputChange =
-  (field: { onChange: (value: string) => void }) =>
-  (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/^0+(?!$)/, "");
-    field.onChange(value);
-  };
+const handleInputChange = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  field: { onChange: (value: string) => void },
+) => {
+  const value = e.target.value.replace(/^0+(?!$)/, "");
+  field.onChange(value);
+};
 
 export type FormData = z.input<typeof playerFormSchema>;
 
@@ -74,8 +47,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
 
   const handleFormSubmit = (data: FormData) => {
     console.log("DATA SUBMITTED ", data);
-    /* const playerData = transformFormDataToPlayer(data); */
-    /* onSubmit(playerData); */
+    onSubmit(data);
   };
 
   return (
@@ -116,7 +88,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                     type="number"
                     min={0}
                     max={99}
-                    onChange={handleInputChange(field)}
+                    onChange={(e) => handleInputChange(e, field)}
                   ></Input>
                 </FormControl>
                 <FormDescription>Amount of apple</FormDescription>
@@ -139,7 +111,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                     type="number"
                     min={0}
                     max={99}
-                    onChange={handleInputChange(field)}
+                    onChange={(e) => handleInputChange(e, field)}
                   ></Input>
                 </FormControl>
                 <FormDescription>Amount of bread</FormDescription>
@@ -162,7 +134,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                     type="number"
                     min={0}
                     max={99}
-                    onChange={handleInputChange(field)}
+                    onChange={(e) => handleInputChange(e, field)}
                   ></Input>
                 </FormControl>
                 <FormDescription>Amount of cheese</FormDescription>
@@ -183,7 +155,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                     id="chicken"
                     placeholder="0"
                     type="number"
-                    onChange={handleInputChange(field)}
+                    onChange={(e) => handleInputChange(e, field)}
                     min={-1}
                     max={99}
                   ></Input>
@@ -209,7 +181,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                     type="number"
                     min={0}
                     max={99}
-                    onChange={handleInputChange(field)}
+                    onChange={(e) => handleInputChange(e, field)}
                   ></Input>
                 </FormControl>
                 <FormDescription>Amount of coin</FormDescription>
@@ -221,11 +193,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
 
         <hr className="my-4" />
 
-        <ContrabandsSelect
-          control={control}
-          name={"contrabands"}
-          handleInputChange={handleInputChange}
-        />
+        <ContrabandsSelect control={control} />
       </form>
     </Form>
   );

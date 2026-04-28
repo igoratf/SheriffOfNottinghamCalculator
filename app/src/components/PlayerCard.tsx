@@ -31,18 +31,7 @@ const displayContrabandDetails = (contrabands: PlayerContraband[]) => {
         {contrabands.map((playerContraband, index) => (
           <li key={index} className="flex justify-between">
             <span>
-              {playerContraband.contraband.name} x{playerContraband.quantity}
-            </span>
-            <span className="text-muted-foreground">
-              ({playerContraband.contraband.score * playerContraband.quantity}{" "}
-              pts
-              {playerContraband.contraband.resourceBonus &&
-                playerContraband.contraband.resourceType &&
-                `, +${
-                  playerContraband.contraband.resourceBonus *
-                  playerContraband.quantity
-                } ${playerContraband.contraband.resourceType}`}
-              )
+              {playerContraband.contraband?.name} x{playerContraband.quantity}
             </span>
           </li>
         ))}
@@ -136,23 +125,24 @@ export const PlayerCard = ({
       <CardContent>
         <ul>
           <li>
-            Apple - {player.apple} {playerScore && `(${playerScore.apple})`}
+            🍎 Apple - {player.apple} {playerScore && `(${playerScore.apple})`}
           </li>
           <li>
-            Bread - {player.bread} {playerScore && `(${playerScore.bread})`}
+            🍞 Bread - {player.bread} {playerScore && `(${playerScore.bread})`}
           </li>
           <li>
-            Chicken - {player.chicken}{" "}
+            🐔 Chicken - {player.chicken}{" "}
             {playerScore && `(${playerScore.chicken})`}
           </li>
           <li>
-            Cheese - {player.cheese} {playerScore && `(${playerScore.cheese})`}
+            🧀 Cheese - {player.cheese}{" "}
+            {playerScore && `(${playerScore.cheese})`}
           </li>
           <li>
-            Coin - {player.coin} {playerScore && `(${playerScore.coin})`}
+            🪙 Coin - {player.coin} {playerScore && `(${playerScore.coin})`}
           </li>
           <li>
-            Contraband -{" "}
+            💼 Contraband -{" "}
             {player.contrabands.reduce((total, pc) => total + pc.quantity, 0)}{" "}
             {playerScore && `(${playerScore.contraband})`}
           </li>
