@@ -21,3 +21,13 @@ export const fetchMatchById = async (id: string) => {
 
   return response.json();
 };
+
+export const fetchContrabands = async () => {
+  const response = await fetch(`${API_URL}/v1/contraband`);
+  console.log("Response ", response);
+  if (!response.ok) {
+    throw new Error("Failed to fetch contrabands");
+  }
+
+  return response.json();
+};

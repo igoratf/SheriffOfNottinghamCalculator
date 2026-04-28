@@ -1,7 +1,6 @@
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
 import {
   Form,
   FormField,
@@ -12,60 +11,18 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import type { Player, PlayerContraband } from "@/utils/types.d";
-import { CONTRABAND_OPTIONS } from "@/utils/constants";
 
-const contrabandSchema = z.object({
-  contrabandName: z.string().min(1, "Contraband type is required"),
-  quantity: z.coerce
-    .number()
-    .min(1, "Quantity must be at least 1")
-    .max(99, "Quantity must be at most 99"),
-});
-
-export const playerFormSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Name is required")
-    .max(12, "Name must be at most 12 characters"),
-  apple: z.coerce
-    .number()
-    .min(0, "Must be at least 0")
-    .max(99, "Must be at most 99"),
-  bread: z.coerce
-    .number()
-    .min(0, "Must be at least 0")
-    .max(99, "Must be at most 99"),
-  cheese: z.coerce
-    .number()
-    .min(0, "Must be at least 0")
-    .max(99, "Must be at most 99"),
-  chicken: z.coerce
-    .number()
-    .min(0, "Must be at least 0")
-    .max(99, "Must be at most 99"),
-  contrabands: z.array(contrabandSchema).default([]),
-  coin: z.coerce
-    .number()
-    .min(0, "Must be at least 0")
-    .max(99, "Must be at most 99"),
-});
+import type { Player } from "@/utils/types.d";
+import { ContrabandsSelect } from "./ContrabandsSelect";
+import { playerFormSchema } from "@/utils/schemas";
 
 interface PlayerFormProps {
   onSubmit: (data: Player) => void;
 }
 
-const transformFormDataToPlayer = (formData: any): Player => {
-  const contrabands: PlayerContraband[] = formData.contrabands.map(
-    (item: any) => {
+/* const transformFormDataToPlayer = (formData: FormData): Player => {
+  const contrabands: PlayerContraband[] = formData.contrabands?.map(
+    (item: Contraband) => {
       const contraband = CONTRABAND_OPTIONS.find(
         (c) => c.name === item.contrabandName,
       );
@@ -88,7 +45,7 @@ const transformFormDataToPlayer = (formData: any): Player => {
     contrabands,
     coin: formData.coin,
   };
-};
+}; */
 
 const handleInputChange =
   (field: { onChange: (value: string) => void }) =>
@@ -97,29 +54,28 @@ const handleInputChange =
     field.onChange(value);
   };
 
+export type FormData = z.input<typeof playerFormSchema>;
+
 export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
-  const form = useForm({
+  const form = useForm<FormData>({
     resolver: zodResolver(playerFormSchema),
     defaultValues: {
       name: "",
-      apple: "",
-      bread: "",
-      cheese: "",
-      chicken: "",
+      apple: 0,
+      bread: 0,
+      cheese: 0,
+      chicken: 0,
       contrabands: [],
-      coin: "",
+      coin: 0,
     },
   });
 
   const { control, handleSubmit } = form;
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "contrabands",
-  });
 
-  const handleFormSubmit = (data: any) => {
-    const playerData = transformFormDataToPlayer(data);
-    onSubmit(playerData);
+  const handleFormSubmit = (data: FormData) => {
+    console.log("DATA SUBMITTED ", data);
+    /* const playerData = transformFormDataToPlayer(data); */
+    /* onSubmit(playerData); */
   };
 
   return (
@@ -265,104 +221,11 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
 
         <hr className="my-4" />
 
-        <div className="mt-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium">Contrabands</h3>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => append({ contrabandName: "", quantity: 1 })}
-            >
-              Add Contraband
-            </Button>
-          </div>
-
-          {fields.map((field, index) => {
-            const usedContrabands = (form.watch("contrabands") || [])
-              .map((c, i) => (i !== index ? c.contrabandName : ""))
-              .filter(Boolean);
-
-            return (
-              <div
-                key={field.id}
-                className="flex items-end gap-2 mb-4 p-4 border rounded-lg min-w-0"
-              >
-                <FormField
-                  control={control}
-                  name={`contrabands.${index}.contrabandName`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1 min-w-0">
-                      <FormLabel>Contraband Type</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full min-w-0">
-                            <SelectValue placeholder="Select contraband" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {CONTRABAND_OPTIONS.filter(
-                            (contraband) =>
-                              !usedContrabands.includes(contraband.name),
-                          ).map((contraband) => (
-                            <SelectItem
-                              key={contraband.name}
-                              value={contraband.name}
-                              className="truncate"
-                            >
-                              <span className="truncate">
-                                {contraband.name} (Score: {contraband.score}
-                                {contraband.resourceBonus &&
-                                  contraband.resourceType &&
-                                  `, +${contraband.resourceBonus} ${contraband.resourceType}`}
-                                )
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={control}
-                  name={`contrabands.${index}.quantity`}
-                  render={({ field }) => (
-                    <FormItem className="w-24">
-                      <FormLabel>Quantity</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          value={String(field.value ?? "")}
-                          placeholder="1"
-                          type="number"
-                          min={1}
-                          max={99}
-                          onChange={handleInputChange(field)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => remove(index)}
-                >
-                  Remove
-                </Button>
-              </div>
-            );
-          })}
-        </div>
+        <ContrabandsSelect
+          control={control}
+          name={"contrabands"}
+          handleInputChange={handleInputChange}
+        />
       </form>
     </Form>
   );
