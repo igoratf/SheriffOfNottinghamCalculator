@@ -12,7 +12,7 @@ export const RankingPage = () => {
 
   if (error) return <p>Error: {error.message}</p>;
 
-  const { matches } = data;
+  const matches = data?.matches || [];
 
   return (
     <main className="flex items-center p-12 justify-start mt-auto min-h-screen flex-col">
@@ -38,7 +38,7 @@ export const RankingPage = () => {
             to={`/match/$matchId`}
             params={{ matchId: match.id.toString() }}
             key={match.id}
-            className="px-4 py-2 bg-slate-200 flex flex-col w-md gap-4 rounded-lg cursor-pointer hover:bg-slate-300 ring-2 ring-slate-200 hover:ring-blue-300"
+            className="px-4 py-2 bg-slate-200 flex flex-col w-md gap-4 rounded-lg cursor-pointer hover:bg-slate-300  transition-colors"
           >
             <div className="flex justify-between">
               <span className="flex-2 text-gray-600 font-medium">

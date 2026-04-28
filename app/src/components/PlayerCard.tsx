@@ -3,7 +3,6 @@ import type {
   PlayerScore,
   KingsAndQueens,
   KingQueenResourceName,
-  PlayerContraband,
 } from "@/utils/types.d";
 import {
   Card,
@@ -18,27 +17,7 @@ import { capitalizeFirstLetter } from "@/utils/helpers";
 import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import classNames from "classnames";
-
-const displayContrabandDetails = (contrabands: PlayerContraband[]) => {
-  if (!contrabands || contrabands.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="mt-4">
-      <h4 className="font-medium text-sm mb-2">Detailed Contrabands:</h4>
-      <ul className="text-sm space-y-1">
-        {contrabands.map((playerContraband, index) => (
-          <li key={index} className="flex justify-between">
-            <span>
-              {playerContraband.contraband?.name} x{playerContraband.quantity}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+import { PlayerContrabandDetails } from "./PlayerContrabandDetails";
 
 export interface PlayerCardProps {
   player: Player;
@@ -143,12 +122,14 @@ export const PlayerCard = ({
           </li>
           <li>
             💼 Contraband -{" "}
-            {player.contrabands.reduce((total, pc) => total + pc.quantity, 0)}{" "}
+            {player.contrabands?.reduce((total, pc) => total + pc.quantity, 0)}{" "}
             {playerScore && `(${playerScore.contraband})`}
           </li>
         </ul>
 
-        {displayContrabandDetails(player.contrabands)}
+        {player.contrabands?.length > 0 && <Separator className="mt-4" />}
+
+        <PlayerContrabandDetails contrabands={player.contrabands} />
       </CardContent>
       {playerScore && (
         <>
