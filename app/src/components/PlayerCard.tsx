@@ -122,7 +122,10 @@ export const PlayerCard = ({
           </li>
           <li>
             💼 Contraband -{" "}
-            {player.contrabands?.reduce((total, pc) => total + pc.quantity, 0)}{" "}
+            {player.contrabands?.reduce(
+              (total, c) => total + c.contraband.score * c.quantity,
+              0,
+            )}{" "}
             {playerScore && `(${playerScore.contraband})`}
           </li>
         </ul>

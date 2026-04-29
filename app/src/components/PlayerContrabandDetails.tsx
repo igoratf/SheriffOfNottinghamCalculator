@@ -4,6 +4,11 @@ interface PlayerContrabandDetailsProps {
   contrabands: PlayerContraband[];
 }
 
+const displayPlayerContraband = (playerContraband: PlayerContraband) => {
+  return `${playerContraband.contraband?.name} x${playerContraband.quantity} -
+              ${playerContraband.contraband.score * playerContraband.quantity}`;
+};
+
 export const PlayerContrabandDetails = ({
   contrabands,
 }: PlayerContrabandDetailsProps) => {
@@ -13,13 +18,11 @@ export const PlayerContrabandDetails = ({
 
   return (
     <div className="mt-4">
-      <h4 className="font-medium text-sm mb-2">Detailed Contrabands:</h4>
+      <h4 className="font-medium text-sm mb-2">Contrabands:</h4>
       <ul className="text-sm space-y-1">
         {contrabands.map((playerContraband, index) => (
           <li key={index} className="flex justify-between">
-            <span>
-              {playerContraband.contraband?.name} x{playerContraband.quantity}
-            </span>
+            <span>{displayPlayerContraband(playerContraband)}</span>
           </li>
         ))}
       </ul>

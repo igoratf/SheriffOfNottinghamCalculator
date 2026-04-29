@@ -8,21 +8,23 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import type { FormData } from "./PlayerForm";
 import { useQuery } from "@tanstack/react-query";
 import { fetchContrabands } from "@/api/api";
 import { Skeleton } from "./ui/skeleton";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
 import type { Contraband } from "@/utils/types";
+import type { PlayerFormData } from "@/utils/schemas";
 
 interface ContrabandsSelect {
-  control: Control<FormData>;
+  control: Control<PlayerFormData>;
 }
 
 export const ContrabandsSelect = ({ control }: ContrabandsSelect) => {
@@ -68,7 +70,6 @@ export const ContrabandsSelect = ({ control }: ContrabandsSelect) => {
       </div>
 
       {fields.map((field, index) => {
-        console.log("FIELD ", field);
         const currentSelection = watchedValue[index]?.contraband?.name;
 
         const filteredOptions = contrabandOptions.filter((option) => {
@@ -89,40 +90,44 @@ export const ContrabandsSelect = ({ control }: ContrabandsSelect) => {
               control={control}
               name={`contrabands.${index}.contraband`}
               render={({ field }) => (
-                <FormItem className="flex-1 min-w-0">
-                  <FormLabel>Contraband Type</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      const selected = contrabandOptions.find(
-                        (c) => c.name === value,
-                      );
-                      field.onChange(selected);
-                    }}
-                    value={field.value?.name ?? ""}
-                  >
-                    <FormControl>
+                <FormControl>
+                  <FormItem className="flex-1 min-w-0">
+                    <FormLabel>Contraband Type</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        const selected = contrabandOptions.find(
+                          (c) => c.name === value,
+                        );
+                        field.onChange(selected);
+                      }}
+                      value={field.value?.name ?? ""}
+                    >
                       <SelectTrigger className="w-full min-w-0">
                         <SelectValue placeholder="Select contraband" />
                       </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {filteredOptions.map((contraband) => {
-                        return (
-                          <SelectItem
-                            key={contraband.name}
-                            value={contraband.name}
-                            className="truncate"
-                          >
-                            <span className="truncate">
-                              {formatContraband(contraband)}
-                            </span>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
+
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Contraband</SelectLabel>
+                          {filteredOptions.map((contraband) => {
+                            return (
+                              <SelectItem
+                                key={contraband.name}
+                                value={contraband.name}
+                                className="truncate"
+                              >
+                                <span className="truncate">
+                                  {formatContraband(contraband)}
+                                </span>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                </FormControl>
               )}
             />
 

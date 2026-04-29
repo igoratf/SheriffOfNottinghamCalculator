@@ -2,6 +2,10 @@ import { z } from "zod";
 
 const contrabandItemSchema = z.object({
   name: z.string().min(1, "Contraband type is required"),
+  score: z.coerce
+    .number()
+    .min(1, "Score must be at least 1")
+    .max(99, "Score must be at most 99"),
   resourceType: z.string().nullable().optional(),
   resourceBonus: z.number().nullable().optional(),
 });
@@ -45,3 +49,5 @@ export const playerFormSchema = z.object({
     .min(0, "Must be at least 0")
     .max(99, "Must be at most 99"),
 });
+
+export type PlayerFormData = z.input<typeof playerFormSchema>;

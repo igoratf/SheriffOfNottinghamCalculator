@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { PlayerModal } from "../PlayerModal";
 import { PlayerCard } from "../PlayerCard";
-import type { Player, PlayerScore, KingsAndQueens } from "@/utils/types.d";
+import type { PlayerScore, KingsAndQueens } from "@/utils/types.d";
 import { Tooltip, TooltipContent } from "../ui/tooltip";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { calculateKingsAndQueens, calculateScore } from "@/utils/helpers";
+import type { PlayerFormData } from "@/utils/schemas";
 
 export const MatchManager = () => {
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<PlayerFormData[]>([]);
   const [newPlayerModalOpen, setNewPlayerModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [matchScore, setMatchScore] = useState<
@@ -26,7 +27,9 @@ export const MatchManager = () => {
     setNewPlayerModalOpen(false);
   };
 
-  const addPlayer = (player: Player) => {
+  console.log("PLAYERS ", players);
+
+  const addPlayer = (player: PlayerFormData) => {
     if (players.length < 5) {
       const alreadyExists = players.find(
         (p) => player.name.toLowerCase() === p.name.toLowerCase(),
@@ -44,14 +47,14 @@ export const MatchManager = () => {
     }
   };
 
-  const removePlayer = (player: Player) => {
+  const removePlayer = (player: PlayerFormData) => {
     setPlayers((prevPlayers) =>
       prevPlayers.filter((p) => p.name !== player.name),
     );
     setErrorMessage("");
   };
 
-  // TODO: Extract this to provider
+  // TODO: Deletate to backend
   const onCalculateScore = () => {
     const score = calculateScore(players);
     const kingsAndQueens = calculateKingsAndQueens(players);

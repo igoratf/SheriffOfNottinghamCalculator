@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Form,
   FormField,
@@ -13,10 +12,10 @@ import {
 import { Input } from "./ui/input";
 
 import { ContrabandsSelect } from "./ContrabandsSelect";
-import { playerFormSchema } from "@/utils/schemas";
+import { playerFormSchema, type PlayerFormData } from "@/utils/schemas";
 
 interface PlayerFormProps {
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: PlayerFormData) => void;
 }
 
 const handleInputChange = (
@@ -27,10 +26,8 @@ const handleInputChange = (
   field.onChange(value);
 };
 
-export type FormData = z.input<typeof playerFormSchema>;
-
 export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
-  const form = useForm<FormData>({
+  const form = useForm<PlayerFormData>({
     resolver: zodResolver(playerFormSchema),
     defaultValues: {
       name: "",
@@ -45,14 +42,18 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
 
   const { control, handleSubmit } = form;
 
-  const handleFormSubmit = (data: FormData) => {
+  const handleFormSubmit = (data: PlayerFormData) => {
     console.log("DATA SUBMITTED ", data);
     onSubmit(data);
   };
 
   return (
     <Form {...form}>
-      <form id="player-form" onSubmit={handleSubmit(handleFormSubmit)}>
+      <form
+        id="player-form"
+        onSubmit={handleSubmit(handleFormSubmit)}
+        className="max-h-[80vh] overflow-auto"
+      >
         <FormField
           name="name"
           control={control}
