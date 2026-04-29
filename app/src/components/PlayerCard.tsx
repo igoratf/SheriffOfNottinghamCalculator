@@ -110,12 +110,12 @@ export const PlayerCard = ({
             🍞 Bread - {player.bread} {playerScore && `(${playerScore.bread})`}
           </li>
           <li>
-            🐔 Chicken - {player.chicken}{" "}
-            {playerScore && `(${playerScore.chicken})`}
-          </li>
-          <li>
             🧀 Cheese - {player.cheese}{" "}
             {playerScore && `(${playerScore.cheese})`}
+          </li>
+          <li>
+            🐔 Chicken - {player.chicken}{" "}
+            {playerScore && `(${playerScore.chicken})`}
           </li>
           <li>
             🪙 Coin - {player.coin} {playerScore && `(${playerScore.coin})`}
