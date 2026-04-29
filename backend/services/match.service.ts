@@ -12,6 +12,7 @@ const adapter = new PrismaPg({
 export const prisma = new PrismaClient({ adapter });
 
 export const calculateMatchScore = async (players: Player[]) => {
+  console.log("PLAYERS ", players);
   const matchPlayers = await calculateGoodsScore(players);
 
   const { kings, queens } = calculateKingsAndQueens(matchPlayers);
@@ -32,10 +33,10 @@ export const saveMatch = async (players: Player[]) => {
       players: {
         create: matchPlayers.map((player) => ({
           name: player.name,
-          appleCount: player.apple,
-          breadCount: player.bread,
-          cheeseCount: player.cheese,
-          chickenCount: player.chicken,
+          apple: player.apple,
+          bread: player.bread,
+          cheese: player.cheese,
+          chicken: player.chicken,
           coins: player.coin,
           king: player.king,
           queen: player.queen,
@@ -45,7 +46,7 @@ export const saveMatch = async (players: Player[]) => {
               quantity: contraband.quantity,
               contraband: {
                 connect: {
-                  name: contraband.name,
+                  id: contraband.id,
                 },
               },
             })),
@@ -73,10 +74,10 @@ export const saveMatch = async (players: Player[]) => {
 export const mapMatchToResponse = (match: MatchWithPlayers) => {
   const formattedPlayers = match.players.map((player) => ({
     ...player,
-    appleScore: player.appleCount * GOODS_SCORES["apple"],
-    breadScore: player.breadCount * GOODS_SCORES["bread"],
-    cheeseScore: player.cheeseCount * GOODS_SCORES["cheese"],
-    chickenScore: player.chickenCount * GOODS_SCORES["chicken"],
+    appleScore: player.apple * GOODS_SCORES["apple"],
+    breadScore: player.bread * GOODS_SCORES["bread"],
+    cheeseScore: player.cheese * GOODS_SCORES["cheese"],
+    chickenScore: player.chicken * GOODS_SCORES["chicken"],
     contrabands: player.contrabands.map((c) => ({
       quantity: c.quantity,
       totalScore: c.quantity * c.contraband.score,
@@ -93,6 +94,8 @@ export const calculateGoodsScore = async (players: Player[]) => {
   const contrabandsMap = new Map(
     contrabands.map((contraband) => [contraband.name, contraband]),
   );
+
+  console.log("PLAYERS ", players);
 
   const matchPlayers: PlayerScore[] = players.map((player) => {
     let totalScore = 0;

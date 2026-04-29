@@ -109,19 +109,19 @@ async function main() {
         create: [
           {
             name: "Prince John",
-            appleCount: 5,
-            breadCount: 2,
-            cheeseCount: 0,
-            chickenCount: 1,
+            apple: 5,
+            bread: 2,
+            cheese: 0,
+            chicken: 1,
             coins: 15,
             score: 35, // Placeholder calculated score
           },
           {
             name: "Robin Hood",
-            appleCount: 0,
-            breadCount: 4,
-            cheeseCount: 3,
-            chickenCount: 0,
+            apple: 0,
+            bread: 4,
+            cheese: 3,
+            chicken: 0,
             coins: 50,
             score: 65, // Placeholder calculated score
           },

@@ -3,7 +3,7 @@ import * as matchService from "../services/match.service.js";
 
 export const saveMatch = async (req: Request, res: Response) => {
   const matchScore = await matchService.saveMatch(req.body.players);
-  res.json({ data: matchScore });
+  res.json({ match: matchScore });
 };
 
 export const getMatches = async (_req: Request, res: Response) => {

@@ -19,6 +19,7 @@ export type KingQueenResourceName = Exclude<
 >;
 
 export interface Contraband {
+  id: number;
   name: string;
   score: number;
   resourceBonus?: number;
