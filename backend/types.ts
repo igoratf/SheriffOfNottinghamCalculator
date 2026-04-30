@@ -37,7 +37,7 @@ export interface Player {
   cheese: number;
   chicken: number;
   contrabands: PlayerContraband[];
-  coin: number;
+  coins: number;
 }
 
 export interface PlayerScore extends Player {

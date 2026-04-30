@@ -37,7 +37,7 @@ export const saveMatch = async (players: Player[]) => {
           bread: player.bread,
           cheese: player.cheese,
           chicken: player.chicken,
-          coins: player.coin,
+          coins: player.coins,
           king: player.king,
           queen: player.queen,
           score: player.totalScore,
@@ -103,7 +103,7 @@ export const calculateGoodsScore = async (players: Player[]) => {
     totalScore += player.bread * GOODS_SCORES["bread"];
     totalScore += player.cheese * GOODS_SCORES["cheese"];
     totalScore += player.chicken * GOODS_SCORES["chicken"];
-    totalScore += player.coin;
+    totalScore += player.coins;
     if (player.contrabands) {
       totalScore += player.contrabands.reduce(
         (acc, curr) =>
