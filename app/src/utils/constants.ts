@@ -5,7 +5,7 @@ export const RESOURCE_SCORE_MAP: Record<ResourceName, number> = {
   cheese: 3,
   bread: 3,
   chicken: 4,
-  coin: 1,
+  coins: 1,
   contraband: 1,
 };
 

@@ -2,19 +2,19 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { PlayerModal } from "../PlayerModal";
 import { PlayerCard } from "../PlayerCard";
-import type { PlayerScore, KingsAndQueens } from "@/utils/types.d";
+import type { KingsAndQueens, Match } from "@/utils/types.d";
 import { Tooltip, TooltipContent } from "../ui/tooltip";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import { calculateKingsAndQueens, calculateScore } from "@/utils/helpers";
 import type { PlayerFormData } from "@/utils/schemas";
+import { calculateMatchScore } from "@/api/api";
+import { useNavigate } from "@tanstack/react-router";
 
 export const MatchManager = () => {
+  const navigate = useNavigate();
   const [players, setPlayers] = useState<PlayerFormData[]>([]);
   const [newPlayerModalOpen, setNewPlayerModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [matchScore, setMatchScore] = useState<
-    Record<string, PlayerScore> | undefined
-  >(undefined);
+  const [matchScore, setMatchScore] = useState<Match | undefined>(undefined);
   const [kingsAndQueens, setKingsAndQueens] = useState<
     KingsAndQueens | undefined
   >(undefined);
@@ -54,18 +54,16 @@ export const MatchManager = () => {
     setErrorMessage("");
   };
 
-  // TODO: Deletate to backend
-  const onCalculateScore = () => {
-    const score = calculateScore(players);
-    const kingsAndQueens = calculateKingsAndQueens(players);
-
-    setMatchScore(score);
-    setKingsAndQueens(kingsAndQueens);
-
-    const sortedPlayers = [...players].sort((a, b) => {
-      return score[b.name].total - score[a.name].total;
-    });
-    setPlayers(sortedPlayers);
+  // TODO: Delegate to backend
+  const onCalculateScore = async () => {
+    const response = await calculateMatchScore(players);
+    if (response) {
+      console.log("Response ", response);
+      navigate({
+        to: "/match/$matchId",
+        params: { matchId: response.match.id },
+      });
+    }
   };
 
   const onResetMatch = () => {

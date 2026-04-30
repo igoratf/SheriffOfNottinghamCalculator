@@ -12,7 +12,6 @@ const adapter = new PrismaPg({
 export const prisma = new PrismaClient({ adapter });
 
 export const calculateMatchScore = async (players: Player[]) => {
-  console.log("PLAYERS ", players);
   const matchPlayers = await calculateGoodsScore(players);
 
   const { kings, queens } = calculateKingsAndQueens(matchPlayers);
@@ -94,8 +93,6 @@ export const calculateGoodsScore = async (players: Player[]) => {
   const contrabandsMap = new Map(
     contrabands.map((contraband) => [contraband.name, contraband]),
   );
-
-  console.log("PLAYERS ", players);
 
   const matchPlayers: PlayerScore[] = players.map((player) => {
     let totalScore = 0;
@@ -278,6 +275,7 @@ const calculateContrabandBonus = (player: Player) => {
 
 export const getMatches = async () => {
   const matches = await prisma.match.findMany({
+    orderBy: { createdAt: "desc" },
     include: {
       players: {
         select: {

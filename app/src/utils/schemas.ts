@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const contrabandItemSchema = z.object({
+  id: z.number(),
   name: z.string().min(1, "Contraband type is required"),
   score: z.coerce
     .number()
@@ -44,7 +45,7 @@ export const playerFormSchema = z.object({
     .min(0, "Must be at least 0")
     .max(99, "Must be at most 99"),
   contrabands: z.array(contrabandSchema).default([]),
-  coin: z.coerce
+  coins: z.coerce
     .number()
     .min(0, "Must be at least 0")
     .max(99, "Must be at most 99"),

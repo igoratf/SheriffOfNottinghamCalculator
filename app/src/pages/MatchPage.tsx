@@ -1,5 +1,6 @@
 import { fetchMatchById } from "@/api/api";
 import { NewPlayerCard } from "@/components/NewPlayerCard";
+import { PlayerCard } from "@/components/PlayerCard";
 import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
@@ -13,7 +14,7 @@ export const MatchPage = () => {
   });
 
   if (error) return <div>Error: {error.message}</div>;
-  if (isLoading)
+  if (isLoading || !data)
     return (
       <div className="flex mt-48 justify-center items-center">
         <Spinner className="size-8" />
@@ -48,7 +49,7 @@ export const MatchPage = () => {
         <h2 className="text-2xl font-semibold text-center">Players</h2>
         <ul className="flex gap-6 mt-2">
           {players?.map((player) => (
-            <NewPlayerCard player={player} />
+            <PlayerCard player={player} key={player.id} />
           ))}
         </ul>
       </div>

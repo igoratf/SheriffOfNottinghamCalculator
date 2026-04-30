@@ -5,15 +5,14 @@ interface PlayerContrabandDetailsProps {
 }
 
 const displayPlayerContraband = (playerContraband: PlayerContraband) => {
-  return `${playerContraband.contraband?.name} x${playerContraband.quantity} -
-              ${playerContraband.contraband.score * playerContraband.quantity}`;
+  return `${playerContraband.name} x${playerContraband.quantity} -
+              ${playerContraband.score * playerContraband.quantity}`;
 };
 
 const displayContrabandResourceBonus = (playerContraband: PlayerContraband) => {
-  const { contraband } = playerContraband;
-  if (!contraband.resourceBonus || !contraband.resourceType) return;
+  if (!playerContraband.resourceBonus || !playerContraband.resourceType) return;
 
-  return `(+${contraband.resourceBonus * playerContraband.quantity} ${contraband.resourceType})`;
+  return `(+${playerContraband.resourceBonus * playerContraband.quantity} ${playerContraband.resourceType})`;
 };
 
 export const PlayerContrabandDetails = ({

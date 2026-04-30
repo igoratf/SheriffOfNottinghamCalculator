@@ -13,6 +13,7 @@ import { Input } from "./ui/input";
 
 import { ContrabandsSelect } from "./ContrabandsSelect";
 import { playerFormSchema, type PlayerFormData } from "@/utils/schemas";
+import { formatPlayersContrabandData } from "@/utils/helpers";
 
 interface PlayerFormProps {
   onSubmit: (data: PlayerFormData) => void;
@@ -36,15 +37,15 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
       cheese: 0,
       chicken: 0,
       contrabands: [],
-      coin: 0,
+      coins: 0,
     },
   });
 
   const { control, handleSubmit } = form;
 
   const handleFormSubmit = (data: PlayerFormData) => {
-    console.log("DATA SUBMITTED ", data);
-    onSubmit(data);
+    const formattedData = formatPlayersContrabandData(data);
+    onSubmit(formattedData);
   };
 
   return (
@@ -168,16 +169,16 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
           />
 
           <FormField
-            name="coin"
+            name="coins"
             control={control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="coin">Coin</FormLabel>
+                <FormLabel htmlFor="coins">Coins</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     value={String(field.value ?? "")}
-                    id="coin"
+                    id="coins"
                     placeholder="0"
                     type="number"
                     min={0}
@@ -185,7 +186,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
                     onChange={(e) => handleInputChange(e, field)}
                   ></Input>
                 </FormControl>
-                <FormDescription>Amount of coin</FormDescription>
+                <FormDescription>Amount of coins</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
