@@ -4,6 +4,7 @@ import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
 import { PrismaClient, type Match } from "@prisma/client";
 import type { MatchWithPlayers } from "./types.js";
 import { AppError } from "../utils/AppError.js";
+import { getPageOffset } from "../utils/getPageOffset.js";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -273,9 +274,11 @@ const calculateContrabandBonus = (player: Player) => {
   return playerWithContrabandBonus;
 };
 
-export const getMatches = async () => {
+export const getMatches = async (page: number) => {
   const matches = await prisma.match.findMany({
     orderBy: { createdAt: "desc" },
+    skip: getPageOffset(page),
+    take: 10,
     include: {
       players: {
         select: {

@@ -6,8 +6,9 @@ export const saveMatch = async (req: Request, res: Response) => {
   res.json({ match: matchScore });
 };
 
-export const getMatches = async (_req: Request, res: Response) => {
-  const matches = await matchService.getMatches();
+export const getMatches = async (req: Request, res: Response) => {
+  const page = req.query.page ? parseInt(req.query.page as string) : 1;
+  const matches = await matchService.getMatches(page);
   res.json({ matches: matches });
 };
 

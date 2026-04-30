@@ -46,3 +46,5 @@ export const CONTRABAND_SCORE: Record<keyof typeof Contraband, number> = {
   PUMPERNICKEL_BREAD: 9,
   ROYAL_ROOSTER: 8,
 };
+
+export const PAGE_OFFSET = 10;
