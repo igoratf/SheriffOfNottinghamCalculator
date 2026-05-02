@@ -3,8 +3,18 @@ import type { Contraband, Match } from "@/utils/types";
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
-export const fetchMatches = async () => {
-  const response = await fetch(`${API_URL}/v1/match`);
+type Matches = {
+  matches: {
+    data: Match[];
+    pagination: { count: number; numberOfPages: number };
+  };
+};
+
+export const fetchMatches = async (page: number): Promise<Matches> => {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+
+  const response = await fetch(`${API_URL}/v1/match?${params.toString()}`);
 
   if (!response.ok) {
     throw new Error("Request failed");

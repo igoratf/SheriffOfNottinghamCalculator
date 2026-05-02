@@ -4,6 +4,11 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/ranking")({
   component: RankingComponent,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      page: Number(search.page) || 1,
+    };
+  },
 });
 
 function RankingComponent() {

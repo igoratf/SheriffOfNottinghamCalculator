@@ -3,6 +3,8 @@
  * @param page - current page number
  * @returns skip value
  */
+
+export const ITEMS_PER_PAGE = 10;
 export const getPageOffset = (page: number) => {
-  return (page - 1) * 10;
+  return (page - 1) * ITEMS_PER_PAGE;
 };

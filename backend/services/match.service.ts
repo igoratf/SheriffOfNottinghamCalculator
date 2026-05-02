@@ -4,7 +4,7 @@ import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
 import { PrismaClient, type Match } from "@prisma/client";
 import type { MatchWithPlayers } from "./types.js";
 import { AppError } from "../utils/AppError.js";
-import { getPageOffset } from "../utils/getPageOffset.js";
+import { getPageOffset, ITEMS_PER_PAGE } from "../utils/getPageOffset.js";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -275,20 +275,25 @@ const calculateContrabandBonus = (player: Player) => {
 };
 
 export const getMatches = async (page: number) => {
-  const matches = await prisma.match.findMany({
-    orderBy: { createdAt: "desc" },
-    skip: getPageOffset(page),
-    take: 10,
-    include: {
-      players: {
-        select: {
-          id: true,
-          name: true,
+  const [matches, count] = await prisma.$transaction([
+    prisma.match.findMany({
+      orderBy: { createdAt: "desc" },
+      skip: getPageOffset(page),
+      take: 10,
+      include: {
+        players: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
-    },
-  });
-  return matches;
+    }),
+    prisma.match.count(),
+  ]);
+
+  const numberOfPages = Math.ceil(count / ITEMS_PER_PAGE);
+  return { data: matches, pagination: { count, numberOfPages } };
 };
 
 export const getMatch = async (id: string) => {
