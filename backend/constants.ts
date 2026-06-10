@@ -48,3 +48,8 @@ export const CONTRABAND_SCORE: Record<keyof typeof Contraband, number> = {
 };
 
 export const PAGE_OFFSET = 10;
+
+export enum MatchSort {
+  ASC = "asc",
+  DESC = "desc",
+}

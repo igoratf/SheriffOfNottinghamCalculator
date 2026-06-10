@@ -1,10 +1,19 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { GOODS_SCORES, KINGS_BONUS, QUEENS_BONUS } from "../constants.js";
+import {
+  GOODS_SCORES,
+  KINGS_BONUS,
+  MatchSort,
+  QUEENS_BONUS,
+} from "../constants.js";
 import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
 import { PrismaClient, type Match } from "@prisma/client";
 import type { MatchWithPlayers } from "./types.js";
 import { AppError } from "../utils/AppError.js";
-import { getPageOffset, ITEMS_PER_PAGE } from "../utils/getPageOffset.js";
+import {
+  getPageOffset,
+  ITEMS_PER_PAGE,
+  parseStringToDate,
+} from "../utils/utils.js";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -274,12 +283,40 @@ const calculateContrabandBonus = (player: Player) => {
   return playerWithContrabandBonus;
 };
 
-export const getMatches = async (page: number) => {
+export const getMatches = async (
+  page: number,
+  sort: MatchSort = MatchSort.DESC,
+  player?: string,
+  dateFrom?: string,
+  dateTo?: string,
+) => {
+  const parsedDateFrom = dateFrom ? parseStringToDate(dateFrom) : null;
+  const parsedDateTo = dateTo ? parseStringToDate(dateTo) : null;
+
   const [matches, count] = await prisma.$transaction([
     prisma.match.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: sort },
       skip: getPageOffset(page),
       take: 10,
+      where: {
+        ...(player && {
+          players: {
+            some: {
+              name: { contains: player, mode: "insensitive" },
+            },
+          },
+        }),
+        ...(parsedDateFrom && {
+          createdAt: {
+            gte: parsedDateFrom,
+          },
+        }),
+        ...(parsedDateTo && {
+          createdAt: {
+            lte: parsedDateTo,
+          },
+        }),
+      },
       include: {
         players: {
           select: {
