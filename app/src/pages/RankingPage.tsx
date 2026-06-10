@@ -1,5 +1,6 @@
 import { fetchMatches } from "@/api/api";
 import { PaginationHandler } from "@/components/PaginationHandler";
+import { RankingFilters } from "@/components/RankingFilters";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Match, Player } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
@@ -21,13 +22,15 @@ export const RankingPage = () => {
   console.log("DATA ", pagination);
 
   return (
-    <main className="flex items-center p-12 justify-start mt-auto min-h-screen flex-col">
-      <header className="text-center mb-8">
+    <main className="flex items-center p-6 justify-start mt-auto min-h-screen flex-col">
+      <header className="text-center mb-4">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Ranking
         </h1>
         <h3 className="text-gray-500">View past games and scores</h3>
       </header>
+
+      <RankingFilters />
 
       {isLoading && (
         <div className="flex flex-col items-center gap-4">

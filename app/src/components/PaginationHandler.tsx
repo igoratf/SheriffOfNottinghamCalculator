@@ -26,7 +26,7 @@ export const PaginationHandler = ({
   const isFirstPage = currentPage === 1;
 
   return (
-    <div className={className}>
+    <div className={`sticky bottom-2 bg-background rounded-lg ${className}`}>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
