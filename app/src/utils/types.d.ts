@@ -39,8 +39,8 @@ export interface PlayerScore extends Player {
   breadScore: number;
   cheeseScore: number;
   chickenScore: number;
-  king?: KingQueenResourceName[];
-  queen?: KingQueenResourceName[];
+  king: KingQueenResourceName[];
+  queen: KingQueenResourceName[];
   score: number;
 }
 

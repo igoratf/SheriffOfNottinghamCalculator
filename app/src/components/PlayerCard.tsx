@@ -1,4 +1,4 @@
-import type { PlayerScore } from "@/utils/types.d";
+import type { KingQueenResourceName, PlayerScore } from "@/utils/types.d";
 import {
   Card,
   CardContent,
@@ -11,23 +11,47 @@ import { Separator } from "./ui/separator";
 import { TrashIcon } from "lucide-react";
 import classNames from "classnames";
 import { PlayerContrabandDetails } from "./PlayerContrabandDetails";
+import { capitalizeFirstLetter } from "@/utils/helpers";
+import { Tooltip } from "./ui/tooltip";
+import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export interface PlayerCardProps {
   player: PlayerScore;
   onDelete?: (player: PlayerScore) => void;
 }
 
-export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
-  console.log("pLAYER ", player);
+const isKingOrQueen = (
+  kingList: KingQueenResourceName[],
+  queenList: KingQueenResourceName[],
+  resource: KingQueenResourceName,
+) => {
+  const isKing = kingList.includes(resource);
+  const isQueen = queenList.includes(resource);
+  if (!isKing && !isQueen) return null;
 
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <span className="ml-2">{isKing ? "🤴" : "👸"}</span>
+      </TooltipTrigger>
+      <TooltipContent className="p-2 rounded-lg border-1">
+        {capitalizeFirstLetter(resource)} {isKing ? "king" : "queen"}
+      </TooltipContent>
+    </Tooltip>
+  );
+};
+
+export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
   const totalContrabandScore = player.contrabands?.reduce(
     (total, c) => total + c.score * c.quantity,
     0,
   );
 
+  console.log("Player ", player);
+
   return (
     <Card
-      className={classNames("max-h-120 w-70 relative h-max", {
+      className={classNames("max-h-140 w-70 relative h-max", {
         /*         "inset-ring inset-ring-yellow-500/50": isFirst || isTiedForFirst,
         "inset-ring inset-ring-slate-500/50": isSecond, */
       })}
@@ -59,6 +83,7 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
           <li>
             🍎 Apples - {player.apple}{" "}
             {player.appleScore && <strong>{`(${player.appleScore})`}</strong>}
+            {isKingOrQueen(player.king, player.queen, "apple")}
           </li>
           <li>
             🍞 Bread - {player.bread}{" "}
@@ -94,23 +119,9 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
             <Separator className="mt-auto px-6" />
           </div>
           <CardFooter>
-            <div className="flex flex-col items-left">
-              <ul>
-                {/*  {kingResources.map((resource) => (
-                  <li key={resource} className="font-semibold text-yellow-500">
-                    {capitalizeFirstLetter(resource)} king
-                  </li>
-                ))}
-                {queenResources.map((resource) => (
-                  <li key={resource} className="font-semibold text-slate-500">
-                    {capitalizeFirstLetter(resource)} queen
-                  </li>
-                ))} */}
-              </ul>
-              <span className="mt-2 text-md font-semibold">
-                Score: {player.score}
-              </span>
-            </div>
+            <span className="mt-2 text-md font-semibold">
+              Score: {player.score}
+            </span>
           </CardFooter>
         </>
       )}
