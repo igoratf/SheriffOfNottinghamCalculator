@@ -2,24 +2,23 @@ import { fetchMatches } from "@/api/api";
 import { PaginationHandler } from "@/components/PaginationHandler";
 import { RankingFilters } from "@/components/RankingFilters";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Route } from "@/routes/ranking";
 import type { Match, Player } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 export const RankingPage = () => {
-  const location = useLocation();
-  const currentPage = location.search.page ?? 1;
+  const { page, filter, dateFrom, dateTo } = Route.useSearch();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["matches", currentPage],
-    queryFn: () => fetchMatches(currentPage),
+    queryKey: ["matches", page, filter, dateFrom, dateTo],
+    queryFn: () => fetchMatches({ page, filter, dateFrom, dateTo }),
   });
 
   if (error) return <p>Error: {error.message}</p>;
 
   const matches = data?.matches?.data || [];
   const pagination = data?.matches?.pagination;
-  console.log("DATA ", pagination);
 
   return (
     <main className="flex items-center p-6 justify-start mt-auto min-h-screen flex-col">
@@ -69,7 +68,7 @@ export const RankingPage = () => {
       </ul>
       <PaginationHandler
         className="mt-4"
-        currentPage={currentPage}
+        currentPage={page}
         numberOfPages={pagination?.numberOfPages || 1}
       />
     </main>

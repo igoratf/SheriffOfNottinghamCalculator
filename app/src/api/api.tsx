@@ -10,11 +10,27 @@ type Matches = {
   };
 };
 
-export const fetchMatches = async (page: number): Promise<Matches> => {
-  const params = new URLSearchParams();
-  params.append("page", page.toString());
+type MatchesSearchParams = {
+  page: number;
+  filter?: string;
+  dateFrom?: string;
+  dateTo?: string;
+};
 
-  const response = await fetch(`${API_URL}/v1/match?${params.toString()}`);
+export const fetchMatches = async (
+  params: MatchesSearchParams,
+): Promise<Matches> => {
+  const searchParams = new URLSearchParams();
+  searchParams.set("page", String(params.page));
+  if (params.filter) searchParams.set("filter", params.filter);
+  if (params.dateFrom) searchParams.set("dateFrom", params.dateFrom);
+  if (params.dateTo) searchParams.set("dateTo", params.dateTo);
+
+  console.log("params ", searchParams.toString());
+
+  const response = await fetch(
+    `${API_URL}/v1/match?${searchParams.toString()}`,
+  );
 
   if (!response.ok) {
     throw new Error("Request failed");

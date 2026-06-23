@@ -10,24 +10,40 @@ import {
 import { Field, FieldGroup, FieldLabel, FieldSet } from "./ui/field";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
-import { useState } from "react";
 import { Calendar } from "./ui/calendar";
-
-const formatDate = (date?: Date) =>
-  date
-    ? `${date.getDate().toString().padStart(2, "0")}-${(date.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}-${date.getFullYear()}`
-    : "DD-MM-YYYY";
+import { Link } from "@tanstack/react-router";
+import { parse, format } from "date-fns";
+import { useState } from "react";
 
 export const RankingFilters = () => {
-  const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
-  const [dateTo, setDateTo] = useState<Date | undefined>(new Date());
+  const [dateFrom, setDatefrom] = useState<string | undefined>();
+  const [dateTo, setDateTo] = useState<string | undefined>(
+    format(new Date(), "yyyy-MM-dd"),
+  );
+
+  const selectedFrom = dateFrom
+    ? parse(dateFrom, "yyyy-MM-dd", new Date())
+    : undefined;
+  const selectedTo = dateTo
+    ? parse(dateTo, "yyyy-MM-dd", new Date())
+    : undefined;
+
+  const handleDateChange = (
+    calendarType: "from" | "to",
+    date: Date | undefined,
+  ) => {
+    const value = date ? format(date, "yyyy-MM-dd") : undefined;
+    if (calendarType === "from") {
+      setDatefrom(value);
+    } else {
+      setDateTo(value);
+    }
+  };
 
   return (
     <div className="mb-4 flex flex-col gap-4 max-w-lg w-full">
       <InputGroup className="w-full">
-        <InputGroupInput placeholder="Search player name..." />
+        <InputGroupInput placeholder="Search by player name..." />
         <InputGroupAddon>
           <SearchIcon />
         </InputGroupAddon>
@@ -42,14 +58,14 @@ export const RankingFilters = () => {
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start">
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formatDate(dateFrom)}
+                    {dateFrom || "YYYY-MM-DD"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
                   <Calendar
                     mode="single"
-                    selected={dateFrom}
-                    onSelect={setDateFrom}
+                    selected={selectedFrom}
+                    onSelect={(date) => handleDateChange("from", date)}
                     className="rounded-lg border"
                     captionLayout="dropdown"
                   />
@@ -62,14 +78,14 @@ export const RankingFilters = () => {
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start">
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formatDate(dateTo)}
+                    {dateTo || "YYYY-MM-DD"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
                   <Calendar
                     mode="single"
-                    selected={dateTo}
-                    onSelect={setDateTo}
+                    selected={selectedTo}
+                    onSelect={(date) => handleDateChange("to", date)}
                     className="rounded-lg border"
                     captionLayout="dropdown"
                   />
@@ -94,6 +110,19 @@ export const RankingFilters = () => {
           </SelectContent>
         </Select>
       </Field>
+
+      <Button>
+        <Link
+          to="."
+          search={(prev) => ({
+            ...prev,
+            dateFrom,
+            dateTo,
+          })}
+        >
+          Search matches
+        </Link>
+      </Button>
     </div>
   );
 };
