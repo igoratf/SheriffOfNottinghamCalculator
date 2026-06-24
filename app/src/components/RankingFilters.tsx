@@ -11,14 +11,19 @@ import { Field, FieldGroup, FieldLabel, FieldSet } from "./ui/field";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { parse, format } from "date-fns";
 import { useState } from "react";
+import { Route } from "@/routes/ranking";
 
 export const RankingFilters = () => {
-  const [dateFrom, setDatefrom] = useState<string | undefined>();
+  const navigate = useNavigate();
+  const { dateTo: initialDateTo, dateFrom: initialDateFrom } =
+    Route.useSearch();
+
+  const [dateFrom, setDatefrom] = useState<string | undefined>(initialDateFrom);
   const [dateTo, setDateTo] = useState<string | undefined>(
-    format(new Date(), "yyyy-MM-dd"),
+    initialDateTo || format(new Date(), "yyyy-MM-dd"),
   );
 
   const selectedFrom = dateFrom
@@ -38,6 +43,17 @@ export const RankingFilters = () => {
     } else {
       setDateTo(value);
     }
+  };
+
+  const handleSearch = () => {
+    navigate({
+      to: ".",
+      search: (prev) => ({
+        ...prev,
+        dateFrom,
+        dateTo,
+      }),
+    });
   };
 
   return (
@@ -111,18 +127,7 @@ export const RankingFilters = () => {
         </Select>
       </Field>
 
-      <Button>
-        <Link
-          to="."
-          search={(prev) => ({
-            ...prev,
-            dateFrom,
-            dateTo,
-          })}
-        >
-          Search matches
-        </Link>
-      </Button>
+      <Button onClick={handleSearch}>Search matches</Button>
     </div>
   );
 };

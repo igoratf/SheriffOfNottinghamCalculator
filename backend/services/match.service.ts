@@ -290,8 +290,12 @@ export const getMatches = async (
   dateFrom?: string,
   dateTo?: string,
 ) => {
-  const parsedDateFrom = dateFrom ? parseStringToDate(dateFrom) : null;
-  const parsedDateTo = dateTo ? parseStringToDate(dateTo) : null;
+  const parsedDateFrom = dateFrom ? new Date(dateFrom) : null;
+  const parsedDateTo = dateTo ? new Date(dateTo) : null;
+  const filterDate = parsedDateFrom || parsedDateTo;
+
+  parsedDateFrom?.setHours(0, 0, 0, 0);
+  parsedDateTo?.setHours(23, 59, 59, 999);
 
   const [matches, count] = await prisma.$transaction([
     prisma.match.findMany({
@@ -306,14 +310,10 @@ export const getMatches = async (
             },
           },
         }),
-        ...(parsedDateFrom && {
+        ...(filterDate && {
           createdAt: {
-            gte: parsedDateFrom,
-          },
-        }),
-        ...(parsedDateTo && {
-          createdAt: {
-            lte: parsedDateTo,
+            ...(parsedDateFrom && { gte: parsedDateFrom }),
+            ...(parsedDateTo && { lte: parsedDateTo }),
           },
         }),
       },
