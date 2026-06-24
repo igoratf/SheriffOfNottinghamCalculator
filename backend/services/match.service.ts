@@ -297,26 +297,28 @@ export const getMatches = async (
   parsedDateFrom?.setHours(0, 0, 0, 0);
   parsedDateTo?.setHours(23, 59, 59, 999);
 
+  const where = {
+    ...(players && {
+      players: {
+        some: {
+          name: { contains: players, mode: "insensitive" as const },
+        },
+      },
+    }),
+    ...(filterDate && {
+      createdAt: {
+        ...(parsedDateFrom && { gte: parsedDateFrom }),
+        ...(parsedDateTo && { lte: parsedDateTo }),
+      },
+    }),
+  };
+
   const [matches, count] = await prisma.$transaction([
     prisma.match.findMany({
       orderBy: { createdAt: sort },
       skip: getPageOffset(page),
       take: 10,
-      where: {
-        ...(players && {
-          players: {
-            some: {
-              name: { contains: players, mode: "insensitive" },
-            },
-          },
-        }),
-        ...(filterDate && {
-          createdAt: {
-            ...(parsedDateFrom && { gte: parsedDateFrom }),
-            ...(parsedDateTo && { lte: parsedDateTo }),
-          },
-        }),
-      },
+      where,
       include: {
         players: {
           select: {
@@ -326,7 +328,7 @@ export const getMatches = async (
         },
       },
     }),
-    prisma.match.count(),
+    prisma.match.count({ where }),
   ]);
 
   const numberOfPages = Math.ceil(count / ITEMS_PER_PAGE);
