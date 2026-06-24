@@ -12,7 +12,7 @@ type Matches = {
 
 type MatchesSearchParams = {
   page: number;
-  filter?: string;
+  players?: string;
   dateFrom?: string;
   dateTo?: string;
 };
@@ -22,7 +22,7 @@ export const fetchMatches = async (
 ): Promise<Matches> => {
   const searchParams = new URLSearchParams();
   searchParams.set("page", String(params.page));
-  if (params.filter) searchParams.set("filter", params.filter);
+  if (params.players) searchParams.set("players", params.players);
   if (params.dateFrom) searchParams.set("dateFrom", params.dateFrom);
   if (params.dateTo) searchParams.set("dateTo", params.dateTo);
 

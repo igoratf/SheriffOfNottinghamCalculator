@@ -13,18 +13,22 @@ import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { useNavigate } from "@tanstack/react-router";
 import { parse, format } from "date-fns";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Route } from "@/routes/ranking";
 
 export const RankingFilters = () => {
   const navigate = useNavigate();
-  const { dateTo: initialDateTo, dateFrom: initialDateFrom } =
-    Route.useSearch();
+  const {
+    players,
+    dateTo: initialDateTo,
+    dateFrom: initialDateFrom,
+  } = Route.useSearch();
 
   const [dateFrom, setDatefrom] = useState<string | undefined>(initialDateFrom);
   const [dateTo, setDateTo] = useState<string | undefined>(
     initialDateTo || format(new Date(), "yyyy-MM-dd"),
   );
+  const [playerSearch, setPlayerSearch] = useState<string | undefined>(players);
 
   const selectedFrom = dateFrom
     ? parse(dateFrom, "yyyy-MM-dd", new Date())
@@ -45,21 +49,34 @@ export const RankingFilters = () => {
     }
   };
 
-  const handleSearch = () => {
+  const handleMatchSearch = () => {
     navigate({
       to: ".",
       search: (prev) => ({
         ...prev,
         dateFrom,
         dateTo,
+        players: playerSearch,
       }),
     });
   };
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleMatchSearch();
+  };
+
   return (
-    <div className="mb-4 flex flex-col gap-4 max-w-lg w-full">
+    <form
+      onSubmit={handleSubmit}
+      className="mb-4 flex flex-col gap-4 max-w-lg w-full"
+    >
       <InputGroup className="w-full">
-        <InputGroupInput placeholder="Search by player name..." />
+        <InputGroupInput
+          placeholder="Search by player name..."
+          value={playerSearch}
+          onChange={(e) => setPlayerSearch(e.target.value)}
+        />
         <InputGroupAddon>
           <SearchIcon />
         </InputGroupAddon>
@@ -127,7 +144,7 @@ export const RankingFilters = () => {
         </Select>
       </Field>
 
-      <Button onClick={handleSearch}>Search matches</Button>
-    </div>
+      <Button type="submit">Search matches</Button>
+    </form>
   );
 };

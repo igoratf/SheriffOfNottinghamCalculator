@@ -27,7 +27,7 @@ export const Navbar = () => {
             to="/ranking"
             search={{
               page: 1,
-              filter: undefined,
+              players: undefined,
               dateFrom: undefined,
               dateTo: undefined,
             }}

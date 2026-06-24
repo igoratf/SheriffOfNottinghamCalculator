@@ -286,7 +286,7 @@ const calculateContrabandBonus = (player: Player) => {
 export const getMatches = async (
   page: number,
   sort: MatchSort = MatchSort.DESC,
-  player?: string,
+  players?: string,
   dateFrom?: string,
   dateTo?: string,
 ) => {
@@ -303,10 +303,10 @@ export const getMatches = async (
       skip: getPageOffset(page),
       take: 10,
       where: {
-        ...(player && {
+        ...(players && {
           players: {
             some: {
-              name: { contains: player, mode: "insensitive" },
+              name: { contains: players, mode: "insensitive" },
             },
           },
         }),

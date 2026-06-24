@@ -9,23 +9,20 @@ export const saveMatch = async (req: Request, res: Response) => {
 };
 
 export const getMatches = async (req: Request, res: Response) => {
-  console.log(" request", req.query);
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
 
   const sort = parseMatchSort(req.query.sort) ?? MatchSort.DESC;
-  const player =
-    typeof req.query.player === "string" ? req.query.player : undefined;
+  const players =
+    typeof req.query.players === "string" ? req.query.players : undefined;
   const dateFrom =
     typeof req.query.dateFrom === "string" ? req.query.dateFrom : undefined;
   const dateTo =
     typeof req.query.dateTo === "string" ? req.query.dateTo : undefined;
 
-  console.log("req ", req.query.dateFrom);
-
   const matches = await matchService.getMatches(
     page,
     sort,
-    player,
+    players,
     dateFrom,
     dateTo,
   );

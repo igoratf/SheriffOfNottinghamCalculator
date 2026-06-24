@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 type RankingSearch = {
   page: number;
-  filter?: string;
+  players?: string;
   dateTo?: string;
   dateFrom?: string;
 };
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/ranking")({
   validateSearch: (search: RankingSearch) => {
     return {
       page: Number(search.page) || 1,
-      filter: search.filter,
+      players: search.players,
       dateTo: search.dateTo,
       dateFrom: search.dateFrom,
     };
