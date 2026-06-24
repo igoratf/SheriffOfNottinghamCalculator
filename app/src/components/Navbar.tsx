@@ -13,7 +13,11 @@ export const Navbar = () => {
         <li>
           <Link
             to="/"
-            className="text-gray-700 hover:text-amber-600 transition-colors"
+            activeOptions={{ exact: true }}
+            inactiveProps={{
+              className: "text-gray-700 hover:text-amber-600 transition-colors",
+            }}
+            activeProps={{ className: "text-amber-600" }}
           >
             Home
           </Link>
@@ -21,7 +25,17 @@ export const Navbar = () => {
         <li>
           <Link
             to="/ranking"
-            className="text-gray-700 hover:text-amber-600 transition-colors"
+            search={{
+              page: 1,
+              filter: undefined,
+              dateFrom: undefined,
+              dateTo: undefined,
+            }}
+            inactiveProps={{
+              className: "text-gray-700 hover:text-amber-600 transition-colors",
+            }}
+            activeOptions={{}}
+            activeProps={{ className: "text-amber-600" }}
           >
             Ranking
           </Link>
