@@ -16,6 +16,8 @@ import { parse, format } from "date-fns";
 import { useState, type FormEvent } from "react";
 import { Route } from "@/routes/ranking";
 
+const DEFAULT_DATE_TO_VALUE = format(new Date(), "yyyy-MM-dd");
+
 export const RankingFilters = () => {
   const navigate = useNavigate();
   const {
@@ -24,10 +26,12 @@ export const RankingFilters = () => {
     dateFrom: initialDateFrom,
   } = Route.useSearch();
 
-  const [dateFrom, setDatefrom] = useState<string | undefined>(initialDateFrom);
+  const [dateFrom, setDateFrom] = useState<string | undefined>(initialDateFrom);
   const [dateTo, setDateTo] = useState<string | undefined>(
-    initialDateTo || format(new Date(), "yyyy-MM-dd"),
+    initialDateTo || DEFAULT_DATE_TO_VALUE,
   );
+  const [isDateFromOpen, setIsDateFromOpen] = useState(false);
+  const [isDateToOpen, setIsDateToOpen] = useState(false);
   const [playerSearch, setPlayerSearch] = useState<string | undefined>(players);
 
   const selectedFrom = dateFrom
@@ -43,9 +47,11 @@ export const RankingFilters = () => {
   ) => {
     const value = date ? format(date, "yyyy-MM-dd") : undefined;
     if (calendarType === "from") {
-      setDatefrom(value);
+      setDateFrom(value);
+      setIsDateFromOpen(false);
     } else {
       setDateTo(value);
+      setIsDateToOpen(false);
     }
   };
 
@@ -63,6 +69,13 @@ export const RankingFilters = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    handleMatchSearch();
+  };
+
+  const handleClear = () => {
+    setDateFrom(undefined);
+    setDateTo(DEFAULT_DATE_TO_VALUE);
+    setPlayerSearch(undefined);
     handleMatchSearch();
   };
 
@@ -87,7 +100,7 @@ export const RankingFilters = () => {
           <div className="grid grid-cols-2 gap-4">
             <Field>
               <FieldLabel htmlFor="dateFrom">Date from</FieldLabel>
-              <Popover>
+              <Popover open={isDateFromOpen} onOpenChange={setIsDateFromOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start">
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -107,7 +120,7 @@ export const RankingFilters = () => {
             </Field>
             <Field>
               <FieldLabel htmlFor="dateTo">Date to</FieldLabel>
-              <Popover>
+              <Popover open={isDateToOpen} onOpenChange={setIsDateToOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start">
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -145,6 +158,9 @@ export const RankingFilters = () => {
       </Field>
 
       <Button type="submit">Search matches</Button>
+      <Button variant="outline" onClick={handleClear}>
+        Reset filters
+      </Button>
     </form>
   );
 };
