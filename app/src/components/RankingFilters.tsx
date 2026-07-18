@@ -1,12 +1,5 @@
 import { SearchIcon, Calendar as CalendarIcon } from "lucide-react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import { Field, FieldGroup, FieldLabel, FieldSet } from "./ui/field";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
@@ -142,7 +135,8 @@ export const RankingFilters = () => {
         </FieldGroup>
       </FieldSet>
 
-      <Field orientation={"responsive"}>
+      {/* To be done in the future */}
+      {/*       <Field orientation={"responsive"}>
         <FieldLabel>Sort by</FieldLabel>
         <Select value="newest">
           <SelectTrigger className="w-full">
@@ -155,7 +149,7 @@ export const RankingFilters = () => {
             <SelectItem value="lowestScore">Lowest score first</SelectItem>
           </SelectContent>
         </Select>
-      </Field>
+      </Field> */}
 
       <Button type="submit">Search matches</Button>
       <Button variant="outline" onClick={handleClear}>

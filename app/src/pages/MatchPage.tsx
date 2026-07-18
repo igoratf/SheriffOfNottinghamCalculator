@@ -1,5 +1,4 @@
 import { fetchMatchById } from "@/api/api";
-import { NewPlayerCard } from "@/components/NewPlayerCard";
 import { PlayerCard } from "@/components/PlayerCard";
 import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
