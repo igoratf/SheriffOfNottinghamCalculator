@@ -44,11 +44,6 @@ export interface PlayerScore extends Player {
   score: number;
 }
 
-export interface KingsAndQueens {
-  kings: Record<KingQueenResourceName, Player[]>;
-  queens: Record<KingQueenResourceName, Player[]>;
-}
-
 export interface Match {
   id: number;
   createdAt: string;

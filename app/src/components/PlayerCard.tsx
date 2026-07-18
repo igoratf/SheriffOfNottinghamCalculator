@@ -21,12 +21,12 @@ export interface PlayerCardProps {
 }
 
 const isKingOrQueen = (
-  kingList: KingQueenResourceName[],
-  queenList: KingQueenResourceName[],
   resource: KingQueenResourceName,
+  kingList?: KingQueenResourceName[],
+  queenList?: KingQueenResourceName[],
 ) => {
-  const isKing = kingList.includes(resource);
-  const isQueen = queenList.includes(resource);
+  const isKing = kingList?.includes(resource);
+  const isQueen = queenList?.includes(resource);
   if (!isKing && !isQueen) return null;
 
   return (
@@ -83,7 +83,7 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
           <li>
             🍎 Apples - {player.apple}{" "}
             {player.appleScore && <strong>{`(${player.appleScore})`}</strong>}
-            {isKingOrQueen(player.king, player.queen, "apple")}
+            {isKingOrQueen("apple", player.king, player.queen)}
           </li>
           <li>
             🍞 Bread - {player.bread}{" "}

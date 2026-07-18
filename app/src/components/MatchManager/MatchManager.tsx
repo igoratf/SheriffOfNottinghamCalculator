@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { PlayerModal } from "../PlayerModal";
 import { PlayerCard } from "../PlayerCard";
-import type { KingsAndQueens, Match } from "@/utils/types.d";
+import type { PlayerScore } from "@/utils/types.d";
 import { Tooltip, TooltipContent } from "../ui/tooltip";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import type { PlayerFormData } from "@/utils/schemas";
@@ -14,11 +14,6 @@ export const MatchManager = () => {
   const [players, setPlayers] = useState<PlayerFormData[]>([]);
   const [newPlayerModalOpen, setNewPlayerModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [matchScore, setMatchScore] = useState<Match | undefined>(undefined);
-  const [kingsAndQueens, setKingsAndQueens] = useState<
-    KingsAndQueens | undefined
-  >(undefined);
-
   const openNewPlayerModal = () => {
     setNewPlayerModalOpen(true);
   };
@@ -26,8 +21,6 @@ export const MatchManager = () => {
   const closeNewPlayerModal = () => {
     setNewPlayerModalOpen(false);
   };
-
-  console.log("PLAYERS ", players);
 
   const addPlayer = (player: PlayerFormData) => {
     if (players.length < 5) {
@@ -54,11 +47,9 @@ export const MatchManager = () => {
     setErrorMessage("");
   };
 
-  // TODO: Delegate to backend
   const onCalculateScore = async () => {
     const response = await calculateMatchScore(players);
     if (response) {
-      console.log("Response ", response);
       navigate({
         to: "/match/$matchId",
         params: { matchId: response.match.id },
@@ -67,8 +58,6 @@ export const MatchManager = () => {
   };
 
   const onResetMatch = () => {
-    setMatchScore(undefined);
-    setKingsAndQueens(undefined);
     setPlayers([]);
   };
 
@@ -96,14 +85,11 @@ export const MatchManager = () => {
           role="region"
           aria-label="Player Cards"
         >
-          {players.map((player, index) => (
+          {players.map((player) => (
             <PlayerCard
               key={player.name}
-              player={player}
+              player={player as PlayerScore}
               onDelete={removePlayer}
-              matchScore={matchScore}
-              kingsAndQueens={kingsAndQueens}
-              index={index}
             />
           ))}
         </div>
@@ -121,25 +107,19 @@ export const MatchManager = () => {
               <AddPlayerButton onClick={openNewPlayerModal} disabled={true} />
             </TooltipTrigger>
           ) : (
-            <AddPlayerButton
-              onClick={openNewPlayerModal}
-              disabled={!!matchScore}
-            />
+            <AddPlayerButton onClick={openNewPlayerModal} />
           )}
         </Tooltip>
-        {matchScore ? (
-          <Button onClick={onResetMatch} variant="default">
-            New match
-          </Button>
-        ) : (
-          <Button
-            onClick={onCalculateScore}
-            className="bg-green-700 hover:bg-green-700/90 text-white"
-            disabled={players.length === 0}
-          >
-            Calculate score
-          </Button>
-        )}
+        <Button
+          onClick={onCalculateScore}
+          className="bg-green-700 hover:bg-green-700/90 text-white"
+          disabled={players.length === 0}
+        >
+          Calculate score
+        </Button>
+        <Button onClick={onResetMatch} variant="outline">
+          New match
+        </Button>
       </div>
     </div>
   );
