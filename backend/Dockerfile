@@ -2,15 +2,14 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy the prisma folder explicitly to the WORKDIR
-COPY prisma ./prisma/
-
-# Copy the rest of your app code
 COPY . .
+
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+ENV PORT=3002
 
 RUN npm run build
 
