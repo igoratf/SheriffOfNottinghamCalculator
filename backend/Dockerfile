@@ -9,12 +9,6 @@ RUN npm install
 # Copy the prisma folder explicitly to the WORKDIR
 COPY prisma ./prisma/
 
-# Copy prisma config
-COPY prisma.config.ts ./
-
-# Compile Typescript files to Javascript
-RUN npx tsc
-
 # Copy the rest of your app code
 COPY . .
 
