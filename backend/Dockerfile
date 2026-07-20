@@ -15,6 +15,8 @@ RUN npx prisma generate
 # Copy the rest of your app code
 COPY . .
 
+RUN npm run build
+
 EXPOSE 3002
 
 CMD ["npm", "start"]
