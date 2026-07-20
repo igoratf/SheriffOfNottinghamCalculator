@@ -12,7 +12,7 @@ const player = {
   bread: 2,
   cheese: 1,
   chicken: 11,
-  coin: 50,
+  coins: 50,
   contrabands: [],
   king: [],
   queen: [],
@@ -25,7 +25,7 @@ const player2 = {
   bread: 10,
   cheese: 2,
   chicken: 10,
-  coin: 51,
+  coins: 51,
   contrabands: [],
   king: [],
   queen: [],
@@ -38,7 +38,7 @@ const player3 = {
   bread: 5,
   cheese: 3,
   chicken: 2,
-  coin: 40,
+  coins: 40,
   contrabands: [],
   king: [],
   queen: [],
@@ -63,6 +63,7 @@ describe("match service", () => {
         ...player,
         contrabands: [
           {
+            id: 1,
             name: "Golden Apple",
             quantity: 1,
             score: 4,
@@ -70,6 +71,7 @@ describe("match service", () => {
             resourceBonus: 2,
           },
           {
+            id: 2,
             name: "Gouda Cheese",
             quantity: 1,
             score: 4,
