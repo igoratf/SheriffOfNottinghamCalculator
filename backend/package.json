@@ -11,7 +11,7 @@
     "dev": "tsx watch app.ts",
     "seed": "tsx prisma/seed.ts",
     "build": "prisma generate && tsc",
-    "start": "prisma migrate deploy &&node dist/app.js",
+    "start": "prisma migrate deploy && node dist/app.js",
     "test": "tsx --test"
   },
   "dependencies": {
