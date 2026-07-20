@@ -10,8 +10,8 @@
   "scripts": {
     "dev": "tsx watch app.ts",
     "seed": "tsx prisma/seed.ts",
-    "build": "prisma generate && tsc",
-    "start": "prisma migrate deploy &&node dist/app.js",
+    "build": "tsc",
+    "start": "npx prisma generate && prisma migrate deploy && node dist/app.js",
     "test": "tsx --test"
   },
   "dependencies": {
@@ -33,3 +33,4 @@
     "typescript": "^5.9.3"
   }
 }
+

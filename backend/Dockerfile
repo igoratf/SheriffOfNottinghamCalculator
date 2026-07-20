@@ -9,14 +9,14 @@ RUN npm install
 # Copy the prisma folder explicitly to the WORKDIR
 COPY prisma ./prisma/
 
-# Generate the client (this verifies the file is there during build)
-RUN npx prisma generate
+# Copy prisma config
+COPY prisma.config.ts ./
 
 # Copy the rest of your app code
 COPY . .
 
-# Compile TypeScript to JavaScript
-RUN npm run build
+# Compile TypeScript to JavaScript (without calling prisma generate)
+RUN npx tsc
 
 EXPOSE 3002
 
