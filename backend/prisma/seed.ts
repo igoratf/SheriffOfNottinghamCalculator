@@ -103,6 +103,11 @@ async function main() {
   console.log(`✅ Added ${contrabands.length} Contraband items.`);
 
   // 2. Create a dummy match to test the dashboard
+  if (process.env.NODE_ENV === "production") {
+    console.log("⚠️ Skipping dummy match creation in production.");
+    return;
+  }
+
   await prisma.match.create({
     data: {
       players: {
