@@ -34,7 +34,12 @@ const isKingOrQueen = (
       <TooltipTrigger>
         <span className="ml-2">{isKing ? "🤴" : "👸"}</span>
       </TooltipTrigger>
-      <TooltipContent className="p-2 rounded-lg border-1">
+      <TooltipContent
+        className={classNames("p-2 rounded-lg border-1 bg-white", {
+          "border-amber-300": isKing,
+          "border-slate-300": isQueen,
+        })}
+      >
         {capitalizeFirstLetter(resource)} {isKing ? "king" : "queen"}
       </TooltipContent>
     </Tooltip>
