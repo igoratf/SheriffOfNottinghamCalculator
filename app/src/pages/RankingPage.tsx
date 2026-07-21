@@ -19,7 +19,6 @@ export const RankingPage = () => {
 
   const matches = data?.matches?.data || [];
   const pagination = data?.matches?.pagination;
-  console.log("pagination ", pagination);
 
   return (
     <main className="flex items-center p-6 justify-start mt-auto min-h-screen flex-col">
@@ -42,30 +41,34 @@ export const RankingPage = () => {
 
       <ul className="flex flex-col gap-4">
         {/* TODO: Create FE type or schema from backend */}
-        {matches.map((match: Match) => (
-          <Link
-            to={`/match/$matchId`}
-            params={{ matchId: match.id.toString() }}
-            key={match.id}
-            className="px-4 py-2 bg-slate-200 flex flex-col w-md gap-4 rounded-lg cursor-pointer hover:bg-slate-300  transition-colors"
-          >
-            <div className="flex justify-between">
-              <span className="flex-2 text-gray-600 font-medium">
-                {new Date(match.createdAt).toLocaleString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </span>
-              <span className="text-left flex-1 text-gray-800 font-medium">
-                Total score: {match.totalScore}
-              </span>
-            </div>
-            <p className="text-sm text-gray-500">
-              {match.players.map((player: Player) => player.name).join(", ")}
-            </p>
-          </Link>
-        ))}
+        {matches.length > 0 ? (
+          matches.map((match: Match) => (
+            <Link
+              to={`/match/$matchId`}
+              params={{ matchId: match.id.toString() }}
+              key={match.id}
+              className="px-4 py-2 bg-slate-200 flex flex-col w-md gap-4 rounded-lg cursor-pointer hover:bg-slate-300  transition-colors"
+            >
+              <div className="flex justify-between">
+                <span className="flex-2 text-gray-600 font-medium">
+                  {new Date(match.createdAt).toLocaleString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+                <span className="text-left flex-1 text-gray-800 font-medium">
+                  Total score: {match.totalScore}
+                </span>
+              </div>
+              <p className="text-sm text-gray-500">
+                {match.players.map((player: Player) => player.name).join(", ")}
+              </p>
+            </Link>
+          ))
+        ) : (
+          <p className="text-gray-500">No matches found</p>
+        )}
       </ul>
       <PaginationHandler
         className="mt-4"
