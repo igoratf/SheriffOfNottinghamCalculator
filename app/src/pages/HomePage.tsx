@@ -16,7 +16,7 @@ export const HomePage = () => {
         </p>
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-3xl mx-auto">
           <h2 className="text-lg font-semibold text-blue-900 mb-2">
-            How to Use
+            How to use
           </h2>
           <ol className="text-sm text-blue-800 text-left space-y-1">
             <li>1. Add players (2-5 players supported)</li>
