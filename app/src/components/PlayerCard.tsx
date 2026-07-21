@@ -88,16 +88,19 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
           <li>
             🍞 Bread - {player.bread}{" "}
             {player.breadScore && <strong>{`(${player.breadScore})`}</strong>}
+            {isKingOrQueen("bread", player.king, player.queen)}
           </li>
           <li>
             🧀 Cheese - {player.cheese}{" "}
             {player.cheeseScore && <strong>{`(${player.cheeseScore})`}</strong>}
+            {isKingOrQueen("cheese", player.king, player.queen)}
           </li>
           <li>
             🐔 Chicken - {player.chicken}{" "}
-            {player.cheeseScore && (
+            {player.chickenScore && (
               <strong>{`(${player.chickenScore})`}</strong>
             )}
+            {isKingOrQueen("chicken", player.king, player.queen)}
           </li>
           <li>
             🪙 Coins - {player.coins}{" "}
