@@ -2,11 +2,13 @@ import { MatchManager } from "@/components/MatchManager/MatchManager";
 
 export const HomePage = () => {
   return (
-    <main className="flex items-center p-12 justify-start mt-auto min-h-screen flex-col">
+    <main className="flex items-center p-6 justify-start mt-auto min-h-screen flex-col">
       <header className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Sheriff of Nottingham Score Calculator
         </h1>
+      </header>
+      <div>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
           Calculate scores for your Sheriff of Nottingham board game matches
           instantly. Track player scores, contraband goods, and determine the
@@ -23,7 +25,7 @@ export const HomePage = () => {
             <li>4. Start a new match anytime</li>
           </ol>
         </div>
-      </header>
+      </div>
 
       <section aria-label="Score Calculator">
         <MatchManager />

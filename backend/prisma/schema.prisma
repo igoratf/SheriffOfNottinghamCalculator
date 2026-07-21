@@ -1,0 +1,60 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model Match {
+    id         Int           @id @default(autoincrement())
+    createdAt  DateTime      @default(now())
+    totalScore Int           @default(0)
+    players    MatchPlayer[]
+}
+
+model MatchPlayer {
+    id          Int                @id @default(autoincrement())
+    matchId     Int
+    coins       Int                @default(0)
+    name        String
+    king        Resource[]         @default([])
+    queen       Resource[]         @default([])
+    score       Int                @default(0)
+    apple       Int                @default(0)
+    bread       Int                @default(0)
+    cheese      Int                @default(0)
+    chicken     Int                @default(0)
+    match       Match              @relation(fields: [matchId], references: [id])
+    contrabands PlayerContraband[]
+
+    @@unique([matchId, name])
+    @@index([matchId])
+}
+
+model Contraband {
+    id              Int                @id @default(autoincrement())
+    name            String             @unique
+    score           Int
+    resourceBonus   Int                @default(0)
+    resourceType    Resource?
+    playersWithThis PlayerContraband[]
+}
+
+model PlayerContraband {
+    id            Int         @id @default(autoincrement())
+    matchPlayerId Int
+    contrabandId  Int
+    quantity      Int         @default(1)
+    contraband    Contraband  @relation(fields: [contrabandId], references: [id])
+    matchPlayer   MatchPlayer @relation(fields: [matchPlayerId], references: [id])
+
+    @@unique([matchPlayerId, contrabandId])
+}
+
+enum Resource {
+    apple
+    bread
+    cheese
+    chicken
+}

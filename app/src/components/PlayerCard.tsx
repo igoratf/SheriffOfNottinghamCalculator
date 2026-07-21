@@ -1,10 +1,4 @@
-import type {
-  Player,
-  PlayerScore,
-  KingsAndQueens,
-  KingQueenResourceName,
-  PlayerContraband,
-} from "@/utils/types.d";
+import type { KingQueenResourceName, PlayerScore } from "@/utils/types.d";
 import {
   Card,
   CardContent,
@@ -14,105 +8,56 @@ import {
 } from "./ui/card";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
-import { capitalizeFirstLetter } from "@/utils/helpers";
 import { TrashIcon } from "lucide-react";
-import { useMemo } from "react";
 import classNames from "classnames";
+import { PlayerContrabandDetails } from "./PlayerContrabandDetails";
+import { capitalizeFirstLetter } from "@/utils/helpers";
+import { Tooltip } from "./ui/tooltip";
+import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
-const displayContrabandDetails = (contrabands: PlayerContraband[]) => {
-  if (!contrabands || contrabands.length === 0) {
-    return null;
-  }
+export interface PlayerCardProps {
+  player: PlayerScore;
+  onDelete?: (player: PlayerScore) => void;
+}
+
+const isKingOrQueen = (
+  resource: KingQueenResourceName,
+  kingList?: KingQueenResourceName[],
+  queenList?: KingQueenResourceName[],
+) => {
+  const isKing = kingList?.includes(resource);
+  const isQueen = queenList?.includes(resource);
+  if (!isKing && !isQueen) return null;
 
   return (
-    <div className="mt-4">
-      <h4 className="font-medium text-sm mb-2">Detailed Contrabands:</h4>
-      <ul className="text-sm space-y-1">
-        {contrabands.map((playerContraband, index) => (
-          <li key={index} className="flex justify-between">
-            <span>
-              {playerContraband.contraband.name} x{playerContraband.quantity}
-            </span>
-            <span className="text-muted-foreground">
-              ({playerContraband.contraband.score * playerContraband.quantity}{" "}
-              pts
-              {playerContraband.contraband.resourceBonus &&
-                playerContraband.contraband.resourceType &&
-                `, +${
-                  playerContraband.contraband.resourceBonus *
-                  playerContraband.quantity
-                } ${playerContraband.contraband.resourceType}`}
-              )
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Tooltip>
+      <TooltipTrigger>
+        <span className="ml-2">{isKing ? "🤴" : "👸"}</span>
+      </TooltipTrigger>
+      <TooltipContent className="p-2 rounded-lg border-1">
+        {capitalizeFirstLetter(resource)} {isKing ? "king" : "queen"}
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
-export interface PlayerCardProps {
-  player: Player;
-  index: number;
-  onDelete: (player: Player) => void;
-  matchScore?: Record<string, PlayerScore>;
-  kingsAndQueens?: KingsAndQueens;
-}
-
-export const PlayerCard = ({
-  player,
-  matchScore,
-  kingsAndQueens,
-  index,
-  onDelete,
-}: PlayerCardProps) => {
-  const playerScore = matchScore?.[player.name];
-
-  const kings = useMemo(
-    () =>
-      kingsAndQueens?.kings || ({} as Record<KingQueenResourceName, Player[]>),
-    [kingsAndQueens?.kings]
-  );
-  const queens = useMemo(
-    () =>
-      kingsAndQueens?.queens || ({} as Record<KingQueenResourceName, Player[]>),
-    [kingsAndQueens?.queens]
+export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
+  const totalContrabandScore = player.contrabands?.reduce(
+    (total, c) => total + c.score * c.quantity,
+    0,
   );
 
-  const kingResources = useMemo(
-    () =>
-      Object.keys(kings).filter((resource) =>
-        kings[resource as KingQueenResourceName].includes(player)
-      ),
-    [kings, player]
-  );
-  const queenResources = useMemo(
-    () =>
-      Object.keys(queens).filter((resource) =>
-        queens[resource as KingQueenResourceName].includes(player)
-      ),
-    [queens, player]
-  );
-
-  const isTiedForFirst = useMemo(() => {
-    if (!matchScore) return false;
-    const allScores = Object.values(matchScore).map((score) => score.total);
-    const highestScore = Math.max(...allScores);
-    return allScores.filter((score) => score === highestScore).length > 1;
-  }, [matchScore]);
-
-  const isFirst = index === 0 && !!playerScore && !isTiedForFirst;
-  const isSecond = index === 1 && !!playerScore && !isTiedForFirst;
+  console.log("Player ", player);
 
   return (
     <Card
-      className={classNames("max-h-120 w-70 relative h-max", {
-        "inset-ring inset-ring-yellow-500/50": isFirst || isTiedForFirst,
-        "inset-ring inset-ring-slate-500/50": isSecond,
+      className={classNames("max-h-140 w-70 relative h-max", {
+        /*         "inset-ring inset-ring-yellow-500/50": isFirst || isTiedForFirst,
+        "inset-ring inset-ring-slate-500/50": isSecond, */
       })}
     >
       <CardHeader>
-        {!matchScore && (
+        {!player.score && (
           <Button
             onClick={() => onDelete?.(player)}
             variant="ghost"
@@ -125,62 +70,58 @@ export const PlayerCard = ({
         <CardTitle>
           <div className="flex items-center gap-2">
             <span className="font-semibold">{player.name}</span>
-            {isFirst && <span className="text-yellow-500">Winner! 👑</span>}
+            {/*  {isFirst && <span className="text-yellow-500">Winner! 👑</span>}
             {isTiedForFirst && (
               <span className="text-yellow-500">Tied for 1st!</span>
             )}
-            {isSecond && <span className="text-slate-600">2nd place</span>}
+            {isSecond && <span className="text-slate-600">2nd place</span>} */}
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <ul>
           <li>
-            Apple - {player.apple} {playerScore && `(${playerScore.apple})`}
+            🍎 Apples - {player.apple}{" "}
+            {player.appleScore && <strong>{`(${player.appleScore})`}</strong>}
+            {isKingOrQueen("apple", player.king, player.queen)}
           </li>
           <li>
-            Bread - {player.bread} {playerScore && `(${playerScore.bread})`}
+            🍞 Bread - {player.bread}{" "}
+            {player.breadScore && <strong>{`(${player.breadScore})`}</strong>}
           </li>
           <li>
-            Chicken - {player.chicken}{" "}
-            {playerScore && `(${playerScore.chicken})`}
+            🧀 Cheese - {player.cheese}{" "}
+            {player.cheeseScore && <strong>{`(${player.cheeseScore})`}</strong>}
           </li>
           <li>
-            Cheese - {player.cheese} {playerScore && `(${playerScore.cheese})`}
+            🐔 Chicken - {player.chicken}{" "}
+            {player.cheeseScore && (
+              <strong>{`(${player.chickenScore})`}</strong>
+            )}
           </li>
           <li>
-            Coin - {player.coin} {playerScore && `(${playerScore.coin})`}
+            🪙 Coins - {player.coins}{" "}
+            {player.score && <strong>{`(${player.coins})`}</strong>}
           </li>
           <li>
-            Contraband -{" "}
-            {player.contrabands.reduce((total, pc) => total + pc.quantity, 0)}{" "}
-            {playerScore && `(${playerScore.contraband})`}
+            💼 Contraband - {totalContrabandScore}{" "}
+            {player.score && <strong>{`(${totalContrabandScore})`}</strong>}
           </li>
         </ul>
 
-        {displayContrabandDetails(player.contrabands)}
+        {player.contrabands?.length > 0 && <Separator className="mt-4" />}
+
+        <PlayerContrabandDetails contrabands={player.contrabands} />
       </CardContent>
-      {playerScore && (
+      {player.score && (
         <>
-          <Separator className="mt-auto" />
+          <div className="px-6">
+            <Separator className="mt-auto px-6" />
+          </div>
           <CardFooter>
-            <div className="flex flex-col items-left">
-              <ul>
-                {kingResources.map((resource) => (
-                  <li key={resource} className="font-semibold text-yellow-500">
-                    {capitalizeFirstLetter(resource)} king
-                  </li>
-                ))}
-                {queenResources.map((resource) => (
-                  <li key={resource} className="font-semibold text-slate-500">
-                    {capitalizeFirstLetter(resource)} queen
-                  </li>
-                ))}
-              </ul>
-              <span className="mt-2 text-md font-semibold">
-                Score: {playerScore.total}
-              </span>
-            </div>
+            <span className="mt-2 text-md font-semibold">
+              Score: {player.score}
+            </span>
           </CardFooter>
         </>
       )}

@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: my_postgres_app
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_HOST_PORT}:${DB_CONTAINER_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Added: Ensures other services know when the DB is actually "ready"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend      # Look here for the code
+      dockerfile: Dockerfile  # The instructions are right here
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      # Note: We use 'db' as the hostname because it matches the service name above
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?schema=public
+    depends_on:
+      db:
+        condition: service_healthy # Wait for healthcheck to pass
+    # Added: This runs migrations and starts your app automatically
+    command: >
+      sh -c "npx prisma generate && npx prisma migrate deploy --schema ./prisma/schema.prisma && npm run dev"
+
+volumes:
+  postgres_data:

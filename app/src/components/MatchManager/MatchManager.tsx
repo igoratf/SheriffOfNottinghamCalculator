@@ -2,22 +2,18 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { PlayerModal } from "../PlayerModal";
 import { PlayerCard } from "../PlayerCard";
-import type { Player, PlayerScore, KingsAndQueens } from "@/utils/types.d";
+import type { PlayerScore } from "@/utils/types.d";
 import { Tooltip, TooltipContent } from "../ui/tooltip";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import { calculateKingsAndQueens, calculateScore } from "@/utils/helpers";
+import type { PlayerFormData } from "@/utils/schemas";
+import { calculateMatchScore } from "@/api/api";
+import { useNavigate } from "@tanstack/react-router";
 
 export const MatchManager = () => {
-  const [players, setPlayers] = useState<Player[]>([]);
+  const navigate = useNavigate();
+  const [players, setPlayers] = useState<PlayerFormData[]>([]);
   const [newPlayerModalOpen, setNewPlayerModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [matchScore, setMatchScore] = useState<
-    Record<string, PlayerScore> | undefined
-  >(undefined);
-  const [kingsAndQueens, setKingsAndQueens] = useState<
-    KingsAndQueens | undefined
-  >(undefined);
-
   const openNewPlayerModal = () => {
     setNewPlayerModalOpen(true);
   };
@@ -26,10 +22,10 @@ export const MatchManager = () => {
     setNewPlayerModalOpen(false);
   };
 
-  const addPlayer = (player: Player) => {
+  const addPlayer = (player: PlayerFormData) => {
     if (players.length < 5) {
       const alreadyExists = players.find(
-        (p) => player.name.toLowerCase() === p.name.toLowerCase()
+        (p) => player.name.toLowerCase() === p.name.toLowerCase(),
       );
       if (alreadyExists) {
         // Move this to player form or toast
@@ -44,30 +40,24 @@ export const MatchManager = () => {
     }
   };
 
-  const removePlayer = (player: Player) => {
+  const removePlayer = (player: PlayerFormData) => {
     setPlayers((prevPlayers) =>
-      prevPlayers.filter((p) => p.name !== player.name)
+      prevPlayers.filter((p) => p.name !== player.name),
     );
     setErrorMessage("");
   };
 
-  // TODO: Extract this to provider
-  const onCalculateScore = () => {
-    const score = calculateScore(players);
-    const kingsAndQueens = calculateKingsAndQueens(players);
-
-    setMatchScore(score);
-    setKingsAndQueens(kingsAndQueens);
-
-    const sortedPlayers = [...players].sort((a, b) => {
-      return score[b.name].total - score[a.name].total;
-    });
-    setPlayers(sortedPlayers);
+  const onCalculateScore = async () => {
+    const response = await calculateMatchScore(players);
+    if (response) {
+      navigate({
+        to: "/match/$matchId",
+        params: { matchId: response.match.id },
+      });
+    }
   };
 
   const onResetMatch = () => {
-    setMatchScore(undefined);
-    setKingsAndQueens(undefined);
     setPlayers([]);
   };
 
@@ -95,14 +85,11 @@ export const MatchManager = () => {
           role="region"
           aria-label="Player Cards"
         >
-          {players.map((player, index) => (
+          {players.map((player) => (
             <PlayerCard
               key={player.name}
-              player={player}
+              player={player as PlayerScore}
               onDelete={removePlayer}
-              matchScore={matchScore}
-              kingsAndQueens={kingsAndQueens}
-              index={index}
             />
           ))}
         </div>
@@ -120,25 +107,19 @@ export const MatchManager = () => {
               <AddPlayerButton onClick={openNewPlayerModal} disabled={true} />
             </TooltipTrigger>
           ) : (
-            <AddPlayerButton
-              onClick={openNewPlayerModal}
-              disabled={!!matchScore}
-            />
+            <AddPlayerButton onClick={openNewPlayerModal} />
           )}
         </Tooltip>
-        {matchScore ? (
-          <Button onClick={onResetMatch} variant="default">
-            New match
-          </Button>
-        ) : (
-          <Button
-            onClick={onCalculateScore}
-            className="bg-green-700 hover:bg-green-700/90 text-white"
-            disabled={players.length === 0}
-          >
-            Calculate score
-          </Button>
-        )}
+        <Button
+          onClick={onCalculateScore}
+          className="bg-green-700 hover:bg-green-700/90 text-white"
+          disabled={players.length === 0}
+        >
+          Calculate score
+        </Button>
+        <Button onClick={onResetMatch} variant="outline">
+          New match
+        </Button>
       </div>
     </div>
   );

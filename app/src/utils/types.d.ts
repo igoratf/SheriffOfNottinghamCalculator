@@ -3,12 +3,12 @@ export type ResourceName =
   | "bread"
   | "cheese"
   | "chicken"
-  | "coin"
+  | "coins"
   | "contraband";
 
 export type KingQueenResourceName = Exclude<
   ResourceName,
-  "coin" | "contraband"
+  "coins" | "contraband"
 >;
 
 export interface Contraband {
@@ -18,9 +18,9 @@ export interface Contraband {
   resourceType?: ResourceName;
 }
 
-export interface PlayerContraband {
-  contraband: Contraband;
+export interface PlayerContraband extends Contraband {
   quantity: number;
+  totalScore?: number;
 }
 
 export interface Player {
@@ -30,20 +30,23 @@ export interface Player {
   cheese: number;
   chicken: number;
   contrabands: PlayerContraband[];
-  coin: number;
+  coins: number;
 }
 
-export interface PlayerScore {
-  apple: number;
-  bread: number;
-  cheese: number;
-  chicken: number;
-  coin: number;
-  contraband: number;
-  total: number;
+export interface PlayerScore extends Player {
+  id: number;
+  appleScore: number;
+  breadScore: number;
+  cheeseScore: number;
+  chickenScore: number;
+  king: KingQueenResourceName[];
+  queen: KingQueenResourceName[];
+  score: number;
 }
 
-export interface KingsAndQueens {
-  kings: Record<KingQueenResourceName, Player[]>;
-  queens: Record<KingQueenResourceName, Player[]>;
+export interface Match {
+  id: number;
+  createdAt: string;
+  totalScore: number;
+  players: PlayerScore[];
 }

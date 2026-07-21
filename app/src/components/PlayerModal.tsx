@@ -1,4 +1,3 @@
-import type { Player } from "@/utils/types.d";
 import { PlayerForm } from "./PlayerForm";
 import { Button } from "./ui/button";
 import {
@@ -9,11 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
+import type { PlayerFormData } from "@/utils/schemas";
 
 interface PlayerModalProps {
   isOpen?: boolean;
   onClose: () => void;
-  onConfirm: (player: Player) => void;
+  onConfirm: (player: PlayerFormData) => void;
 }
 
 export const PlayerModal = ({
@@ -23,7 +23,7 @@ export const PlayerModal = ({
 }: PlayerModalProps) => {
   return (
     <Dialog open={isOpen}>
-      <DialogContent showCloseButton={false}>
+      <DialogContent showCloseButton={false} className="overflow-auto">
         <DialogHeader>
           <DialogTitle>Add new player</DialogTitle>
         </DialogHeader>

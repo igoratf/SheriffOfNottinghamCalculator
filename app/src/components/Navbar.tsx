@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export const Navbar = () => {
   return (
     <nav className="bg-white shadow p-4 flex items-center">
@@ -9,20 +11,34 @@ export const Navbar = () => {
 
       <ul className="flex space-x-6 ml-8">
         <li>
-          <a
-            href="#"
-            className="text-gray-700 hover:text-amber-600 transition-colors"
+          <Link
+            to="/"
+            activeOptions={{ exact: true }}
+            inactiveProps={{
+              className: "text-gray-700 hover:text-amber-600 transition-colors",
+            }}
+            activeProps={{ className: "text-amber-600" }}
           >
             Home
-          </a>
+          </Link>
         </li>
         <li>
-          <a
-            href="#"
-            className="text-gray-400 cursor-not-allowed opacity-50 pointer-events-none"
+          <Link
+            to="/ranking"
+            search={{
+              page: 1,
+              players: undefined,
+              dateFrom: undefined,
+              dateTo: undefined,
+            }}
+            inactiveProps={{
+              className: "text-gray-700 hover:text-amber-600 transition-colors",
+            }}
+            activeOptions={{}}
+            activeProps={{ className: "text-amber-600" }}
           >
             Ranking
-          </a>
+          </Link>
         </li>
       </ul>
     </nav>
