@@ -117,9 +117,11 @@ export const MatchManager = () => {
         >
           Calculate score
         </Button>
-        <Button onClick={onResetMatch} variant="outline">
-          New match
-        </Button>
+        {players.length > 0 && (
+          <Button onClick={onResetMatch} variant="outline">
+            New match
+          </Button>
+        )}
       </div>
     </div>
   );
