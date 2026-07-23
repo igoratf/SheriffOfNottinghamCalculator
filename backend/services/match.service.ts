@@ -1,4 +1,3 @@
-import { PrismaPg } from "@prisma/adapter-pg";
 import {
   GOODS_SCORES,
   KINGS_BONUS,
@@ -6,20 +5,10 @@ import {
   QUEENS_BONUS,
 } from "../constants.js";
 import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
-import { PrismaClient, type Match } from "@prisma/client";
 import type { MatchWithPlayers } from "./types.js";
 import { AppError } from "../utils/AppError.js";
-import {
-  getPageOffset,
-  ITEMS_PER_PAGE,
-  parseStringToDate,
-} from "../utils/utils.js";
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
-
-export const prisma = new PrismaClient({ adapter });
+import { getPageOffset, ITEMS_PER_PAGE } from "../utils/utils.js";
+import { prisma } from "../prisma/client.js";
 
 export const calculateMatchScore = async (players: Player[]) => {
   const matchPlayers = await calculateGoodsScore(players);
