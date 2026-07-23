@@ -58,3 +58,11 @@ enum Resource {
     cheese
     chicken
 }
+
+model RateLimiter {
+    id          String   @id
+    requests    Int
+    windowStart DateTime
+
+    @@map("rate_limit")
+}
