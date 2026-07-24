@@ -21,6 +21,7 @@ export const MatchPage = () => {
     );
 
   const { totalScore, createdAt, players } = data.match;
+  const sortedPlayers = players?.sort((a, b) => b.score - a.score) || [];
 
   return (
     <main className="flex items-center p-6 justify-start mt-auto min-h-screen flex-col">
@@ -44,10 +45,10 @@ export const MatchPage = () => {
         </p>
       </div>
 
-      <div className="mt-6">
+      <div className="flex flex-col mt-6">
         <h2 className="text-2xl font-semibold text-center">Players</h2>
-        <ul className="flex gap-6 mt-2">
-          {players?.map((player) => (
+        <ul className="flex flex-col md:flex-row gap-6 mt-2">
+          {sortedPlayers.map((player) => (
             <PlayerCard player={player} key={player.id} />
           ))}
         </ul>
