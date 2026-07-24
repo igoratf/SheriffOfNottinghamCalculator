@@ -39,32 +39,35 @@ export const RankingPage = () => {
         </div>
       )}
 
-      <ul className="flex flex-col gap-4">
+      <ul className="flex flex-col items-center w-full gap-4">
         {/* TODO: Create FE type or schema from backend */}
         {matches.length > 0 ? (
           matches.map((match: Match) => (
-            <Link
-              to={`/match/$matchId`}
-              params={{ matchId: match.id.toString() }}
-              key={match.id}
-              className="px-4 py-2 bg-slate-200 flex flex-col w-md gap-4 rounded-lg cursor-pointer hover:bg-slate-300  transition-colors"
-            >
-              <div className="flex justify-between">
-                <span className="flex-2 text-gray-600 font-medium">
-                  {new Date(match.createdAt).toLocaleString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </span>
-                <span className="text-left flex-1 text-gray-800 font-medium">
-                  Total score: {match.totalScore}
-                </span>
-              </div>
-              <p className="text-sm text-gray-500">
-                {match.players.map((player: Player) => player.name).join(", ")}
-              </p>
-            </Link>
+            <li key={match.id} className="w-full max-w-md flex justify-center">
+              <Link
+                to={`/match/$matchId`}
+                params={{ matchId: match.id.toString() }}
+                className="px-4 py-2 bg-slate-200 flex grow flex-col gap-4 rounded-lg cursor-pointer hover:bg-slate-300  transition-colors"
+              >
+                <div className="flex justify-between">
+                  <span className="flex-2 text-gray-600 font-medium">
+                    {new Date(match.createdAt).toLocaleString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <span className="text-left flex-1 text-gray-600 font-medium">
+                    Total score: {match.totalScore}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500">
+                  {match.players
+                    .map((player: Player) => player.name)
+                    .join(", ")}
+                </p>
+              </Link>
+            </li>
           ))
         ) : (
           <p className="text-gray-500">No matches found</p>
