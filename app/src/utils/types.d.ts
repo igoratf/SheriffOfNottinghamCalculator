@@ -42,6 +42,7 @@ export interface PlayerScore extends Player {
   king: KingQueenResourceName[];
   queen: KingQueenResourceName[];
   score: number;
+  bonus?: Record<KingQueenResourceName, number>;
 }
 
 export interface Match {

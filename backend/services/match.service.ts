@@ -13,9 +13,11 @@ import { prisma } from "../prisma/client.js";
 export const calculateMatchScore = async (players: Player[]) => {
   const matchPlayers = await calculateGoodsScore(players);
 
-  const { kings, queens } = calculateKingsAndQueens(matchPlayers);
+  // Extract a call to calculate contraband bonus here
+  const { kings, queens, playersWithContrabandBonus } =
+    calculateKingsAndQueens(matchPlayers);
   calculateKingQueenBonus(kings, queens);
-  const matchTotalScore = matchPlayers.reduce((acc, player) => {
+  const matchTotalScore = playersWithContrabandBonus.reduce((acc, player) => {
     return acc + player.totalScore;
   }, 0);
 
@@ -24,6 +26,7 @@ export const calculateMatchScore = async (players: Player[]) => {
 
 export const saveMatch = async (players: Player[]) => {
   const { matchPlayers, matchTotalScore } = await calculateMatchScore(players);
+  console.log("match players ", matchPlayers);
 
   const match = await prisma.match.create({
     data: {
@@ -39,6 +42,7 @@ export const saveMatch = async (players: Player[]) => {
           king: player.king,
           queen: player.queen,
           score: player.totalScore,
+          bonus: player.bonus,
           contrabands: {
             create: player.contrabands?.map((contraband) => ({
               quantity: contraband.quantity,
@@ -70,6 +74,7 @@ export const saveMatch = async (players: Player[]) => {
 };
 
 export const mapMatchToResponse = (match: MatchWithPlayers) => {
+  console.log("match from db ", match);
   const formattedPlayers = match.players.map((player) => ({
     ...player,
     appleScore: player.apple * GOODS_SCORES["apple"],
@@ -100,6 +105,7 @@ export const calculateGoodsScore = async (players: Player[]) => {
     totalScore += player.cheese * GOODS_SCORES["cheese"];
     totalScore += player.chicken * GOODS_SCORES["chicken"];
     totalScore += player.coins;
+
     if (player.contrabands) {
       totalScore += player.contrabands.reduce(
         (acc, curr) =>
@@ -116,38 +122,40 @@ export const calculateGoodsScore = async (players: Player[]) => {
 };
 
 export const calculateKingsAndQueens = (players: PlayerScore[]) => {
-  players.forEach((player) => calculateContrabandBonus(player));
+  const playersWithContrabandBonus = players.map((player) =>
+    calculateContrabandBonus(player),
+  );
 
   const { max: appleMax, secondMax: appleSecondMax } = calculateResourcesMax(
-    players,
+    playersWithContrabandBonus,
     "apple",
   );
   const { max: breadMax, secondMax: breadSecondMax } = calculateResourcesMax(
-    players,
+    playersWithContrabandBonus,
     "bread",
   );
 
   const { max: cheeseMax, secondMax: cheeseSecondMax } = calculateResourcesMax(
-    players,
+    playersWithContrabandBonus,
     "cheese",
   );
   const { max: chickenMax, secondMax: chickenSecondMax } =
-    calculateResourcesMax(players, "chicken");
+    calculateResourcesMax(playersWithContrabandBonus, "chicken");
 
-  const kings: Record<KingQueenResourceName, PlayerScore[]> = {
+  const kings: Record<KingQueenResourceName, Player[]> = {
     apple: [],
     bread: [],
     cheese: [],
     chicken: [],
   };
-  const queens: Record<KingQueenResourceName, PlayerScore[]> = {
+  const queens: Record<KingQueenResourceName, Player[]> = {
     apple: [],
     bread: [],
     cheese: [],
     chicken: [],
   };
 
-  players.forEach((player) => {
+  playersWithContrabandBonus.forEach((player) => {
     if (player.apple === appleMax) {
       kings.apple.push(player);
     } else if (kings.apple.length <= 1 && player.apple === appleSecondMax) {
@@ -176,11 +184,11 @@ export const calculateKingsAndQueens = (players: PlayerScore[]) => {
     }
   });
 
-  return { kings, queens };
+  return { kings, queens, playersWithContrabandBonus };
 };
 
 type KingsAndQueens = {
-  [K in KingQueenResourceName]: PlayerScore[];
+  [K in KingQueenResourceName]: Player[];
 };
 
 const calculateKingQueenBonus = (
@@ -234,7 +242,7 @@ const calculateKingQueenBonus = (
  * @returns
  */
 const calculateResourcesMax = (
-  players: Player[],
+  players: PlayerScore[],
   resource: KingQueenResourceName,
 ) => {
   players.sort((a, b) => b[resource] - a[resource]);
@@ -250,24 +258,22 @@ const calculateResourcesMax = (
  * @param player of the match
  * @returns player with goods count updated
  */
-const calculateContrabandBonus = (player: Player) => {
+const calculateContrabandBonus = (player: PlayerScore): PlayerScore => {
   if (!player.contrabands?.length) return player;
+  const playerWithContrabandBonus: PlayerScore = { ...player };
 
   const playerContrabands = player.contrabands;
-  const playerWithContrabandBonus = playerContrabands.map(
-    (playerContraband) => {
-      const { resourceType, resourceBonus } = playerContraband;
-      if (resourceType && resourceBonus && resourceType in player) {
-        return {
-          ...player,
-          [resourceType]: (player[resourceType as KingQueenResourceName] +=
-            resourceBonus * playerContraband.quantity),
-        };
+  playerContrabands.forEach((playerContraband) => {
+    const { resourceType, resourceBonus } = playerContraband;
+    if (resourceType && resourceBonus && resourceType in player) {
+      const bonus = resourceBonus * playerContraband.quantity;
+      if (player.bonus?.[resourceType]) {
+        player.bonus[resourceType] += bonus;
+      } else {
+        player.bonus = { ...player.bonus, [resourceType]: bonus };
       }
-
-      return player;
-    },
-  );
+    }
+  });
 
   return playerWithContrabandBonus;
 };

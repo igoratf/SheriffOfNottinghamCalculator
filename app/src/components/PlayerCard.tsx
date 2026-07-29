@@ -14,6 +14,7 @@ import { PlayerContrabandDetails } from "./PlayerContrabandDetails";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 import { Tooltip } from "./ui/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Badge } from "./ui/badge";
 
 export interface PlayerCardProps {
   player: PlayerScore;
@@ -32,7 +33,7 @@ const isKingOrQueen = (
   return (
     <Tooltip>
       <TooltipTrigger>
-        <span className="ml-2">{isKing ? "🤴" : "👸"}</span>
+        <span>{isKing ? "🤴" : "👸"}</span>
       </TooltipTrigger>
       <TooltipContent
         className={classNames("p-2 rounded-lg border-1 bg-white", {
@@ -85,34 +86,68 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
       </CardHeader>
       <CardContent>
         <ul>
-          <li>
-            🍎 Apples - {player.apple}{" "}
-            {player.appleScore && <strong>{`(${player.appleScore})`}</strong>}
+          <li className="space-x-1 flex items-center">
+            <span>🍎 Apples - {player.apple}</span>
+            <span>
+              {player.appleScore && <strong>{`(${player.appleScore})`}</strong>}
+            </span>
+            {player.bonus?.apple && (
+              <Badge
+                variant="outline"
+                className="ml-2 text-amber-500 bg-amber-500/10 border-amber-500/20"
+              >
+                +{player.bonus.apple}
+              </Badge>
+            )}
             {isKingOrQueen("apple", player.king, player.queen)}
           </li>
-          <li>
-            🍞 Bread - {player.bread}{" "}
+          <li className="space-x-1 flex items-center">
+            <span>🍞 Bread - {player.bread} </span>
             {player.breadScore && <strong>{`(${player.breadScore})`}</strong>}
+            {player.bonus?.bread && (
+              <Badge
+                variant="outline"
+                className="ml-2 text-amber-500 bg-amber-500/10 border-amber-500/20"
+              >
+                +{player.bonus.bread}
+              </Badge>
+            )}
             {isKingOrQueen("bread", player.king, player.queen)}
           </li>
-          <li>
-            🧀 Cheese - {player.cheese}{" "}
+          <li className="space-x-1 flex items-center">
+            <span>🧀 Cheese - {player.cheese} </span>
             {player.cheeseScore && <strong>{`(${player.cheeseScore})`}</strong>}
+            {player.bonus?.cheese && (
+              <Badge
+                variant="outline"
+                className="ml-2 text-amber-500 bg-amber-500/10 border-amber-500/20"
+              >
+                +{player.bonus.cheese}
+              </Badge>
+            )}
             {isKingOrQueen("cheese", player.king, player.queen)}
           </li>
-          <li>
-            🐔 Chicken - {player.chicken}{" "}
+          <li className="space-x-1 flex items-center">
+            <span>🐔 Chicken - {player.chicken} </span>
             {player.chickenScore && (
               <strong>{`(${player.chickenScore})`}</strong>
             )}
+            {player.bonus?.chicken && (
+              <Badge
+                variant="outline"
+                className="ml-2 text-amber-500 bg-amber-500/10 border-amber-500/20"
+              >
+                +{player.bonus.chicken}
+              </Badge>
+            )}
             {isKingOrQueen("chicken", player.king, player.queen)}
           </li>
-          <li>
-            🪙 Coins - {player.coins}{" "}
+          <li className="space-x-1 flex items-center">
+            <span>🪙 Coins - {player.coins} </span>
             {player.score && <strong>{`(${player.coins})`}</strong>}
           </li>
-          <li>
-            💼 Contraband - {totalContrabandScore}{" "}
+          <li className="space-x-1 flex items-center">
+            <span>💼 Contraband - {totalContrabandScore} </span>
             {player.score && <strong>{`(${totalContrabandScore})`}</strong>}
           </li>
         </ul>
