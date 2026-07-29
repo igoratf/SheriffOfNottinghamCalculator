@@ -88,13 +88,15 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
         <ul>
           <li className="space-x-1 flex items-center">
             <span>🍎 Apples - {player.apple}</span>
-            <span>
-              {player.appleScore && <strong>{`(${player.appleScore})`}</strong>}
-            </span>
+            {player.score && (
+              <span>
+                <strong>{`(${player.appleScore})`}</strong>
+              </span>
+            )}
             {player.bonus?.apple && (
               <Badge
                 variant="outline"
-                className="ml-2 text-amber-500 bg-amber-500/10 border-amber-500/20"
+                className="text-amber-500 bg-amber-500/10 border-amber-500/20"
               >
                 +{player.bonus.apple}
               </Badge>
@@ -103,11 +105,13 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
           </li>
           <li className="space-x-1 flex items-center">
             <span>🍞 Bread - {player.bread} </span>
-            {player.breadScore && <strong>{`(${player.breadScore})`}</strong>}
+            {player.score && (
+              <span className="font-bold">{`(${player.breadScore})`}</span>
+            )}
             {player.bonus?.bread && (
               <Badge
                 variant="outline"
-                className="ml-2 text-amber-500 bg-amber-500/10 border-amber-500/20"
+                className="text-amber-500 bg-amber-500/10 border-amber-500/20"
               >
                 +{player.bonus.bread}
               </Badge>
@@ -116,7 +120,9 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
           </li>
           <li className="space-x-1 flex items-center">
             <span>🧀 Cheese - {player.cheese} </span>
-            {player.cheeseScore && <strong>{`(${player.cheeseScore})`}</strong>}
+            {player.score && (
+              <span className="font-bold">{`(${player.cheeseScore})`}</span>
+            )}
             {player.bonus?.cheese && (
               <Badge
                 variant="outline"
@@ -129,8 +135,8 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
           </li>
           <li className="space-x-1 flex items-center">
             <span>🐔 Chicken - {player.chicken} </span>
-            {player.chickenScore && (
-              <strong>{`(${player.chickenScore})`}</strong>
+            {player.score && (
+              <span className="font-bold">{`(${player.chickenScore})`}</span>
             )}
             {player.bonus?.chicken && (
               <Badge
@@ -144,11 +150,15 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
           </li>
           <li className="space-x-1 flex items-center">
             <span>🪙 Coins - {player.coins} </span>
-            {player.score && <strong>{`(${player.coins})`}</strong>}
+            {player.score && (
+              <span className="font-bold">{`(${player.coins})`}</span>
+            )}
           </li>
           <li className="space-x-1 flex items-center">
             <span>💼 Contraband - {totalContrabandScore} </span>
-            {player.score && <strong>{`(${totalContrabandScore})`}</strong>}
+            {player.score && (
+              <span className="font-bold">{`(${totalContrabandScore})`}</span>
+            )}
           </li>
         </ul>
 
