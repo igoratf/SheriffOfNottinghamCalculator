@@ -14,7 +14,7 @@ import { PlayerContrabandDetails } from "./PlayerContrabandDetails";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 import { Tooltip } from "./ui/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
-import { Badge } from "./ui/badge";
+import { RoyalGoodBonusBadge } from "./RoyalGoodBonusBadge";
 
 export interface PlayerCardProps {
   player: PlayerScore;
@@ -94,12 +94,7 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
               </span>
             )}
             {player.bonus?.apple && (
-              <Badge
-                variant="outline"
-                className="text-amber-500 bg-amber-500/10 border-amber-500/20"
-              >
-                +{player.bonus.apple}
-              </Badge>
+              <RoyalGoodBonusBadge bonus={player.bonus.apple} />
             )}
             {isKingOrQueen("apple", player.king, player.queen)}
           </li>
@@ -109,12 +104,7 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
               <span className="font-bold">{`(${player.breadScore})`}</span>
             )}
             {player.bonus?.bread && (
-              <Badge
-                variant="outline"
-                className="text-amber-500 bg-amber-500/10 border-amber-500/20"
-              >
-                +{player.bonus.bread}
-              </Badge>
+              <RoyalGoodBonusBadge bonus={player.bonus.bread} />
             )}
             {isKingOrQueen("bread", player.king, player.queen)}
           </li>
@@ -124,12 +114,7 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
               <span className="font-bold">{`(${player.cheeseScore})`}</span>
             )}
             {player.bonus?.cheese && (
-              <Badge
-                variant="outline"
-                className="ml-2 text-amber-500 bg-amber-500/10 border-amber-500/20"
-              >
-                +{player.bonus.cheese}
-              </Badge>
+              <RoyalGoodBonusBadge bonus={player.bonus.cheese} />
             )}
             {isKingOrQueen("cheese", player.king, player.queen)}
           </li>
@@ -139,12 +124,7 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
               <span className="font-bold">{`(${player.chickenScore})`}</span>
             )}
             {player.bonus?.chicken && (
-              <Badge
-                variant="outline"
-                className="ml-2 text-amber-500 bg-amber-500/10 border-amber-500/20"
-              >
-                +{player.bonus.chicken}
-              </Badge>
+              <RoyalGoodBonusBadge bonus={player.bonus.chicken} />
             )}
             {isKingOrQueen("chicken", player.king, player.queen)}
           </li>
