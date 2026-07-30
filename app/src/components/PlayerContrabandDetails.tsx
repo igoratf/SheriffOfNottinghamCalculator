@@ -39,7 +39,7 @@ export const PlayerContrabandDetails = ({
 
             <Popover>
               <PopoverTrigger>
-                <InfoIcon className="h-4 w-4 text-amber-900 cursor-pointer hover:text-amber-600 transition-transform duration-200" />
+                <InfoIcon className="h-4 w-4 text-orange-800 cursor-pointer hover:text-amber-600 transition-colors duration-200" />
               </PopoverTrigger>
               <PopoverContent className="p-2 rounded-lg border-1 bg-white">
                 <p className="text-sm text-gray-500">

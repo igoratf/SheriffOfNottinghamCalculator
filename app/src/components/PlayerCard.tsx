@@ -53,8 +53,6 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
     0,
   );
 
-  console.log("Player ", player);
-
   return (
     <Card
       className={classNames("max-h-140 w-70 relative h-max", {

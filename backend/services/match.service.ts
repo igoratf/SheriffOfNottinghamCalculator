@@ -11,22 +11,23 @@ import { getPageOffset, ITEMS_PER_PAGE } from "../utils/utils.js";
 import { prisma } from "../prisma/client.js";
 
 export const calculateMatchScore = async (players: Player[]) => {
-  const matchPlayers = await calculateGoodsScore(players);
+  const playersWithGoodsScore = await calculateGoodsScore(players);
 
   // Extract a call to calculate contraband bonus here
-  const { kings, queens, playersWithContrabandBonus } =
-    calculateKingsAndQueens(matchPlayers);
+  const { kings, queens, playersWithContrabandBonus } = calculateKingsAndQueens(
+    playersWithGoodsScore,
+  );
+  // This function modifies players data in place as they're mapped to queens and kings lists, so we don't need to return anything from it.
   calculateKingQueenBonus(kings, queens);
   const matchTotalScore = playersWithContrabandBonus.reduce((acc, player) => {
     return acc + player.totalScore;
   }, 0);
 
-  return { matchPlayers, matchTotalScore };
+  return { matchPlayers: playersWithContrabandBonus, matchTotalScore };
 };
 
 export const saveMatch = async (players: Player[]) => {
   const { matchPlayers, matchTotalScore } = await calculateMatchScore(players);
-  console.log("match players ", matchPlayers);
 
   const match = await prisma.match.create({
     data: {
