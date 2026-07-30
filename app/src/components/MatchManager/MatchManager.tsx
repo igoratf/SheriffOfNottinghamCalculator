@@ -48,6 +48,14 @@ export const MatchManager = () => {
   };
 
   const onCalculateScore = async () => {
+    if (players.length < 2) {
+      return setErrorMessage(
+        "At least 2 players are required to calculate score",
+      );
+    } else if (players.length > 5) {
+      return setErrorMessage("Cannot have more than 5 players");
+    }
+
     const response = await calculateMatchScore(players);
     if (response) {
       navigate({
@@ -95,7 +103,7 @@ export const MatchManager = () => {
         </div>
       )}
       {errorMessage && (
-        <p className="text-red-600 text-center">{errorMessage}</p>
+        <p className="mb-4 text-red-600 text-center">{errorMessage}</p>
       )}
       <div className="flex justify-center items-center gap-4">
         <Tooltip>
