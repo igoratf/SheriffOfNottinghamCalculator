@@ -1,6 +1,6 @@
 import type { PlayerContraband } from "@/utils/types";
 import { InfoIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface PlayerContrabandDetailsProps {
   contrabands: PlayerContraband[];

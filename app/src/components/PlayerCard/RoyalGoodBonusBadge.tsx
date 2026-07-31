@@ -1,5 +1,5 @@
-import { Badge } from "./ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Badge } from "../ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 export const RoyalGoodBonusBadge = ({ bonus }: { bonus: number }) => {
   return (

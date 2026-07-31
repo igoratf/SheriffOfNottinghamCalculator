@@ -1,51 +1,23 @@
-import type { KingQueenResourceName, PlayerScore } from "@/utils/types.d";
+import type { PlayerScore } from "@/utils/types.d";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 import { TrashIcon } from "lucide-react";
 import classNames from "classnames";
 import { PlayerContrabandDetails } from "./PlayerContrabandDetails";
-import { capitalizeFirstLetter } from "@/utils/helpers";
-import { Tooltip } from "./ui/tooltip";
-import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { RoyalGoodBonusBadge } from "./RoyalGoodBonusBadge";
+import { KingAndQueenPopover } from "./KingAndQueenPopover";
 
 export interface PlayerCardProps {
   player: PlayerScore;
   onDelete?: (player: PlayerScore) => void;
 }
-
-const isKingOrQueen = (
-  resource: KingQueenResourceName,
-  kingList?: KingQueenResourceName[],
-  queenList?: KingQueenResourceName[],
-) => {
-  const isKing = kingList?.includes(resource);
-  const isQueen = queenList?.includes(resource);
-  if (!isKing && !isQueen) return null;
-
-  return (
-    <Tooltip>
-      <TooltipTrigger>
-        <span>{isKing ? "🤴" : "👸"}</span>
-      </TooltipTrigger>
-      <TooltipContent
-        className={classNames("p-2 rounded-lg border-1 bg-white", {
-          "border-amber-300": isKing,
-          "border-slate-300": isQueen,
-        })}
-      >
-        {capitalizeFirstLetter(resource)} {isKing ? "king" : "queen"}
-      </TooltipContent>
-    </Tooltip>
-  );
-};
 
 export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
   const totalContrabandScore = player.contrabands?.reduce(
@@ -94,7 +66,11 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
             {player.bonus?.apple && (
               <RoyalGoodBonusBadge bonus={player.bonus.apple} />
             )}
-            {isKingOrQueen("apple", player.king, player.queen)}
+            <KingAndQueenPopover
+              resource="apple"
+              kingList={player.king}
+              queenList={player.queen}
+            />
           </li>
           <li className="space-x-1 flex items-center">
             <span>🍞 Bread - {player.bread} </span>
@@ -104,7 +80,11 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
             {player.bonus?.bread && (
               <RoyalGoodBonusBadge bonus={player.bonus.bread} />
             )}
-            {isKingOrQueen("bread", player.king, player.queen)}
+            <KingAndQueenPopover
+              resource="bread"
+              kingList={player.king}
+              queenList={player.queen}
+            />
           </li>
           <li className="space-x-1 flex items-center">
             <span>🧀 Cheese - {player.cheese} </span>
@@ -114,7 +94,11 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
             {player.bonus?.cheese && (
               <RoyalGoodBonusBadge bonus={player.bonus.cheese} />
             )}
-            {isKingOrQueen("cheese", player.king, player.queen)}
+            <KingAndQueenPopover
+              resource="cheese"
+              kingList={player.king}
+              queenList={player.queen}
+            />
           </li>
           <li className="space-x-1 flex items-center">
             <span>🐔 Chicken - {player.chicken} </span>
@@ -124,7 +108,11 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
             {player.bonus?.chicken && (
               <RoyalGoodBonusBadge bonus={player.bonus.chicken} />
             )}
-            {isKingOrQueen("chicken", player.king, player.queen)}
+            <KingAndQueenPopover
+              resource="chicken"
+              kingList={player.king}
+              queenList={player.queen}
+            />
           </li>
           <li className="space-x-1 flex items-center">
             <span>🪙 Coins - {player.coins} </span>
