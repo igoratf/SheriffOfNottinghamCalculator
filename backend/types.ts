@@ -23,7 +23,7 @@ export interface Contraband {
   name: string;
   score: number;
   resourceBonus?: number;
-  resourceType?: ResourceName;
+  resourceType?: KingQueenResourceName;
 }
 
 export interface PlayerContraband extends Contraband {
@@ -38,6 +38,7 @@ export interface Player {
   chicken: number;
   contrabands: PlayerContraband[];
   coins: number;
+  bonus?: Partial<Record<KingQueenResourceName, number>>;
 }
 
 export interface PlayerScore extends Player {
