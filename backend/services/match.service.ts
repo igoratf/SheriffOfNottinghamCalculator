@@ -29,32 +29,39 @@ export const calculateMatchScore = async (players: Player[]) => {
 export const saveMatch = async (players: Player[]) => {
   const { matchPlayers, matchTotalScore } = await calculateMatchScore(players);
 
+  const matchPlayersData = matchPlayers.map((player) => {
+    const playerData = {
+      name: player.name,
+      apple: player.apple,
+      bread: player.bread,
+      cheese: player.cheese,
+      chicken: player.chicken,
+      coins: player.coins,
+      king: player.king,
+      queen: player.queen,
+      score: player.totalScore,
+      contrabands: {
+        create: player.contrabands?.map((contraband) => ({
+          quantity: contraband.quantity,
+          contraband: {
+            connect: {
+              id: contraband.id,
+            },
+          },
+        })),
+      },
+    };
+
+    return player.bonus === undefined
+      ? playerData
+      : { ...playerData, bonus: player.bonus };
+  });
+
   const match = await prisma.match.create({
     data: {
       totalScore: matchTotalScore,
       players: {
-        create: matchPlayers.map((player) => ({
-          name: player.name,
-          apple: player.apple,
-          bread: player.bread,
-          cheese: player.cheese,
-          chicken: player.chicken,
-          coins: player.coins,
-          king: player.king,
-          queen: player.queen,
-          score: player.totalScore,
-          bonus: player.bonus,
-          contrabands: {
-            create: player.contrabands?.map((contraband) => ({
-              quantity: contraband.quantity,
-              contraband: {
-                connect: {
-                  id: contraband.id,
-                },
-              },
-            })),
-          },
-        })),
+        create: matchPlayersData,
       },
     },
     include: {
@@ -75,7 +82,6 @@ export const saveMatch = async (players: Player[]) => {
 };
 
 export const mapMatchToResponse = (match: MatchWithPlayers) => {
-  console.log("match from db ", match);
   const formattedPlayers = match.players.map((player) => ({
     ...player,
     appleScore: player.apple * GOODS_SCORES["apple"],
