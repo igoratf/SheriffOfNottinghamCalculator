@@ -67,6 +67,7 @@ export const MatchManager = () => {
 
   const onResetMatch = () => {
     setPlayers([]);
+    setErrorMessage("");
   };
 
   return (
