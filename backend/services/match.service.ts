@@ -164,29 +164,34 @@ export const calculateKingsAndQueens = (players: PlayerScore[]) => {
   };
 
   playersWithContrabandBonus.forEach((player) => {
-    if (player.apple === appleMax) {
+    const playerApple = player.apple + (player.bonus?.apple ?? 0);
+    const playerBread = player.bread + (player.bonus?.bread ?? 0);
+    const playerCheese = player.cheese + (player.bonus?.cheese ?? 0);
+    const playerChicken = player.chicken + (player.bonus?.chicken ?? 0);
+
+    if (playerApple === appleMax) {
       kings.apple.push(player);
-    } else if (kings.apple.length <= 1 && player.apple === appleSecondMax) {
+    } else if (kings.apple.length <= 1 && playerApple === appleSecondMax) {
       queens.apple.push(player);
     }
 
-    if (player.bread === breadMax) {
+    if (playerBread === breadMax) {
       kings.bread.push(player);
-    } else if (kings.bread.length <= 1 && player.bread === breadSecondMax) {
+    } else if (kings.bread.length <= 1 && playerBread === breadSecondMax) {
       queens.bread.push(player);
     }
 
-    if (player.cheese === cheeseMax) {
+    if (playerCheese === cheeseMax) {
       kings.cheese.push(player);
-    } else if (kings.cheese.length <= 1 && player.cheese === cheeseSecondMax) {
+    } else if (kings.cheese.length <= 1 && playerCheese === cheeseSecondMax) {
       queens.cheese.push(player);
     }
 
-    if (player.chicken === chickenMax) {
+    if (playerChicken === chickenMax) {
       kings.chicken.push(player);
     } else if (
       kings.chicken.length <= 1 &&
-      player.chicken === chickenSecondMax
+      playerChicken === chickenSecondMax
     ) {
       queens.chicken.push(player);
     }
@@ -253,10 +258,22 @@ const calculateResourcesMax = (
   players: PlayerScore[],
   resource: KingQueenResourceName,
 ) => {
-  players.sort((a, b) => b[resource] - a[resource]);
+  players.sort(
+    (a, b) =>
+      b[resource] +
+      (b.bonus?.[resource] ?? 0) -
+      (a[resource] + (a.bonus?.[resource] ?? 0)),
+  );
 
-  const max = players.at(0)?.[resource] ?? 0;
-  const secondMax = players.at(1)?.[resource] ?? 0;
+  const firstPlayer = players.at(0);
+  const secondPlayer = players.at(1);
+
+  const max = firstPlayer
+    ? firstPlayer[resource] + (firstPlayer.bonus?.[resource] ?? 0)
+    : 0;
+  const secondMax = secondPlayer
+    ? secondPlayer[resource] + (secondPlayer.bonus?.[resource] ?? 0)
+    : 0;
 
   return { max, secondMax };
 };
