@@ -19,6 +19,7 @@ export const calculateMatchScore = async (players: Player[]) => {
   );
   // This function modifies players data in place as they're mapped to queens and kings lists, so we don't need to return anything from it.
   calculateKingQueenBonus(kings, queens);
+
   const matchTotalScore = playersWithContrabandBonus.reduce((acc, player) => {
     return acc + player.totalScore;
   }, 0);
@@ -272,12 +273,19 @@ const calculateContrabandBonus = (player: PlayerScore): PlayerScore => {
   const playerContrabands = player.contrabands;
   playerContrabands.forEach((playerContraband) => {
     const { resourceType, resourceBonus } = playerContraband;
-    if (resourceType && resourceBonus && resourceType in player) {
+    if (
+      resourceType &&
+      resourceBonus &&
+      resourceType in playerWithContrabandBonus
+    ) {
       const bonus = resourceBonus * playerContraband.quantity;
-      if (player.bonus?.[resourceType]) {
-        player.bonus[resourceType] += bonus;
+      if (playerWithContrabandBonus.bonus?.[resourceType]) {
+        playerWithContrabandBonus.bonus[resourceType] += bonus;
       } else {
-        player.bonus = { ...player.bonus, [resourceType]: bonus };
+        playerWithContrabandBonus.bonus = {
+          ...playerWithContrabandBonus.bonus,
+          [resourceType]: bonus,
+        };
       }
     }
   });

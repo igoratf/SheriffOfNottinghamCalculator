@@ -34,7 +34,6 @@ export const ContrabandsSelect = ({ control }: ContrabandsSelect) => {
   });
 
   const watchedValue = useWatch({ control, name: "contrabands" }) || [];
-  console.log("watched ", watchedValue);
 
   const { fields, append, remove } = useFieldArray({
     control,

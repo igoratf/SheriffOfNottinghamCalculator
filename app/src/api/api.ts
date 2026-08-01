@@ -26,8 +26,6 @@ export const fetchMatches = async (
   if (params.dateFrom) searchParams.set("dateFrom", params.dateFrom);
   if (params.dateTo) searchParams.set("dateTo", params.dateTo);
 
-  console.log("params ", searchParams.toString());
-
   const response = await fetch(
     `${API_URL}/v1/match?${searchParams.toString()}`,
   );
@@ -71,7 +69,7 @@ export const calculateMatchScore = async (players: PlayerFormData[]) => {
       },
       body: JSON.stringify({ players: players }),
     });
-    console.log("Match response ", response);
+
     if (!response.ok) {
       throw new Error("Failed to calculate match score");
     }
