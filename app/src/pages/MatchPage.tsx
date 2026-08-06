@@ -41,6 +41,8 @@ export const MatchPage = () => {
   };
 
   const isFirst = (player: PlayerScore) => {
+    if (isTiedForFirst(player)) return false;
+
     const firstPlaceScore = sortedPlayers[0]?.score;
     return player.score === firstPlaceScore;
   };

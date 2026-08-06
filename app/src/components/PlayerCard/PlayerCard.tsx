@@ -56,10 +56,10 @@ export const PlayerCard = ({
           <div className="flex items-center gap-2">
             <span className="font-semibold">{player.name}</span>
             {isFirst && (
-              <span className="ml-auto text-yellow-500">Winner! 👑</span>
+              <span className=" text-yellow-500 ml-auto">Winner! 👑</span>
             )}
             {isTiedForFirst && (
-              <span className="text-yellow-500">Tied for 1st!</span>
+              <span className="text-yellow-500 ml-auto">Winner tie!</span>
             )}
             {isSecond && (
               <span className="text-slate-600 ml-auto">2nd place! 🥈</span>
