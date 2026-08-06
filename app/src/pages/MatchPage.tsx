@@ -2,6 +2,7 @@ import { fetchMatchById } from "@/api/api";
 import { PlayerCard } from "@/components/PlayerCard/PlayerCard";
 import { Spinner } from "@/components/ui/spinner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import type { PlayerScore } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 
@@ -23,6 +24,26 @@ export const MatchPage = () => {
 
   const { totalScore, createdAt, players } = data.match;
   const sortedPlayers = players?.sort((a, b) => b.score - a.score) || [];
+
+  const isTiedForFirst = (player: PlayerScore) => {
+    const firstPlaceScore = sortedPlayers[0]?.score;
+    const secondPlaceScore = sortedPlayers[1]?.score;
+    return (
+      player.score === firstPlaceScore && firstPlaceScore === secondPlaceScore
+    );
+  };
+
+  const isSecond = (player: PlayerScore) => {
+    if (isTiedForFirst(player)) return false;
+
+    const secondPlaceScore = sortedPlayers[1]?.score;
+    return player.score === secondPlaceScore;
+  };
+
+  const isFirst = (player: PlayerScore) => {
+    const firstPlaceScore = sortedPlayers[0]?.score;
+    return player.score === firstPlaceScore;
+  };
 
   return (
     <TooltipProvider>
@@ -51,7 +72,13 @@ export const MatchPage = () => {
           <h2 className="text-2xl font-semibold text-center">Players</h2>
           <ul className="flex flex-col md:flex-row gap-6 mt-2">
             {sortedPlayers.map((player) => (
-              <PlayerCard player={player} key={player.id} />
+              <PlayerCard
+                player={player}
+                key={player.id}
+                isFirst={isFirst(player)}
+                isSecond={isSecond(player)}
+                isTiedForFirst={isTiedForFirst(player)}
+              />
             ))}
           </ul>
         </div>

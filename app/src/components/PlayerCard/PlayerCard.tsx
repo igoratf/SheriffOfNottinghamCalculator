@@ -16,10 +16,19 @@ import { KingAndQueenPopover } from "./KingAndQueenPopover";
 
 export interface PlayerCardProps {
   player: PlayerScore;
+  isFirst?: boolean;
+  isTiedForFirst?: boolean;
+  isSecond?: boolean;
   onDelete?: (player: PlayerScore) => void;
 }
 
-export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
+export const PlayerCard = ({
+  player,
+  isFirst,
+  isSecond,
+  isTiedForFirst,
+  onDelete,
+}: PlayerCardProps) => {
   const totalContrabandScore = player.contrabands?.reduce(
     (total, c) => total + c.score * c.quantity,
     0,
@@ -28,8 +37,8 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
   return (
     <Card
       className={classNames("max-h-140 w-70 relative h-max", {
-        /*         "inset-ring inset-ring-yellow-500/50": isFirst || isTiedForFirst,
-        "inset-ring inset-ring-slate-500/50": isSecond, */
+        "inset-ring inset-ring-yellow-500/50": isFirst || isTiedForFirst,
+        "inset-ring inset-ring-slate-500/50": isSecond,
       })}
     >
       <CardHeader>
@@ -46,11 +55,15 @@ export const PlayerCard = ({ player, onDelete }: PlayerCardProps) => {
         <CardTitle>
           <div className="flex items-center gap-2">
             <span className="font-semibold">{player.name}</span>
-            {/*  {isFirst && <span className="text-yellow-500">Winner! 👑</span>}
+            {isFirst && (
+              <span className="ml-auto text-yellow-500">Winner! 👑</span>
+            )}
             {isTiedForFirst && (
               <span className="text-yellow-500">Tied for 1st!</span>
             )}
-            {isSecond && <span className="text-slate-600">2nd place</span>} */}
+            {isSecond && (
+              <span className="text-slate-600 ml-auto">2nd place! 🥈</span>
+            )}
           </div>
         </CardTitle>
       </CardHeader>
