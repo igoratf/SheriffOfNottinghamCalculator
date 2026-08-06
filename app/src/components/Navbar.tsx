@@ -4,7 +4,7 @@ export const Navbar = () => {
   return (
     <nav className="bg-white shadow p-4 flex items-center">
       <div className="flex items-center space-x-2">
-        <span className="text-lg font-semibold max-w-[12rem] block">
+        <span className="text-lg font-semibold max-w-[12rem] block bg-linear-to-tl from-slate-900 to-blue-700 bg-clip-text text-transparent">
           Sheriff of Nottingham
         </span>
       </div>
@@ -17,7 +17,9 @@ export const Navbar = () => {
             inactiveProps={{
               className: "text-gray-700 hover:text-amber-600 transition-colors",
             }}
-            activeProps={{ className: "text-amber-600" }}
+            activeProps={{
+              className: "text-amber-600 underline",
+            }}
           >
             Home
           </Link>
@@ -35,9 +37,9 @@ export const Navbar = () => {
               className: "text-gray-700 hover:text-amber-600 transition-colors",
             }}
             activeOptions={{}}
-            activeProps={{ className: "text-amber-600" }}
+            activeProps={{ className: "text-amber-600 underline" }}
           >
-            Ranking
+            History
           </Link>
         </li>
       </ul>

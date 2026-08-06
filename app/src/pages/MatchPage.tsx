@@ -1,4 +1,5 @@
 import { fetchMatchById } from "@/api/api";
+import { PageHeader } from "@/components/PageHeader";
 import { PlayerCard } from "@/components/PlayerCard/PlayerCard";
 import { Spinner } from "@/components/ui/spinner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -51,9 +52,7 @@ export const MatchPage = () => {
     <TooltipProvider>
       <main className="flex items-center p-6 justify-start mt-auto min-h-screen flex-col">
         <header className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Match
-          </h1>
+          <PageHeader title="Match" />
           <h3 className="text-gray-500">View detailed match information</h3>
         </header>
 
@@ -71,7 +70,7 @@ export const MatchPage = () => {
         </div>
 
         <div className="flex flex-col mt-6">
-          <h2 className="text-2xl font-semibold text-center">Players</h2>
+          <PageHeader title="Players" size="sm" className="text-center" />
           <ul className="flex flex-col md:flex-row gap-6 mt-2">
             {sortedPlayers.map((player) => (
               <PlayerCard
