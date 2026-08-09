@@ -33,6 +33,11 @@ export interface Player {
   coins: number;
 }
 
+export type KingQueenBonus = {
+  type: KingQueenBonusCategory;
+  score: number;
+};
+
 export interface PlayerScore extends Player {
   id: number;
   appleScore: number;
@@ -43,6 +48,7 @@ export interface PlayerScore extends Player {
   queen: KingQueenResourceName[];
   score: number;
   bonus?: Record<KingQueenResourceName, number>;
+  kingQueenBonus?: Record<KingQueenResourceName, KingQueenBonus>;
 }
 
 export interface Match {

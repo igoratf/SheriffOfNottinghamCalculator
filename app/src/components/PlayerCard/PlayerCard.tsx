@@ -1,4 +1,4 @@
-import type { PlayerScore } from "@/utils/types.d";
+import type { KingQueenResourceName, PlayerScore } from "@/utils/types.d";
 import {
   Card,
   CardContent,
@@ -11,6 +11,7 @@ import { Separator } from "../ui/separator";
 import { TrashIcon } from "lucide-react";
 import classNames from "classnames";
 import { PlayerContrabandDetails } from "./PlayerContrabandDetails";
+import { KingQueenBonusItem } from "./KingQueenBonusItem";
 import { RoyalGoodBonusBadge } from "./RoyalGoodBonusBadge";
 import { KingAndQueenPopover } from "./KingAndQueenPopover";
 
@@ -33,6 +34,8 @@ export const PlayerCard = ({
     (total, c) => total + c.score * c.quantity,
     0,
   );
+
+  console.log("player.kingQueenBonus", player.kingQueenBonus);
 
   return (
     <Card
@@ -114,7 +117,7 @@ export const PlayerCard = ({
             />
           </li>
           <li className="space-x-1 flex items-center">
-            <span>🐔 Chicken - {player.chicken} </span>
+            <span>🐔 Chickens - {player.chicken} </span>
             {player.score && (
               <span className="font-bold">{`(${player.chickenScore})`}</span>
             )}
@@ -150,6 +153,24 @@ export const PlayerCard = ({
           <div className="px-6">
             <Separator className="mt-auto px-6" />
           </div>
+          {player.kingQueenBonus && (
+            <div className="px-6 space-y-4">
+              <ul>
+                {Object.entries(player.kingQueenBonus).map(
+                  ([resource, bonus]) => {
+                    return (
+                      <KingQueenBonusItem
+                        key={resource}
+                        resource={resource as KingQueenResourceName}
+                        bonus={bonus}
+                      />
+                    );
+                  },
+                )}
+              </ul>
+              <Separator className="mt-auto px-6" />
+            </div>
+          )}
           <CardFooter>
             <span className="mt-2 text-md font-semibold">
               Score: {player.score}

@@ -30,6 +30,17 @@ export interface PlayerContraband extends Contraband {
   quantity: number;
 }
 
+export enum KingQueenBonusCategory {
+  KING = "king",
+  QUEEN = "queen",
+  KING_QUEEN = "king-queen",
+}
+
+export type KingQueenBonus = {
+  type: KingQueenBonusCategory;
+  score: number;
+};
+
 export interface Player {
   name: string;
   apple: number;
@@ -39,6 +50,7 @@ export interface Player {
   contrabands: PlayerContraband[];
   coins: number;
   bonus?: Partial<Record<KingQueenResourceName, number>>;
+  kingQueenBonus?: Partial<Record<KingQueenResourceName, KingQueenBonus>>;
 }
 
 export interface PlayerScore extends Player {
