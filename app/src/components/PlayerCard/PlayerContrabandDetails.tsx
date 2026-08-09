@@ -33,7 +33,7 @@ export const PlayerContrabandDetails = ({
             <span className="text-gray-600">
               {displayPlayerContraband(playerContraband)}
             </span>
-            <span className="text-amber-500 shrink-0">
+            <span className="text-yellow-500 shrink-0">
               {displayContrabandResourceBonus(playerContraband)}
             </span>
 

@@ -4,7 +4,13 @@ import {
   MatchSort,
   QUEENS_BONUS,
 } from "../constants.js";
-import type { KingQueenResourceName, Player, PlayerScore } from "../types.js";
+import {
+  KingQueenBonusCategory,
+  type KingQueenBonus,
+  type KingQueenResourceName,
+  type Player,
+  type PlayerScore,
+} from "../types.js";
 import type { MatchWithPlayers } from "./types.js";
 import { AppError } from "../utils/AppError.js";
 import { getPageOffset, ITEMS_PER_PAGE } from "../utils/utils.js";
@@ -53,9 +59,11 @@ export const saveMatch = async (players: Player[]) => {
       },
     };
 
-    return player.bonus === undefined
-      ? playerData
-      : { ...playerData, bonus: player.bonus };
+    return {
+      ...playerData,
+      ...(player.bonus && { bonus: player.bonus }),
+      ...(player.kingQueenBonus && { kingQueenBonus: player.kingQueenBonus }),
+    };
   });
 
   const match = await prisma.match.create({
@@ -218,19 +226,31 @@ const calculateKingQueenBonus = (
   ][];
 
   kingsEntries.forEach(([resource, players]) => {
-    let scoreBonus = 0;
+    let kingQueenBonus: KingQueenBonus;
+
     if (players.length > 1) {
-      scoreBonus = Math.floor(
+      const scoreBonus = Math.floor(
         (KINGS_BONUS[resource] + QUEENS_BONUS[resource]) /
           kings[resource].length,
       );
+      kingQueenBonus = {
+        type: KingQueenBonusCategory.KING_QUEEN,
+        score: scoreBonus,
+      };
     } else if (players.length === 1) {
-      scoreBonus = KINGS_BONUS[resource];
+      kingQueenBonus = {
+        type: KingQueenBonusCategory.KING,
+        score: KINGS_BONUS[resource],
+      };
     }
 
     players.forEach((player) => {
       player.king.push(resource);
-      player.totalScore += scoreBonus;
+      player.totalScore += kingQueenBonus.score;
+      if (!player.kingQueenBonus) {
+        player.kingQueenBonus = {};
+      }
+      player.kingQueenBonus[resource] = kingQueenBonus;
     });
   });
 
@@ -238,10 +258,18 @@ const calculateKingQueenBonus = (
     if (kings[resource].length > 1) return;
 
     const scoreBonus = Math.floor(QUEENS_BONUS[resource] / players.length);
+    const kingQueenBonus = {
+      type: KingQueenBonusCategory.QUEEN,
+      score: scoreBonus,
+    };
 
     players.forEach((player) => {
       player.queen.push(resource);
-      player.totalScore += scoreBonus;
+      player.totalScore += kingQueenBonus.score;
+      if (!player.kingQueenBonus) {
+        player.kingQueenBonus = {};
+      }
+      player.kingQueenBonus[resource] = kingQueenBonus;
     });
   });
 
