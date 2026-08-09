@@ -26,11 +26,11 @@ export const KingQueenBonusItem = ({
 }: KingQueenBonusItemProps) => {
   const { type, score } = bonus;
 
-  if (type === KingQueenBonusCategory.KING_QUEEN) {
-    return (
-      <li className="flex items-center space-x-2 text-yellow-600 text-sm">
-        <span>{`+${score} ${resource} ${formatKingQueenType(type)}`}</span>
+  return (
+    <li className="flex items-center justify-between space-x-2 text-yellow-500 text-sm">
+      <span>{`+${score} ${resource} ${formatKingQueenType(type)}`}</span>
 
+      {type === KingQueenBonusCategory.KING_QUEEN && (
         <Popover>
           <PopoverTrigger>
             <InfoIcon className="h-4 w-4 text-orange-800 cursor-pointer hover:text-amber-600 transition-colors duration-200" />
@@ -42,13 +42,7 @@ export const KingQueenBonusItem = ({
             </p>
           </PopoverContent>
         </Popover>
-      </li>
-    );
-  }
-
-  return (
-    <li>
-      {type} + ${score}
+      )}
     </li>
   );
 };
