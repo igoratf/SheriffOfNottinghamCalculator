@@ -35,8 +35,6 @@ export const PlayerCard = ({
     0,
   );
 
-  console.log("player.kingQueenBonus", player.kingQueenBonus);
-
   return (
     <Card
       className={classNames("max-h-140 w-70 relative h-max", {
@@ -151,10 +149,10 @@ export const PlayerCard = ({
       {player.score && (
         <>
           <div className="px-6">
-            <Separator className="mt-auto px-6" />
+            <Separator className="mt-auto" />
           </div>
           {player.kingQueenBonus && (
-            <div className="px-6 space-y-4">
+            <div className="px-6 space-y-6">
               <ul>
                 {Object.entries(player.kingQueenBonus).map(
                   ([resource, bonus]) => {
@@ -168,13 +166,11 @@ export const PlayerCard = ({
                   },
                 )}
               </ul>
-              <Separator className="mt-auto px-6" />
+              <Separator className="mt-auto" />
             </div>
           )}
           <CardFooter>
-            <span className="mt-2 text-md font-semibold">
-              Score: {player.score}
-            </span>
+            <span className="text-md font-semibold">Score: {player.score}</span>
           </CardFooter>
         </>
       )}
