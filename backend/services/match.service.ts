@@ -93,6 +93,14 @@ export const saveMatch = async (players: Player[]) => {
 export const mapMatchToResponse = (match: MatchWithPlayers) => {
   const formattedPlayers = match.players.map((player) => ({
     ...player,
+    bonus:
+      player.bonus && Object.keys(player.bonus).length > 0
+        ? player.bonus
+        : undefined,
+    kingQueenBonus:
+      player.kingQueenBonus && Object.keys(player.kingQueenBonus).length > 0
+        ? player.kingQueenBonus
+        : undefined,
     appleScore: player.apple * GOODS_SCORES["apple"],
     breadScore: player.bread * GOODS_SCORES["bread"],
     cheeseScore: player.cheese * GOODS_SCORES["cheese"],

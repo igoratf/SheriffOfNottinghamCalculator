@@ -28,7 +28,7 @@ model MatchPlayer {
     match          Match              @relation(fields: [matchId], references: [id])
     contrabands    PlayerContraband[]
     bonus          Json?              @default("{}")
-    kingQueenBonus Json?              @default("{}")
+    kingQueenBonus Json?
 
     @@unique([matchId, name])
     @@index([matchId])

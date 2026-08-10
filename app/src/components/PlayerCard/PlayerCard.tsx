@@ -35,6 +35,8 @@ export const PlayerCard = ({
     0,
   );
 
+  console.log("player ", player);
+
   return (
     <Card
       className={classNames("max-h-140 w-70 relative h-max", {
