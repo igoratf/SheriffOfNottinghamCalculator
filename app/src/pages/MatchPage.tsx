@@ -71,7 +71,7 @@ export const MatchPage = () => {
 
         <div className="flex flex-col mt-6">
           <PageHeader title="Players" size="sm" />
-          <ul className="flex flex-col md:flex-row gap-6 mt-2">
+          <ul className="flex flex-wrap justify-center flex-col md:flex-row gap-6 mt-2">
             {sortedPlayers.map((player) => (
               <PlayerCard
                 player={player}
