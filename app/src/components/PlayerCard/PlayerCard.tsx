@@ -35,11 +35,9 @@ export const PlayerCard = ({
     0,
   );
 
-  console.log("player ", player);
-
   return (
     <Card
-      className={classNames("max-h-140 w-70 relative h-max", {
+      className={classNames("w-70 overflow-y-auto relative h-max", {
         "inset-ring inset-ring-yellow-500/50": isFirst || isTiedForFirst,
         "inset-ring inset-ring-slate-500/50": isSecond,
       })}
@@ -171,7 +169,7 @@ export const PlayerCard = ({
               <Separator className="mt-auto" />
             </div>
           )}
-          <CardFooter>
+          <CardFooter className="sticky">
             <span className="text-md font-semibold">Score: {player.score}</span>
           </CardFooter>
         </>
