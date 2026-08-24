@@ -2,6 +2,7 @@ import { type NextFunction, type Request, type Response } from "express";
 import * as matchService from "../services/match.service.js";
 import { MatchSort } from "../constants.js";
 import { parseMatchSort } from "../utils/utils.js";
+import type { SortOption } from "../services/types.js";
 
 export const saveMatch = async (req: Request, res: Response) => {
   const matchScore = await matchService.saveMatch(req.body.players);
@@ -11,7 +12,8 @@ export const saveMatch = async (req: Request, res: Response) => {
 export const getMatches = async (req: Request, res: Response) => {
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
 
-  const sort = parseMatchSort(req.query.sort) ?? MatchSort.DESC;
+  const sortBy =
+    typeof req.query.sortBy === "string" ? req.query.sortBy : undefined;
   const players =
     typeof req.query.players === "string" ? req.query.players : undefined;
   const dateFrom =
@@ -21,7 +23,8 @@ export const getMatches = async (req: Request, res: Response) => {
 
   const matches = await matchService.getMatches(
     page,
-    sort,
+    // TODO: Fix this with util function
+    sortBy as SortOption,
     players,
     dateFrom,
     dateTo,

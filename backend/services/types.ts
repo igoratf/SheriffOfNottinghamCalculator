@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import type { SORT_OPTIONS } from "../utils/constants.js";
 
 export type MatchWithPlayers = Prisma.MatchGetPayload<{
   include: {
@@ -13,3 +14,5 @@ export type MatchWithPlayers = Prisma.MatchGetPayload<{
     };
   };
 }>;
+
+export type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];

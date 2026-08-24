@@ -11,10 +11,11 @@ import {
   type Player,
   type PlayerScore,
 } from "../types.js";
-import type { MatchWithPlayers } from "./types.js";
+import { type MatchWithPlayers, type SortOption } from "./types.js";
 import { AppError } from "../utils/AppError.js";
 import { getPageOffset, ITEMS_PER_PAGE } from "../utils/utils.js";
 import { prisma } from "../prisma/client.js";
+import { SORT_OPTIONS } from "../utils/constants.js";
 
 export const calculateMatchScore = async (players: Player[]) => {
   const playersWithGoodsScore = await calculateGoodsScore(players);
@@ -348,7 +349,7 @@ const calculateContrabandBonus = (player: PlayerScore): PlayerScore => {
 
 export const getMatches = async (
   page: number,
-  sort: MatchSort = MatchSort.DESC,
+  sortBy: SortOption,
   players?: string,
   dateFrom?: string,
   dateTo?: string,
@@ -376,9 +377,24 @@ export const getMatches = async (
     }),
   };
 
+  const sortByScoreValue =
+    sortBy === SORT_OPTIONS.HIGHEST_SCORE
+      ? "desc"
+      : sortBy === SORT_OPTIONS.LOWEST_SCORE
+        ? "asc"
+        : undefined;
+
+  // I'm not checking if we have SORT_OPTIONS.NEWEST value set here because it should be the default.
+  // I do that for sort by score because it's to check if we should return totalScore in the orderBy object below
+  const sortByCreated = sortBy === SORT_OPTIONS.OLDEST ? "asc" : "desc";
+
   const [matches, count] = await prisma.$transaction([
     prisma.match.findMany({
-      orderBy: { createdAt: sort },
+      orderBy: {
+        ...(sortByScoreValue
+          ? { totalScore: sortByScoreValue }
+          : { createdAt: sortByCreated }),
+      },
       skip: getPageOffset(page),
       take: 10,
       where,

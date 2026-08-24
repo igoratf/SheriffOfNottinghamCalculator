@@ -1,3 +1,4 @@
+import type { SortOption } from "@/utils/constants";
 import type { PlayerFormData } from "@/utils/schemas";
 import type { Contraband, Match } from "@/utils/types";
 
@@ -15,6 +16,7 @@ type MatchesSearchParams = {
   players?: string;
   dateFrom?: string;
   dateTo?: string;
+  sortBy?: SortOption;
 };
 
 export const fetchMatches = async (
@@ -25,6 +27,7 @@ export const fetchMatches = async (
   if (params.players) searchParams.set("players", params.players);
   if (params.dateFrom) searchParams.set("dateFrom", params.dateFrom);
   if (params.dateTo) searchParams.set("dateTo", params.dateTo);
+  if (params.sortBy) searchParams.set("sortBy", params.sortBy);
 
   const response = await fetch(
     `${API_URL}/v1/match?${searchParams.toString()}`,
