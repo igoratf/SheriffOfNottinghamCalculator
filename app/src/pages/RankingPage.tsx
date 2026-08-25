@@ -9,11 +9,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 
 export const RankingPage = () => {
-  const { page, players, dateFrom, dateTo } = Route.useSearch();
+  const { page, players, dateFrom, dateTo, sortBy } = Route.useSearch();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["matches", page, players, dateFrom, dateTo],
-    queryFn: () => fetchMatches({ page, players, dateFrom, dateTo }),
+    queryKey: ["matches", page, players, dateFrom, dateTo, sortBy],
+    queryFn: () => fetchMatches({ page, players, dateFrom, dateTo, sortBy }),
   });
 
   if (error) return <p>Error: {error.message}</p>;

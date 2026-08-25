@@ -1,5 +1,6 @@
 import { PageLayout } from "@/components/PageLayout";
 import { RankingPage } from "@/pages/RankingPage";
+import type { SortOption } from "@/utils/constants";
 import { createFileRoute } from "@tanstack/react-router";
 
 type RankingSearch = {
@@ -7,6 +8,7 @@ type RankingSearch = {
   players?: string;
   dateTo?: string;
   dateFrom?: string;
+  sortBy?: SortOption;
 };
 
 export const Route = createFileRoute("/ranking")({
@@ -17,6 +19,7 @@ export const Route = createFileRoute("/ranking")({
       players: search.players,
       dateTo: search.dateTo,
       dateFrom: search.dateFrom,
+      sortBy: search.sortBy,
     };
   },
 });

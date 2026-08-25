@@ -32,6 +32,7 @@ export const Navbar = () => {
               players: undefined,
               dateFrom: undefined,
               dateTo: undefined,
+              sortBy: undefined,
             }}
             inactiveProps={{
               className: "text-gray-700 hover:text-amber-600 transition-colors",

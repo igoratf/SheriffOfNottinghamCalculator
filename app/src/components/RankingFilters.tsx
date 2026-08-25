@@ -8,6 +8,14 @@ import { useNavigate } from "@tanstack/react-router";
 import { parse, format } from "date-fns";
 import { useState, type FormEvent } from "react";
 import { Route } from "@/routes/ranking";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { SORT_OPTIONS, type SortOption } from "@/utils/constants";
 
 const DEFAULT_DATE_TO_VALUE = format(new Date(), "yyyy-MM-dd");
 
@@ -15,6 +23,7 @@ export const RankingFilters = () => {
   const navigate = useNavigate();
   const {
     players,
+    sortBy,
     dateTo: initialDateTo,
     dateFrom: initialDateFrom,
   } = Route.useSearch();
@@ -26,6 +35,9 @@ export const RankingFilters = () => {
   const [isDateFromOpen, setIsDateFromOpen] = useState(false);
   const [isDateToOpen, setIsDateToOpen] = useState(false);
   const [playerSearch, setPlayerSearch] = useState<string | undefined>(players);
+  const [sortOption, setSortOption] = useState<SortOption | undefined>(
+    sortBy ?? SORT_OPTIONS.NEWEST,
+  );
 
   const selectedFrom = dateFrom
     ? parse(dateFrom, "yyyy-MM-dd", new Date())
@@ -55,6 +67,7 @@ export const RankingFilters = () => {
         ...prev,
         dateFrom,
         dateTo,
+        sortBy: sortOption,
         players: playerSearch,
       }),
     });
@@ -69,6 +82,7 @@ export const RankingFilters = () => {
     setDateFrom(undefined);
     setDateTo(DEFAULT_DATE_TO_VALUE);
     setPlayerSearch(undefined);
+    setSortOption(SORT_OPTIONS.NEWEST);
     handleMatchSearch();
   };
 
@@ -135,21 +149,29 @@ export const RankingFilters = () => {
         </FieldGroup>
       </FieldSet>
 
-      {/* To be done in the future */}
-      {/*       <Field orientation={"responsive"}>
+      <Field orientation={"responsive"}>
         <FieldLabel>Sort by</FieldLabel>
-        <Select value="newest">
+        <Select
+          value={sortOption}
+          onValueChange={(value) => {
+            setSortOption(value as SortOption);
+          }}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Newest first" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="newest">Newest first</SelectItem>
-            <SelectItem value="oldest">Oldest first</SelectItem>
-            <SelectItem value="highestScore">Highest score first</SelectItem>
-            <SelectItem value="lowestScore">Lowest score first</SelectItem>
+            <SelectItem value={SORT_OPTIONS.NEWEST}>Newest first</SelectItem>
+            <SelectItem value={SORT_OPTIONS.OLDEST}>Oldest first</SelectItem>
+            <SelectItem value={SORT_OPTIONS.HIGHEST_SCORE}>
+              Highest score first
+            </SelectItem>
+            <SelectItem value={SORT_OPTIONS.LOWEST_SCORE}>
+              Lowest score first
+            </SelectItem>
           </SelectContent>
         </Select>
-      </Field> */}
+      </Field>
 
       <Button type="submit">Search matches</Button>
       <Button variant="outline" onClick={handleClear}>

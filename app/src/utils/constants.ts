@@ -36,3 +36,12 @@ export enum KingQueenBonusCategory {
   QUEEN = "queen",
   KING_QUEEN = "king-queen",
 }
+
+export const SORT_OPTIONS = {
+  NEWEST: "newest",
+  OLDEST: "oldest",
+  HIGHEST_SCORE: "highestScore",
+  LOWEST_SCORE: "lowestScore",
+} as const;
+
+export type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
