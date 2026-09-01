@@ -45,3 +45,6 @@ export const SORT_OPTIONS = {
 } as const;
 
 export type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
+
+export const MIN_NUMBER_OF_PLAYERS = 3;
+export const MAX_NUMBER_OF_PLAYERS = 6;

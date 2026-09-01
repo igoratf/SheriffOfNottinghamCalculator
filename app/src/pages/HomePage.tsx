@@ -1,5 +1,9 @@
 import { MatchManager } from "@/components/MatchManager/MatchManager";
 import { PageHeader } from "@/components/PageHeader";
+import {
+  MAX_NUMBER_OF_PLAYERS,
+  MIN_NUMBER_OF_PLAYERS,
+} from "@/utils/constants";
 
 export const HomePage = () => {
   return (
@@ -18,7 +22,7 @@ export const HomePage = () => {
             How to use
           </h2>
           <ol className="text-sm text-blue-800 text-left space-y-1">
-            <li>1. Add players (2-5 players supported)</li>
+            <li>{`1. Add players (${MIN_NUMBER_OF_PLAYERS}-${MAX_NUMBER_OF_PLAYERS} players supported)`}</li>
             <li>2. Enter each player's legal goods and contraband</li>
             <li>3. Click "Calculate Score" to see final results</li>
             <li>4. Start a new match anytime</li>

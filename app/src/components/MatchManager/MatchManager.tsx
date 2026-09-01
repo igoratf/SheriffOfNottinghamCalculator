@@ -8,6 +8,10 @@ import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import type { PlayerFormData } from "@/utils/schemas";
 import { calculateMatchScore } from "@/api/api";
 import { useNavigate } from "@tanstack/react-router";
+import {
+  MAX_NUMBER_OF_PLAYERS,
+  MIN_NUMBER_OF_PLAYERS,
+} from "@/utils/constants";
 
 export const MatchManager = () => {
   const navigate = useNavigate();
@@ -23,7 +27,7 @@ export const MatchManager = () => {
   };
 
   const addPlayer = (player: PlayerFormData) => {
-    if (players.length < 5) {
+    if (players.length < MAX_NUMBER_OF_PLAYERS) {
       const alreadyExists = players.find(
         (p) => player.name.toLowerCase() === p.name.toLowerCase(),
       );
@@ -36,7 +40,7 @@ export const MatchManager = () => {
       }
       closeNewPlayerModal();
     } else {
-      setErrorMessage("Cannot add more than 5 players");
+      setErrorMessage(`Cannot add more than ${MAX_NUMBER_OF_PLAYERS} players`);
     }
   };
 
@@ -48,12 +52,14 @@ export const MatchManager = () => {
   };
 
   const onCalculateScore = async () => {
-    if (players.length < 2) {
+    if (players.length < MIN_NUMBER_OF_PLAYERS) {
       return setErrorMessage(
-        "At least 2 players are required to calculate score",
+        `At least ${MIN_NUMBER_OF_PLAYERS} players are required to calculate score`,
       );
-    } else if (players.length > 5) {
-      return setErrorMessage("Cannot have more than 5 players");
+    } else if (players.length > MAX_NUMBER_OF_PLAYERS) {
+      return setErrorMessage(
+        `Cannot have more than ${MAX_NUMBER_OF_PLAYERS} players`,
+      );
     }
 
     const response = await calculateMatchScore(players);
@@ -84,8 +90,8 @@ export const MatchManager = () => {
             score
           </p>
           <p className="text-sm text-gray-500">
-            Supports 2-5 players • Track legal goods and contraband • Instant
-            scoring
+            {`Supports ${MIN_NUMBER_OF_PLAYERS}-${MAX_NUMBER_OF_PLAYERS} players • Track legal goods and contraband • Instant
+            scoring`}
           </p>
         </div>
       ) : (
@@ -108,7 +114,7 @@ export const MatchManager = () => {
       )}
       <div className="flex justify-center items-center gap-4">
         <Tooltip>
-          {players.length >= 5 ? (
+          {players.length >= MAX_NUMBER_OF_PLAYERS ? (
             <TooltipTrigger>
               <TooltipContent>
                 <p>Maximum number of players reached</p>
