@@ -1,12 +1,10 @@
 import { type NextFunction, type Request, type Response } from "express";
 import * as matchService from "../services/match.service.js";
-import { MatchSort } from "../constants.js";
-import { parseMatchSort } from "../utils/utils.js";
 import type { SortOption } from "../services/types.js";
 
 export const saveMatch = async (req: Request, res: Response) => {
   const matchScore = await matchService.saveMatch(req.body.players);
-  res.json({ match: matchScore });
+  res.status(201).json({ match: matchScore });
 };
 
 export const getMatches = async (req: Request, res: Response) => {

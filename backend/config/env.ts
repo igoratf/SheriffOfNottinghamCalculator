@@ -12,4 +12,4 @@ const envPath = path.join(__dirname, "../../.env");
 // Load it!
 config({ path: envPath });
 
-export const { PORT, DATABASE_URL } = process.env;
+export const { PORT, DATABASE_URL, FRONTEND_URL } = process.env;
