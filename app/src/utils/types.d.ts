@@ -57,3 +57,9 @@ export interface Match {
   totalScore: number;
   players: PlayerScore[];
 }
+
+export interface SpecialOrder {
+  id: number;
+  name: string;
+  value: number;
+}

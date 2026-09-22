@@ -1,6 +1,6 @@
 import type { SortOption } from "@/utils/constants";
 import type { PlayerFormData } from "@/utils/schemas";
-import type { Contraband, Match } from "@/utils/types";
+import type { Contraband, Match, SpecialOrder } from "@/utils/types";
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
@@ -58,6 +58,18 @@ export const fetchContrabands = async (): Promise<{
 
   if (!response.ok) {
     throw new Error("Failed to fetch contrabands");
+  }
+
+  return response.json();
+};
+
+export const fetchSpecialOrders = async (): Promise<{
+  specialOrders: SpecialOrder[];
+}> => {
+  const response = await fetch(`${API_URL}/v1/special-orders`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch special orders");
   }
 
   return response.json();

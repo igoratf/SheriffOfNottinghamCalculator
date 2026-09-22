@@ -10,12 +10,15 @@ import {
 import type { PlayerFormData } from "@/utils/schemas";
 import { useState } from "react";
 import { Plus, TrashIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSpecialOrders } from "@/api/api";
+import { Skeleton } from "./ui/skeleton";
 
 interface SpecialOrdersSelect {
   control: Control<PlayerFormData>;
 }
 
-export const SPECIAL_ORDER_LIST = [
+/* export const SPECIAL_ORDER_LIST = [
   { id: 1, name: "Apple + Crossbow", value: 6 },
   { id: 2, name: "Apple + Mead", value: 6 },
   // Yes, there are two. Who knows why?
@@ -33,14 +36,14 @@ export const SPECIAL_ORDER_LIST = [
   { id: 13, name: "Chicken + Silk", value: 4 },
   { id: 14, name: "Chicken + Mead", value: 5 },
   { id: 15, name: "Chicken + Pepper", value: 5 },
-];
+]; */
 
 export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
   const [showSelect, setShowSelect] = useState(false);
-  /*  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["specialOrders"],
     queryFn: fetchSpecialOrders,
-  }); */
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -48,13 +51,11 @@ export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
     keyName: "fieldId",
   });
 
-  /*   if (error) return <p>Error: {error.message}</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   if (isLoading) {
-    return <Skeleton className="h-8" aria-label="Loading contrabands" />;
-  } */
-
-  /* const contrabandOptions = data?.contrabands || []; */
+    return <Skeleton className="h-8" aria-label="Loading special orders" />;
+  }
 
   if (!showSelect) {
     return (
@@ -64,8 +65,15 @@ export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
     );
   }
 
+  const specialOrders = data?.specialOrders || [];
+
+  const specialOrderOptions = specialOrders.filter((order) => {
+    const isUsed = fields.some((field) => field.id === order.id);
+    return !isUsed;
+  });
+
   const onSelectSpecialOrder = (id: string) => {
-    const selectedOrder = SPECIAL_ORDER_LIST.find(
+    const selectedOrder = specialOrderOptions.find(
       (order) => order.id.toString() === id,
     );
     if (selectedOrder) {
@@ -78,14 +86,6 @@ export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
     const selectedOrderIndex = fields.findIndex((order) => order.id === id);
     remove(selectedOrderIndex);
   };
-
-  const specialOrderOptions = SPECIAL_ORDER_LIST.filter((order) => {
-    console.log("order ", order);
-    console.log("fields ", fields);
-    console.log(fields.some((field) => field.id === order.id));
-    const isUsed = fields.some((field) => field.id === order.id);
-    return !isUsed;
-  });
 
   return (
     <div className="mt-4">
@@ -117,6 +117,7 @@ export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
               <Button
                 size="icon"
                 variant="outline"
+                aria-label="Remove special order"
                 className="text-red-500 hover:text-red-600"
                 onClick={(e) => onRemove(e, field.id)}
               >
@@ -126,80 +127,6 @@ export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
           );
         })}
       </ul>
-
-      {/* {fields.map((field, index) => {
-        const currentSelection = watchedValue[index]?.id;
-
-        const filteredOptions = SPECIAL_ORDER_LIST.filter((option) => {
-          const isUsedElsewhere = watchedValue.some(
-            (item, i) =>
-              i !== index && item?.id.toString() === option.id.toString(),
-          );
-
-          // Keep the  option if it's NOT used elsewhere OR if it is the current selection
-          return !isUsedElsewhere || option.id.toString() === currentSelection;
-        });
-
-        return (
-          <div
-            key={field.id}
-            className="flex items-start gap-2 mb-4 p-4 border rounded-lg min-w-0"
-          >
-            <FormField
-              control={control}
-              name={`specialOrders.${index}`}
-              render={({ field }) => (
-                <FormControl>
-                  <FormItem className="flex-1 min-w-0">
-                    <FormLabel>Special Order</FormLabel>
-                    <Select
-                      onValueChange={(value) => {
-                        const selected = SPECIAL_ORDER_LIST.find(
-                          (c) => c.id.toString() === value,
-                        );
-                        field.onChange(selected);
-                      }}
-                      value={field.value?.id ?? ""}
-                    >
-                      <SelectTrigger className="w-full min-w-0">
-                        <SelectValue placeholder="Select special order" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Special Order</SelectLabel>
-                          {filteredOptions.map((order) => {
-                            return (
-                              <SelectItem
-                                key={order.id.toString()}
-                                value={order.id.toString()}
-                                className="truncate"
-                              >
-                                <span className="truncate">{order.label}</span>
-                              </SelectItem>
-                            );
-                          })}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                </FormControl>
-              )}
-            />
-
-            <Button
-              className="mt-6"
-              type="button"
-              variant="destructive"
-              size="sm"
-              onClick={() => remove(index)}
-            >
-              Remove
-            </Button>
-          </div>
-        );
-      })} */}
     </div>
   );
 };
