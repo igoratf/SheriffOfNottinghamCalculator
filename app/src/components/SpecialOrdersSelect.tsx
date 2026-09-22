@@ -18,26 +18,6 @@ interface SpecialOrdersSelect {
   control: Control<PlayerFormData>;
 }
 
-/* export const SPECIAL_ORDER_LIST = [
-  { id: 1, name: "Apple + Crossbow", value: 6 },
-  { id: 2, name: "Apple + Mead", value: 6 },
-  // Yes, there are two. Who knows why?
-  { id: 3, name: "Apple + Mead", value: 6 },
-  { id: 4, name: "Apple + Silk", value: 6 },
-  { id: 5, name: "Apple + Pepper", value: 7 },
-  // Also two for this one
-  { id: 6, name: "Apple + Pepper", value: 7 },
-  { id: 7, name: "Bread + Mead", value: 5 },
-  { id: 8, name: "Bread + Silk", value: 5 },
-  { id: 9, name: "Bread + Pepper", value: 6 },
-  { id: 10, name: "Cheese + Mead", value: 5 },
-  { id: 11, name: "Cheese + Silk", value: 5 },
-  { id: 12, name: "Cheese + Pepper", value: 6 },
-  { id: 13, name: "Chicken + Silk", value: 4 },
-  { id: 14, name: "Chicken + Mead", value: 5 },
-  { id: 15, name: "Chicken + Pepper", value: 5 },
-]; */
-
 export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
   const [showSelect, setShowSelect] = useState(false);
   const { data, error, isLoading } = useQuery({
@@ -100,7 +80,7 @@ export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
         <SelectContent>
           {specialOrderOptions.map((order) => (
             <SelectItem key={order.id} value={order.id.toString()}>
-              {order.name}
+              {`${order.name} (Score: ${order.value})`}
             </SelectItem>
           ))}
         </SelectContent>
@@ -113,7 +93,10 @@ export const SpecialOrdersSelect = ({ control }: SpecialOrdersSelect) => {
               key={field.id}
               className="w-full flex justify-between items-center border-1 border-gray-300 p-2 rounded-lg"
             >
-              <span className="text-sm"> {field.name}</span>
+              <span className="text-sm">
+                {" "}
+                {`${field.name} (Score: ${field.value})`}
+              </span>
               <Button
                 size="icon"
                 variant="outline"

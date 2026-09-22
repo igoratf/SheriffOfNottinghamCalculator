@@ -14,20 +14,21 @@ model Match {
 }
 
 model MatchPlayer {
-    id             Int                @id @default(autoincrement())
+    id             Int                  @id @default(autoincrement())
     matchId        Int
-    coins          Int                @default(0)
+    coins          Int                  @default(0)
     name           String
-    king           Resource[]         @default([])
-    queen          Resource[]         @default([])
-    score          Int                @default(0)
-    apple          Int                @default(0)
-    bread          Int                @default(0)
-    cheese         Int                @default(0)
-    chicken        Int                @default(0)
-    match          Match              @relation(fields: [matchId], references: [id])
+    king           Resource[]           @default([])
+    queen          Resource[]           @default([])
+    score          Int                  @default(0)
+    apple          Int                  @default(0)
+    bread          Int                  @default(0)
+    cheese         Int                  @default(0)
+    chicken        Int                  @default(0)
+    match          Match                @relation(fields: [matchId], references: [id])
     contrabands    PlayerContraband[]
-    bonus          Json?              @default("{}")
+    specialOrders  PlayerSpecialOrder[]
+    bonus          Json?                @default("{}")
     kingQueenBonus Json?
 
     @@unique([matchId, name])
@@ -43,6 +44,13 @@ model Contraband {
     playersWithThis PlayerContraband[]
 }
 
+model SpecialOrder {
+    id              Int                  @id @default(autoincrement())
+    name            String
+    value           Int
+    playersWithThis PlayerSpecialOrder[]
+}
+
 model PlayerContraband {
     id            Int         @id @default(autoincrement())
     matchPlayerId Int
@@ -52,6 +60,16 @@ model PlayerContraband {
     matchPlayer   MatchPlayer @relation(fields: [matchPlayerId], references: [id])
 
     @@unique([matchPlayerId, contrabandId])
+}
+
+model PlayerSpecialOrder {
+    id             Int          @id @default(autoincrement())
+    matchPlayerId  Int
+    specialOrderId Int
+    matchPlayer    MatchPlayer  @relation(fields: [matchPlayerId], references: [id])
+    specialOrder   SpecialOrder @relation(fields: [specialOrderId], references: [id])
+
+    @@unique([matchPlayerId, specialOrderId])
 }
 
 enum Resource {

@@ -20,7 +20,27 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("🌱 Starting database seed...");
 
-  const contrabands = [
+  const SPECIAL_ORDER_LIST = [
+    { id: 1, name: "Apple + Crossbow", value: 6 },
+    { id: 2, name: "Apple + Mead", value: 6 },
+    // Yes, there are two. Who knows why?
+    { id: 3, name: "Apple + Mead", value: 6 },
+    { id: 4, name: "Apple + Silk", value: 6 },
+    { id: 5, name: "Apple + Pepper", value: 7 },
+    // Also two for this one
+    { id: 6, name: "Apple + Pepper", value: 7 },
+    { id: 7, name: "Bread + Mead", value: 5 },
+    { id: 8, name: "Bread + Silk", value: 5 },
+    { id: 9, name: "Bread + Pepper", value: 6 },
+    { id: 10, name: "Cheese + Mead", value: 5 },
+    { id: 11, name: "Cheese + Silk", value: 5 },
+    { id: 12, name: "Cheese + Pepper", value: 6 },
+    { id: 13, name: "Chicken + Silk", value: 4 },
+    { id: 14, name: "Chicken + Mead", value: 5 },
+    { id: 15, name: "Chicken + Pepper", value: 5 },
+  ];
+
+  const CONTRABANDS_LIST = [
     {
       name: "Pepper",
       score: CONTRABAND_SCORE.PEPPER,
@@ -91,16 +111,25 @@ async function main() {
     },
   ];
 
-  // Clear existing Contraband to prevent duplicates if you run this twice
+  // Clear existing Contraband and Special Orders to prevent duplicates if you run this twice
   await prisma.contraband.deleteMany({});
+  await prisma.specialOrder.deleteMany({});
 
   // Insert the items
-  for (const item of contrabands) {
+  for (const item of CONTRABANDS_LIST) {
     await prisma.contraband.create({
       data: item,
     });
   }
-  console.log(`✅ Added ${contrabands.length} Contraband items.`);
+
+  for (const item of SPECIAL_ORDER_LIST) {
+    await prisma.specialOrder.create({
+      data: item,
+    });
+  }
+
+  console.log(`✅ Added ${CONTRABANDS_LIST.length} Contraband items.`);
+  console.log(`✅ Added ${SPECIAL_ORDER_LIST.length} Special Order items.`);
 
   // 2. Create a dummy match to test the dashboard
   if (process.env.NODE_ENV === "production") {

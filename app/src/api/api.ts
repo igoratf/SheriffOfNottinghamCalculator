@@ -66,7 +66,7 @@ export const fetchContrabands = async (): Promise<{
 export const fetchSpecialOrders = async (): Promise<{
   specialOrders: SpecialOrder[];
 }> => {
-  const response = await fetch(`${API_URL}/v1/special-orders`);
+  const response = await fetch(`${API_URL}/v1/special-order`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch special orders");
