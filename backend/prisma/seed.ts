@@ -38,7 +38,7 @@ async function main() {
     { code: "CHICKEN_PEPPER", name: "Chicken + Pepper", value: 5 },
   ];
 
-  const CONTRABANDS_LIST = [
+  /* const CONTRABANDS_LIST = [
     {
       name: "Pepper",
       score: CONTRABAND_SCORE.PEPPER,
@@ -107,15 +107,7 @@ async function main() {
       resourceBonus: 2,
       resourceType: ResourceEnum.CHICKEN,
     },
-  ];
-
-  // Insert the items
-  /*   for (const item of CONTRABANDS_LIST) {
-    await prisma.contraband.upsert({
-      data: item,
-      where: { id: item.}
-    });
-  } */
+  ]; */
 
   await prisma.$transaction(
     SPECIAL_ORDER_LIST.map((item) =>
