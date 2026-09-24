@@ -14,6 +14,7 @@ import { Input } from "./ui/input";
 import { ContrabandsSelect } from "./ContrabandsSelect";
 import { playerFormSchema, type PlayerFormData } from "@/utils/schemas";
 import { formatPlayersContrabandData } from "@/utils/helpers";
+import { SpecialOrdersSelect } from "./SpecialOrdersSelect";
 
 interface PlayerFormProps {
   onSubmit: (data: PlayerFormData) => void;
@@ -37,6 +38,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
       cheese: 0,
       chicken: 0,
       contrabands: [],
+      specialOrders: [],
       coins: 0,
     },
   });
@@ -196,6 +198,7 @@ export const PlayerForm = ({ onSubmit }: PlayerFormProps) => {
         <hr className="my-4" />
 
         <ContrabandsSelect control={control} />
+        <SpecialOrdersSelect control={control} />
       </form>
     </Form>
   );

@@ -30,6 +30,12 @@ export interface PlayerContraband extends Contraband {
   quantity: number;
 }
 
+export interface PlayerSpecialOrder {
+  id: number;
+  name: string;
+  value: number;
+}
+
 export enum KingQueenBonusCategory {
   KING = "king",
   QUEEN = "queen",
@@ -48,6 +54,7 @@ export interface Player {
   cheese: number;
   chicken: number;
   contrabands: PlayerContraband[];
+  specialOrders: PlayerSpecialOrder[];
   coins: number;
   bonus?: Partial<Record<KingQueenResourceName, number>>;
   kingQueenBonus?: Partial<Record<KingQueenResourceName, KingQueenBonus>>;

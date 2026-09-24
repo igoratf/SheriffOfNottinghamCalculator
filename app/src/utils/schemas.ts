@@ -23,6 +23,12 @@ const contrabandSchema = z.object({
     .max(99, "Quantity must be at most 99"),
 });
 
+const specialOrdersSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  value: z.number(),
+});
+
 export const playerFormSchema = z.object({
   name: z
     .string()
@@ -45,6 +51,7 @@ export const playerFormSchema = z.object({
     .min(0, "Must be at least 0")
     .max(99, "Must be at most 99"),
   contrabands: z.array(contrabandSchema).default([]),
+  specialOrders: z.array(specialOrdersSchema).default([]),
   coins: z.coerce
     .number()
     .min(0, "Must be at least 0")

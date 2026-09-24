@@ -20,7 +20,25 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("🌱 Starting database seed...");
 
-  const contrabands = [
+  const SPECIAL_ORDER_LIST = [
+    { code: "APPLE_CROSSBOW", name: "Apple + Crossbow", value: 6 },
+    { code: "APPLE_MEAD_1", name: "Apple + Mead", value: 6 },
+    { code: "APPLE_MEAD_2", name: "Apple + Mead", value: 6 },
+    { code: "APPLE_SILK", name: "Apple + Silk", value: 6 },
+    { code: "APPLE_PEPPER_1", name: "Apple + Pepper", value: 7 },
+    { code: "APPLE_PEPPER_2", name: "Apple + Pepper", value: 7 },
+    { code: "BREAD_MEAD", name: "Bread + Mead", value: 5 },
+    { code: "BREAD_SILK", name: "Bread + Silk", value: 5 },
+    { code: "BREAD_PEPPER", name: "Bread + Pepper", value: 6 },
+    { code: "CHEESE_MEAD", name: "Cheese + Mead", value: 5 },
+    { code: "CHEESE_SILK", name: "Cheese + Silk", value: 5 },
+    { code: "CHEESE_PEPPER", name: "Cheese + Pepper", value: 6 },
+    { code: "CHICKEN_SILK", name: "Chicken + Silk", value: 4 },
+    { code: "CHICKEN_MEAD", name: "Chicken + Mead", value: 5 },
+    { code: "CHICKEN_PEPPER", name: "Chicken + Pepper", value: 5 },
+  ];
+
+  const CONTRABANDS_LIST = [
     {
       name: "Pepper",
       score: CONTRABAND_SCORE.PEPPER,
@@ -91,16 +109,29 @@ async function main() {
     },
   ];
 
-  // Clear existing Contraband to prevent duplicates if you run this twice
-  await prisma.contraband.deleteMany({});
-
   // Insert the items
-  for (const item of contrabands) {
-    await prisma.contraband.create({
+  /*   for (const item of CONTRABANDS_LIST) {
+    await prisma.contraband.upsert({
       data: item,
+      where: { id: item.}
     });
-  }
-  console.log(`✅ Added ${contrabands.length} Contraband items.`);
+  } */
+
+  await prisma.$transaction(
+    SPECIAL_ORDER_LIST.map((item) =>
+      prisma.specialOrder.upsert({
+        where: { code: item.code },
+        update: {
+          name: item.name,
+          value: item.value,
+        },
+        create: item,
+      }),
+    ),
+  );
+
+  /* console.log(`✅ Added ${CONTRABANDS_LIST.length} Contraband items.`); */
+  console.log(`✅ Upserted ${SPECIAL_ORDER_LIST.length} Special Order items.`);
 
   // 2. Create a dummy match to test the dashboard
   if (process.env.NODE_ENV === "production") {

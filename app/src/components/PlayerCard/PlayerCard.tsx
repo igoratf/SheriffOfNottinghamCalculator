@@ -14,6 +14,7 @@ import { PlayerContrabandDetails } from "./PlayerContrabandDetails";
 import { KingQueenBonusItem } from "./KingQueenBonusItem";
 import { RoyalGoodBonusBadge } from "./RoyalGoodBonusBadge";
 import { KingAndQueenPopover } from "./KingAndQueenPopover";
+import { PlayerSpecialOrderDetails } from "./PlayerSpecialOrderDetails";
 
 export interface PlayerCardProps {
   player: PlayerScore;
@@ -32,6 +33,11 @@ export const PlayerCard = ({
 }: PlayerCardProps) => {
   const totalContrabandScore = player.contrabands?.reduce(
     (total, c) => total + c.score * c.quantity,
+    0,
+  );
+
+  const totalSpecialOrderScore = player.specialOrders?.reduce(
+    (total, current) => total + current.value,
     0,
   );
 
@@ -140,11 +146,18 @@ export const PlayerCard = ({
               <span className="font-bold">{`(${totalContrabandScore})`}</span>
             )}
           </li>
+          {totalSpecialOrderScore > 0 && (
+            <li className="space-x-1 flex items-center">
+              <span>📜 Special order - {totalSpecialOrderScore} </span>
+              {player.score && (
+                <span className="font-bold">{`(${totalSpecialOrderScore})`}</span>
+              )}
+            </li>
+          )}
         </ul>
 
-        {player.contrabands?.length > 0 && <Separator className="mt-4" />}
-
         <PlayerContrabandDetails contrabands={player.contrabands} />
+        <PlayerSpecialOrderDetails specialOrders={player.specialOrders} />
       </CardContent>
       {player.score && (
         <>
