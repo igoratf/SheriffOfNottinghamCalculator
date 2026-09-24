@@ -112,7 +112,7 @@ async function main() {
   ];
 
   // Clear existing Contraband and Special Orders to prevent duplicates if you run this twice
-  await prisma.contraband.deleteMany({});
+  /*   await prisma.contraband.deleteMany({});
   await prisma.specialOrder.deleteMany({});
 
   // Insert the items
@@ -120,7 +120,7 @@ async function main() {
     await prisma.contraband.create({
       data: item,
     });
-  }
+  } */
 
   for (const item of SPECIAL_ORDER_LIST) {
     await prisma.specialOrder.create({
@@ -128,7 +128,7 @@ async function main() {
     });
   }
 
-  console.log(`✅ Added ${CONTRABANDS_LIST.length} Contraband items.`);
+  /* console.log(`✅ Added ${CONTRABANDS_LIST.length} Contraband items.`); */
   console.log(`✅ Added ${SPECIAL_ORDER_LIST.length} Special Order items.`);
 
   // 2. Create a dummy match to test the dashboard

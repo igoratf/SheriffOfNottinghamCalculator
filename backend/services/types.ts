@@ -10,6 +10,11 @@ export type MatchWithPlayers = Prisma.MatchGetPayload<{
             contraband: true;
           };
         };
+        specialOrders: {
+          include: {
+            specialOrder: true;
+          };
+        };
       };
     };
   };

@@ -58,6 +58,15 @@ export const saveMatch = async (players: Player[]) => {
           },
         })),
       },
+      specialOrders: {
+        create: player.specialOrders?.map((order) => ({
+          specialOrder: {
+            connect: {
+              id: order.id,
+            },
+          },
+        })),
+      },
     };
 
     return {
@@ -80,6 +89,11 @@ export const saveMatch = async (players: Player[]) => {
           contrabands: {
             include: {
               contraband: true,
+            },
+          },
+          specialOrders: {
+            include: {
+              specialOrder: true,
             },
           },
         },
@@ -111,6 +125,7 @@ export const mapMatchToResponse = (match: MatchWithPlayers) => {
       totalScore: c.quantity * c.contraband.score,
       ...c.contraband,
     })),
+    specialOrders: player.specialOrders.map((order) => order.specialOrder),
   }));
   const formattedMatch = { ...match, players: formattedPlayers };
 
@@ -135,6 +150,13 @@ export const calculateGoodsScore = async (players: Player[]) => {
       totalScore += player.contrabands.reduce(
         (acc, curr) =>
           acc + curr.quantity * (contrabandsMap.get(curr.name)?.score || 0),
+        0,
+      );
+    }
+
+    if (player.specialOrders) {
+      totalScore += player.specialOrders.reduce(
+        (acc, curr) => acc + curr.value,
         0,
       );
     }
@@ -427,6 +449,15 @@ export const getMatch = async (id: string) => {
             omit: {
               matchPlayerId: true,
               contrabandId: true,
+            },
+          },
+          specialOrders: {
+            include: {
+              specialOrder: true,
+            },
+            omit: {
+              specialOrderId: true,
+              matchPlayerId: true,
             },
           },
         },
