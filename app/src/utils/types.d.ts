@@ -23,6 +23,12 @@ export interface PlayerContraband extends Contraband {
   totalScore?: number;
 }
 
+export interface PlayerSpecialOrder {
+  id: number;
+  name: string;
+  value: number;
+}
+
 export interface Player {
   name: string;
   apple: number;
@@ -30,6 +36,7 @@ export interface Player {
   cheese: number;
   chicken: number;
   contrabands: PlayerContraband[];
+  specialOrders: PlayerSpecialOrder[];
   coins: number;
 }
 

@@ -1,6 +1,7 @@
 import type { PlayerContraband } from "@/utils/types";
 import { InfoIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Separator } from "../ui/separator";
 
 interface PlayerContrabandDetailsProps {
   contrabands: PlayerContraband[];
@@ -25,34 +26,37 @@ export const PlayerContrabandDetails = ({
   }
 
   return (
-    <div className="mt-4">
-      <h4 className="font-medium text-sm mb-2">Contrabands:</h4>
-      <ul className="text-xs space-y-1">
-        {contrabands.map((playerContraband, index) => (
-          <li key={index} className="flex items-center justify-between gap-2">
-            <span className="text-gray-600">
-              {displayPlayerContraband(playerContraband)}
-            </span>
-            <span className="text-yellow-500 shrink-0">
-              {displayContrabandResourceBonus(playerContraband)}
-            </span>
+    <>
+      <Separator className="mt-4" />
+      <div className="mt-4">
+        <h4 className="font-medium text-sm mb-2">Contrabands:</h4>
+        <ul className="text-xs space-y-1">
+          {contrabands.map((playerContraband, index) => (
+            <li key={index} className="flex items-center justify-between gap-2">
+              <span className="text-gray-600">
+                {displayPlayerContraband(playerContraband)}
+              </span>
+              <span className="text-yellow-500 shrink-0">
+                {displayContrabandResourceBonus(playerContraband)}
+              </span>
 
-            {playerContraband.resourceType && (
-              <Popover>
-                <PopoverTrigger>
-                  <InfoIcon className="h-4 w-4 text-orange-800 cursor-pointer hover:text-amber-600 transition-colors duration-200" />
-                </PopoverTrigger>
-                <PopoverContent className="p-2 rounded-lg border-1 bg-white">
-                  <p className="text-sm text-gray-500">
-                    Bonus from royal goods only counts for king and queen bonus
-                    and do not score extra points.
-                  </p>
-                </PopoverContent>
-              </Popover>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+              {playerContraband.resourceType && (
+                <Popover>
+                  <PopoverTrigger>
+                    <InfoIcon className="h-4 w-4 text-orange-800 cursor-pointer hover:text-amber-600 transition-colors duration-200" />
+                  </PopoverTrigger>
+                  <PopoverContent className="p-2 rounded-lg border-1 bg-white">
+                    <p className="text-sm text-gray-500">
+                      Bonus from royal goods only counts for king and queen
+                      bonus and do not score extra points.
+                    </p>
+                  </PopoverContent>
+                </Popover>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };

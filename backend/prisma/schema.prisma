@@ -46,6 +46,7 @@ model Contraband {
 
 model SpecialOrder {
     id              Int                  @id @default(autoincrement())
+    code            String               @unique
     name            String
     value           Int
     playersWithThis PlayerSpecialOrder[]

@@ -21,23 +21,21 @@ async function main() {
   console.log("🌱 Starting database seed...");
 
   const SPECIAL_ORDER_LIST = [
-    { id: 1, name: "Apple + Crossbow", value: 6 },
-    { id: 2, name: "Apple + Mead", value: 6 },
-    // Yes, there are two. Who knows why?
-    { id: 3, name: "Apple + Mead", value: 6 },
-    { id: 4, name: "Apple + Silk", value: 6 },
-    { id: 5, name: "Apple + Pepper", value: 7 },
-    // Also two for this one
-    { id: 6, name: "Apple + Pepper", value: 7 },
-    { id: 7, name: "Bread + Mead", value: 5 },
-    { id: 8, name: "Bread + Silk", value: 5 },
-    { id: 9, name: "Bread + Pepper", value: 6 },
-    { id: 10, name: "Cheese + Mead", value: 5 },
-    { id: 11, name: "Cheese + Silk", value: 5 },
-    { id: 12, name: "Cheese + Pepper", value: 6 },
-    { id: 13, name: "Chicken + Silk", value: 4 },
-    { id: 14, name: "Chicken + Mead", value: 5 },
-    { id: 15, name: "Chicken + Pepper", value: 5 },
+    { code: "APPLE_CROSSBOW", name: "Apple + Crossbow", value: 6 },
+    { code: "APPLE_MEAD_1", name: "Apple + Mead", value: 6 },
+    { code: "APPLE_MEAD_2", name: "Apple + Mead", value: 6 },
+    { code: "APPLE_SILK", name: "Apple + Silk", value: 6 },
+    { code: "APPLE_PEPPER_1", name: "Apple + Pepper", value: 7 },
+    { code: "APPLE_PEPPER_2", name: "Apple + Pepper", value: 7 },
+    { code: "BREAD_MEAD", name: "Bread + Mead", value: 5 },
+    { code: "BREAD_SILK", name: "Bread + Silk", value: 5 },
+    { code: "BREAD_PEPPER", name: "Bread + Pepper", value: 6 },
+    { code: "CHEESE_MEAD", name: "Cheese + Mead", value: 5 },
+    { code: "CHEESE_SILK", name: "Cheese + Silk", value: 5 },
+    { code: "CHEESE_PEPPER", name: "Cheese + Pepper", value: 6 },
+    { code: "CHICKEN_SILK", name: "Chicken + Silk", value: 4 },
+    { code: "CHICKEN_MEAD", name: "Chicken + Mead", value: 5 },
+    { code: "CHICKEN_PEPPER", name: "Chicken + Pepper", value: 5 },
   ];
 
   const CONTRABANDS_LIST = [
@@ -111,25 +109,29 @@ async function main() {
     },
   ];
 
-  // Clear existing Contraband and Special Orders to prevent duplicates if you run this twice
-  /*   await prisma.contraband.deleteMany({});
-  await prisma.specialOrder.deleteMany({});
-
   // Insert the items
-  for (const item of CONTRABANDS_LIST) {
-    await prisma.contraband.create({
+  /*   for (const item of CONTRABANDS_LIST) {
+    await prisma.contraband.upsert({
       data: item,
+      where: { id: item.}
     });
   } */
 
-  for (const item of SPECIAL_ORDER_LIST) {
-    await prisma.specialOrder.create({
-      data: item,
-    });
-  }
+  await prisma.$transaction(
+    SPECIAL_ORDER_LIST.map((item) =>
+      prisma.specialOrder.upsert({
+        where: { code: item.code },
+        update: {
+          name: item.name,
+          value: item.value,
+        },
+        create: item,
+      }),
+    ),
+  );
 
   /* console.log(`✅ Added ${CONTRABANDS_LIST.length} Contraband items.`); */
-  console.log(`✅ Added ${SPECIAL_ORDER_LIST.length} Special Order items.`);
+  console.log(`✅ Upserted ${SPECIAL_ORDER_LIST.length} Special Order items.`);
 
   // 2. Create a dummy match to test the dashboard
   if (process.env.NODE_ENV === "production") {
